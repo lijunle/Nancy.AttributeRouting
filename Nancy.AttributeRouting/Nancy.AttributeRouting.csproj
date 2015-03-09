@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Nancy.AttributeRouting.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
