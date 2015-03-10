@@ -2,7 +2,7 @@
 
 Enable attribute routing for Nancy project, and build route URL with compiled-time checked lambda expression.
 
-# Install (TODO)
+# Install
 
 ```powershell
 PM> Install-Package Nancy.AttributeRouting

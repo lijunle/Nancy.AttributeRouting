@@ -140,6 +140,9 @@ packages/*
 # (and the packages folder if the line above has been uncommented)
 !packages/build/
 
+# NuGet executable for packages restore
+.nuget/nuget.exe
+
 # Windows Azure Build Output
 csx/
 *.build.csdef
