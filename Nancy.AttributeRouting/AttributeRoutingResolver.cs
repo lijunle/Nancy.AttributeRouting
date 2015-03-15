@@ -60,7 +60,7 @@
                 string path = routing.Key;
                 MethodBase member = routing.Value;
                 Type type = member.DeclaringType;
-                ViewAttribute viewAttribute = member.GetCustomAttribute<ViewAttribute>();
+                string viewPath = ViewAttribute.GetPath(member);
 
                 if (member is ConstructorInfo || member is MethodInfo)
                 {
@@ -71,9 +71,9 @@
                             ? MethodInvoke(instance, member, parameters, container, module)
                             : instance;
 
-                        if (viewAttribute != null)
+                        if (!string.IsNullOrEmpty(viewPath))
                         {
-                            return negotiator.Value.WithModel(result).WithView(viewAttribute.Path);
+                            return negotiator.Value.WithModel(result).WithView(viewPath);
                         }
 
                         return result;

@@ -8,17 +8,21 @@
     {
         private static readonly Browser Browser = new Browser(new DefaultNancyBootstrapper());
 
-        [Fact]
-        public void View_attribute_should_point_out_file_location()
+        [Theory]
+        [InlineData("/html", "Hello world!")]
+        [InlineData("/html/inner", "Get inner message.")]
+        [InlineData("/html/deeper", "Get deeper message.")]
+        [InlineData("/html/inner/inherit", "Inherit prefix message.")]
+        public void View_attribute_should_point_out_file_location(string url, string expectedContent)
         {
             // Act
-            BrowserResponse response = Browser.Get("/html", with => with.Accept("text/html"));
+            BrowserResponse response = Browser.Get(url, with => with.Accept("text/html"));
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            string body = response.Body.AsString();
-            Assert.Contains("Hello world!", body);
+            string content = response.Body.AsString();
+            Assert.Contains(expectedContent, content);
         }
 
         [Fact]
