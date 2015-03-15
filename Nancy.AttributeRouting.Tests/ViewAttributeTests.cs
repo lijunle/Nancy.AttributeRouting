@@ -38,5 +38,18 @@
             Assert.EndsWith("}", content);
             Assert.Contains("Hello world!", content);
         }
+
+        [Fact]
+        public void ViewPrefix_attribute_should_find_prepend_file_location()
+        {
+            // Act
+            BrowserResponse response = Browser.Get("/html/inner", with => with.Accept("text/html"));
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string body = response.Body.AsString();
+            Assert.Contains("Get inner message.", body);
+        }
     }
 }
