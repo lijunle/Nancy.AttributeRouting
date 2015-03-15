@@ -101,7 +101,7 @@
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(HasRouteAttribute);
 
-            return ctors.Union(methods);
+            return ctors.Concat(methods);
         }
 
         private static bool HasRouteAttribute(MethodBase member)

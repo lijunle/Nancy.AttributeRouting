@@ -160,7 +160,7 @@
                 segmentExtractor.Extract(path)
                     .Select(segment => GetSegmentValue(segment, parameters));
 
-            return string.Join("/", new[] { string.Empty }.Union(segmentValues));
+            return string.Join("/", new[] { string.Empty }.Concat(segmentValues));
         }
 
         private static string GetSegmentValue(string segment, IDictionary<string, string> parameters)
