@@ -34,7 +34,7 @@
                 .Where(type => !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
                 .SelectMany(GetMembersWithRouteAttribute)
                 .ToList()
-                .ForEach(AddToRouting);
+                .ForEach(method => RouteAttribute.AddToRoutings(Routings, method));
         }
 
         public AttributeRoutingResolver(TinyIoCContainer container)
@@ -89,30 +89,6 @@
                     throw new InvalidOperationException(errorMessage);
                 }
             }
-        }
-
-        private static void AddToRouting(MethodBase member)
-        {
-            member.GetCustomAttributes<RouteAttribute>().ToList()
-                .ForEach(attr => AddToRouting(attr.Method, attr.Path, member));
-        }
-
-        private static void AddToRouting(HttpMethod method, string path, MethodBase member)
-        {
-            if (Routings[method].ContainsKey(path))
-            {
-                string message = string.Format(
-                    "Attribute path {0} registered on two members, {1}.{2} and {3}.{4}.",
-                    path,
-                    Routings[method][path].DeclaringType.FullName,
-                    Routings[method][path].Name,
-                    member.DeclaringType.FullName,
-                    member.Name);
-
-                throw new Exception(message);
-            }
-
-            Routings[method].Add(path, member);
         }
 
         private static IEnumerable<MethodBase> GetMembersWithRouteAttribute(Type type)
