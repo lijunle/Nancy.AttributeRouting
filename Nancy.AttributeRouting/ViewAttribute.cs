@@ -1,7 +1,9 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Reflection;
 
     [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method)]
@@ -22,9 +24,9 @@
                 return string.Empty;
             }
 
-            string prefix = ViewPrefixAttribute.GetPrefix(method.DeclaringType);
+            IEnumerable<string> prefix = ViewPrefixAttribute.GetPrefix(method.DeclaringType);
 
-            return string.Format("/{0}/{1}", prefix, attr.path);
+            return string.Join("/", prefix.Concat(new string[] { attr.path }));
         }
     }
 
@@ -39,11 +41,22 @@
             this.prefix = prefix.Trim('/');
         }
 
-        internal static string GetPrefix(Type type)
+        internal static IEnumerable<string> GetPrefix(Type type)
         {
-            var attr = type.GetCustomAttribute<ViewPrefixAttribute>();
+            if (type == typeof(object))
+            {
+                return new string[0];
+            }
 
-            return attr == null ? string.Empty : attr.prefix;
+            IEnumerable<string> basePrefix = GetPrefix(type.BaseType);
+
+            var attr = type.GetCustomAttribute<ViewPrefixAttribute>(false);
+            if (attr == null)
+            {
+                return basePrefix;
+            }
+
+            return basePrefix.Concat(new string[] { attr.prefix });
         }
     }
 }
