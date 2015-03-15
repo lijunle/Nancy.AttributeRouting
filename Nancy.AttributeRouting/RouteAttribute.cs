@@ -33,7 +33,7 @@
         {
             HttpMethod method = attribute.method;
             IEnumerable<string> prefix = RoutePrefixAttribute.GetPrefix(member.DeclaringType);
-            string path = string.Join("/", prefix.Union(new string[] { attribute.path }));
+            string path = string.Join("/", prefix.Concat(new string[] { attribute.path }));
 
             if (routings[method].ContainsKey(path))
             {
@@ -65,13 +65,19 @@
 
         internal static IEnumerable<string> GetPrefix(Type type)
         {
-            var attr = type.GetCustomAttribute<RoutePrefixAttribute>();
-            if (attr == null)
+            if (type == typeof(object))
             {
                 return new string[] { string.Empty };
             }
 
-            return new string[] { attr.prefix };
+            IEnumerable<string> prefix = GetPrefix(type.BaseType);
+            var attr = type.GetCustomAttribute<RoutePrefixAttribute>(false);
+            if (attr == null)
+            {
+                return prefix;
+            }
+
+            return prefix.Concat(new string[] { attr.prefix });
         }
     }
 
