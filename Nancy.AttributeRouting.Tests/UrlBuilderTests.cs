@@ -118,7 +118,9 @@
             string url = Url.Builder.GetUrl<ComplexViewModel>(v => v.GetComplexRoute(id, birth, 12, true));
 
             // Assert
-            string expectedUrl = string.Format("/complex/non-string/12/True/{0}/{1}", id, birth);
+            string expectedUrl = string.Format(
+                "/complex/non-string/12/True/{0}/{1}", id, Uri.EscapeDataString(birth.ToString()));
+
             Assert.Equal(expectedUrl, url);
         }
 
