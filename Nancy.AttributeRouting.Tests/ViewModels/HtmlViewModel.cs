@@ -22,9 +22,38 @@
             {
             }
 
-            public string Message
+            public virtual string Message
             {
                 get { return "Get inner message."; }
+            }
+        }
+
+        [ViewPrefix("Deeper")]
+        public class DeeperViewModel : InnerViewModel
+        {
+            [Get("/html/deeper")]
+            [View("deeper")]
+            public DeeperViewModel()
+            {
+            }
+
+            public override string Message
+            {
+                get { return "Get deeper message."; }
+            }
+        }
+
+        public class InheritPrefixViewModel : InnerViewModel
+        {
+            [Get("/html/inner/inherit")]
+            [View("inherit")]
+            public InheritPrefixViewModel()
+            {
+            }
+
+            public override string Message
+            {
+                get { return "Inherit prefix message."; }
             }
         }
     }
