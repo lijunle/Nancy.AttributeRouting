@@ -172,7 +172,7 @@
                 throw new ArgumentException(message, "segment");
             }
 
-            return result;
+            return Uri.EscapeDataString(result);
         }
 
         private static string TryGetParameterValue(string segment, IDictionary<string, string> parameters)
