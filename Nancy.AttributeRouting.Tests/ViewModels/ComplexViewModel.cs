@@ -44,6 +44,12 @@
             return name;
         }
 
+        [Get("/complex/special/{str}")]
+        public object GetWithSpecialCharacters(string str)
+        {
+            return new { str };
+        }
+
         public class Form
         {
             public string User { get; set; }

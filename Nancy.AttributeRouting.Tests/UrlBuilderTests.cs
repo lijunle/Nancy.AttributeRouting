@@ -118,8 +118,22 @@
             string url = Url.Builder.GetUrl<ComplexViewModel>(v => v.GetComplexRoute(id, birth, 12, true));
 
             // Assert
-            string expectedUrl = string.Format("/complex/non-string/12/True/{0}/{1}", id, birth);
+            string expectedUrl = string.Format(
+                "/complex/non-string/12/True/{0}/{1}", id, Uri.EscapeDataString(birth.ToString()));
+
             Assert.Equal(expectedUrl, url);
+        }
+
+        [Theory]
+        [InlineData("Space Here", "Space%20Here")]
+        [InlineData("中文", "%E4%B8%AD%E6%96%87")]
+        public void GetUrl_with_special_characters_should_build_normalized_URL(string str, string expectedStr)
+        {
+            // Act
+            string url = Url.Builder.GetUrl<ComplexViewModel>(v => v.GetWithSpecialCharacters(str));
+
+            // Assert
+            Assert.Equal("/complex/special/" + expectedStr, url);
         }
 
         public class Url : NancyModule

@@ -21,6 +21,8 @@
         [InlineData("/nested/result/custom-value", "Result", "nested-custom-value")]
         [InlineData("/my/1", "Result", "TheSameResultFromTwoRoutings")]
         [InlineData("/my/2", "Result", "TheSameResultFromTwoRoutings")]
+        [InlineData("/complex/special/Space%20Here", "Str", "Space Here")]
+        [InlineData("/complex/special/%E4%B8%AD%E6%96%87", "Str", "中文")]
         public void Attribute_routing_should_accept_get_request(string path, string expectedKey, string expectedValue)
         {
             // Act
