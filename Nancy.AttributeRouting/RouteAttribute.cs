@@ -27,6 +27,18 @@
     }
 
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
+    [AttributeUsage(AttributeTargets.Class)]
+    public class RoutePrefixAttribute : Attribute
+    {
+        private readonly string prefix;
+
+        public RoutePrefixAttribute(string prefix)
+        {
+            this.prefix = prefix;
+        }
+    }
+
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public sealed class DeleteAttribute : RouteAttribute
     {
         public DeleteAttribute(string path)
