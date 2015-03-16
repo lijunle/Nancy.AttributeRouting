@@ -26,6 +26,38 @@
                 .ForEach(attr => AddToRoutings(routings, attr, member));
         }
 
+        internal static string GetPath(MethodBase method)
+        {
+            RouteAttribute attr;
+
+            try
+            {
+                attr = method.GetCustomAttribute<RouteAttribute>(false);
+            }
+            catch (AmbiguousMatchException e)
+            {
+                string message = string.Format(
+                    "Method {0} associates with more than one route attributes.",
+                    method.Name);
+
+                throw new Exception(message, e);
+            }
+
+            if (attr == null)
+            {
+                string message = string.Format(
+                    "Does not find any route attribute with method {0}.",
+                    method.Name);
+
+                throw new Exception(message);
+            }
+
+            IEnumerable<string> prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = string.Join("/", prefix.Concat(new string[] { attr.path }));
+
+            return path;
+        }
+
         private static void AddToRoutings(
             Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
             RouteAttribute attribute,
@@ -49,6 +81,11 @@
             }
 
             routings[method].Add(path, member);
+        }
+
+        private static string JoinPrefixAndPath(IEnumerable<string> prefix, string path)
+        {
+            return string.Join("/", prefix.Concat(new string[] { path }));
         }
     }
 
