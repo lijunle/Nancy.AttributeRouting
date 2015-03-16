@@ -136,6 +136,50 @@
             Assert.Equal("/complex/special/" + expectedStr, url);
         }
 
+        [Fact]
+        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_0()
+        {
+            // Act
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel>(
+                () => new RoutePrefixViewModel());
+
+            // Assert
+            Assert.Equal("/route-prefix", url);
+        }
+
+        [Fact]
+        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_1()
+        {
+            // Act
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InnerPrefixViewModel>(
+                () => new RoutePrefixViewModel.InnerPrefixViewModel());
+
+            // Assert
+            Assert.Equal("/route-prefix/inner", url);
+        }
+
+        [Fact]
+        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_2()
+        {
+            // Act
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritPrefixViewModel>(
+                () => new RoutePrefixViewModel.InheritPrefixViewModel());
+
+            // Assert
+            Assert.Equal("/route-prefix/inherit", url);
+        }
+
+        [Fact]
+        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_3()
+        {
+            // Act
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritInnerViewModel>(
+                () => new RoutePrefixViewModel.InheritInnerViewModel());
+
+            // Assert
+            Assert.Equal("/route-prefix/inner/inherit", url);
+        }
+
         public class Url : NancyModule
         {
             public Url(IUrlBuilder urlbuilder)
