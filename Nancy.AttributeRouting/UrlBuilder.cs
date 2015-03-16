@@ -57,7 +57,7 @@
                 throw new Exception(ExpressionNotValidMessage);
             }
 
-            string path = GetRoutePath(newCall.Constructor);
+            string path = RouteAttribute.GetPath(newCall.Constructor);
 
             IDictionary<string, string> constructorParameters =
                 MethodCallToDictionary(newCall.Constructor, newCall.Arguments);
@@ -84,37 +84,12 @@
                 throw new Exception(ExpressionNotValidMessage);
             }
 
-            string path = GetRoutePath(methodCall.Method);
+            string path = RouteAttribute.GetPath(methodCall.Method);
 
             IDictionary<string, string> methodParameters =
                 MethodCallToDictionary(methodCall.Method, methodCall.Arguments);
 
             return ExtractParametersToPath(this.segmentExtractor, path, Merge(methodParameters, parameters));
-        }
-
-        private static string GetRoutePath(MethodBase method)
-        {
-            IEnumerable<CustomAttributeData> data = method.CustomAttributes
-                .Where(attr => typeof(RouteAttribute).IsAssignableFrom(attr.AttributeType));
-
-            if (data.Count() == 0)
-            {
-                string message = string.Format(
-                    "Does not find any route attribute with method {0}.",
-                    method.Name);
-
-                throw new Exception(message);
-            }
-            else if (data.Count() > 1)
-            {
-                string message = string.Format(
-                    "Method {0} associates with more than one route attributes. Only one is allowed.",
-                    method.Name);
-
-                throw new Exception(message);
-            }
-
-            return (string)data.First().ConstructorArguments.First().Value;
         }
 
         private static IDictionary<string, string> MethodCallToDictionary(
