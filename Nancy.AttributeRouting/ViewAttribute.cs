@@ -18,15 +18,16 @@
 
         internal static string GetPath(MethodBase method)
         {
-            var attr = method.GetCustomAttribute<ViewAttribute>();
+            var attr = method.GetCustomAttribute<ViewAttribute>(false);
             if (attr == null)
             {
                 return string.Empty;
             }
 
             IEnumerable<string> prefix = ViewPrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = string.Join("/", prefix.Concat(new string[] { attr.path }));
 
-            return string.Join("/", prefix.Concat(new string[] { attr.path }));
+            return path;
         }
     }
 
