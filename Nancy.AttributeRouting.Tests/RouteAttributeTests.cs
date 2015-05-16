@@ -12,6 +12,7 @@
 
         [Theory]
         [InlineData("/my-view-model", "Property", "Value")]
+        [InlineData("/my-view-model/all", "Property", "all-properties")]
         [InlineData("/my-view-model/my-property", "Property", "my-property")]
         [InlineData("/nested-view-model", "NestedProperty", "NestedValue")]
         [InlineData("/my/result", "Result", "MyResult")]
