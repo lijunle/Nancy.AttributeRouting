@@ -66,7 +66,7 @@
                 {
                     builder[path] = parameters =>
                     {
-                        object instance = ContainerResolve(container, type, parameters);
+                        object instance = ContainerResolve(container, type, member, parameters);
                         object result = member is MethodInfo
                             ? MethodInvoke(instance, member, parameters, container, module)
                             : instance;
@@ -109,13 +109,19 @@
             return member.GetCustomAttributes<RouteAttribute>().Count() != 0;
         }
 
-        private static object ContainerResolve(TinyIoCContainer container, Type type, DynamicDictionary nancyDictionary)
+        private static object ContainerResolve(TinyIoCContainer container, Type type, MethodBase member, DynamicDictionary nancyDictionary)
         {
             var data = new Dictionary<string, object>();
 
             foreach (string key in nancyDictionary.Keys)
             {
                 data.Add(key, nancyDictionary[key].Value);
+            }
+
+            if (member is ConstructorInfo)
+            {
+                var ctor = member as ConstructorInfo;
+                ctor.GetParameters().Where(p => p.HasDefaultValue).ToList().ForEach(p => data.Add(p.Name, p.DefaultValue));
             }
 
             return container.Resolve(type, new NamedParameterOverloads(data));
