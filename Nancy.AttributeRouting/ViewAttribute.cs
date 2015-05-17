@@ -6,11 +6,24 @@
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// The View attribute indicates the view path to render from request.
+    /// </summary>
+    /// <example>
+    /// The following code will render <c>View/index.html</c> with routing instance.
+    /// <code>
+    /// View('View/index.html')
+    /// </code>
+    /// </example>
     [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method)]
     public class ViewAttribute : Attribute
     {
         private readonly string path;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewAttribute"/> class.
+        /// </summary>
+        /// <param name="path">The view path for rendering.</param>
         public ViewAttribute(string path)
         {
             this.path = path.TrimStart('/');
@@ -31,12 +44,20 @@
         }
     }
 
+    /// <summary>
+    /// The ViewPrefix attribute. It decorates on class, indicates the View attribute works with
+    /// this prefix to locate paths.
+    /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     [AttributeUsage(AttributeTargets.Class)]
     public class ViewPrefixAttribute : Attribute
     {
         private readonly string prefix;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewPrefixAttribute"/> class.
+        /// </summary>
+        /// <param name="prefix">The path prefix.</param>
         public ViewPrefixAttribute(string prefix)
         {
             this.prefix = prefix.Trim('/');

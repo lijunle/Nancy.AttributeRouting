@@ -6,6 +6,9 @@
     using System.Reflection;
     using Nancy.TinyIoc;
 
+    /// <summary>
+    /// The class to resolve routing attributes.
+    /// </summary>
     public class AttributeRoutingResolver : NancyModule
     {
         private static readonly Dictionary<HttpMethod, Dictionary<string, MethodBase>> Routings =
@@ -29,6 +32,10 @@
                 .ForEach(method => RouteAttribute.AddToRoutings(Routings, method));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeRoutingResolver"/> class.
+        /// </summary>
+        /// <param name="container">The Nancy IoC container.</param>
         public AttributeRoutingResolver(TinyIoCContainer container)
         {
             Resolve(container, this, this.Delete, HttpMethod.Delete);
