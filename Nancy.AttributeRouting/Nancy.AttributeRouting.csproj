@@ -54,6 +54,7 @@
     <Compile Include="HttpMethod.cs" />
     <Compile Include="Registration.cs" />
     <Compile Include="RouteAttribute.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="UrlBuilder.cs" />
     <Compile Include="ViewAttribute.cs" />
   </ItemGroup>

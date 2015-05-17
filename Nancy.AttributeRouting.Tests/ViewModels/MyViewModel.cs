@@ -15,6 +15,12 @@
             this.property = property;
         }
 
+        [Get("/my-view-model/all")]
+        public MyViewModel(bool all = true)
+        {
+            this.property = "all-properties";
+        }
+
         public string Property
         {
             get { return this.property ?? "Value"; }
