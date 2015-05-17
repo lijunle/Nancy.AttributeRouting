@@ -4,18 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Nancy.ModelBinding;
-    using Nancy.Responses.Negotiation;
     using Nancy.TinyIoc;
 
     public class AttributeRoutingResolver : NancyModule
     {
-        private static readonly PropertyInfo[] NancyModuleProperties =
-            typeof(NancyModule).GetProperties();
-
-        private static readonly MethodInfo BindMethod =
-            typeof(ModuleExtensions).GetMethod("Bind", new Type[] { typeof(INancyModule) });
-
         private static readonly Dictionary<HttpMethod, Dictionary<string, MethodBase>> Routings =
             new Dictionary<HttpMethod, Dictionary<string, MethodBase>>
             {
@@ -39,18 +31,16 @@
 
         public AttributeRoutingResolver(TinyIoCContainer container)
         {
-            var negotiator = new Lazy<Negotiator>(() => this.Negotiate);
-            Resolve(container, negotiator, this, this.Delete, HttpMethod.Delete);
-            Resolve(container, negotiator, this, this.Get, HttpMethod.Get);
-            Resolve(container, negotiator, this, this.Options, HttpMethod.Options);
-            Resolve(container, negotiator, this, this.Patch, HttpMethod.Patch);
-            Resolve(container, negotiator, this, this.Post, HttpMethod.Post);
-            Resolve(container, negotiator, this, this.Put, HttpMethod.Put);
+            Resolve(container, this, this.Delete, HttpMethod.Delete);
+            Resolve(container, this, this.Get, HttpMethod.Get);
+            Resolve(container, this, this.Options, HttpMethod.Options);
+            Resolve(container, this, this.Patch, HttpMethod.Patch);
+            Resolve(container, this, this.Post, HttpMethod.Post);
+            Resolve(container, this, this.Put, HttpMethod.Put);
         }
 
         private static void Resolve(
             TinyIoCContainer container,
-            Lazy<Negotiator> negotiator,
             NancyModule module,
             RouteBuilder builder,
             HttpMethod httpMethod)
@@ -59,35 +49,21 @@
             {
                 string path = routing.Key;
                 MethodBase member = routing.Value;
-                Type type = member.DeclaringType;
-                string viewPath = ViewAttribute.GetPath(member);
 
-                if (member is ConstructorInfo || member is MethodInfo)
+                builder[path] = dynamicParameters =>
                 {
-                    builder[path] = parameters =>
+                    Dictionary<string, object> parameters = dynamicParameters.ToDictionary();
+                    object instance = ConstructInstance(container, member, parameters);
+                    object result = MethodInvoke(instance, member, parameters, module);
+
+                    string viewPath = ViewAttribute.GetPath(member);
+                    if (!string.IsNullOrEmpty(viewPath))
                     {
-                        object instance = ContainerResolve(container, type, member, parameters);
-                        object result = member is MethodInfo
-                            ? MethodInvoke(instance, member, parameters, container, module)
-                            : instance;
+                        return module.Negotiate.WithModel(result).WithView(viewPath);
+                    }
 
-                        if (!string.IsNullOrEmpty(viewPath))
-                        {
-                            return negotiator.Value.WithModel(result).WithView(viewPath);
-                        }
-
-                        return result;
-                    };
-                }
-                else
-                {
-                    string errorMessage = string.Format(
-                        "Routing attribute is not allowed to decorated on {0} of type {1}.",
-                        member.Name,
-                        type.FullName);
-
-                    throw new InvalidOperationException(errorMessage);
-                }
+                    return result;
+                };
             }
         }
 
@@ -106,90 +82,81 @@
 
         private static bool HasRouteAttribute(MethodBase member)
         {
-            return member.GetCustomAttributes<RouteAttribute>().Count() != 0;
+            return member.GetCustomAttributes<RouteAttribute>().Any();
         }
 
-        private static object ContainerResolve(TinyIoCContainer container, Type type, MethodBase member, DynamicDictionary nancyDictionary)
+        private static object ConstructInstance(TinyIoCContainer container, MethodBase member, Dictionary<string, object> parameters)
         {
-            var data = new Dictionary<string, object>();
-
-            foreach (string key in nancyDictionary.Keys)
+            var ctor = member as ConstructorInfo;
+            if (ctor != null)
             {
-                data.Add(key, nancyDictionary[key].Value);
+                Dictionary<string, object> defaultParameters =
+                    ctor.GetParameters().Where(p => p.HasDefaultValue).ToDictionary(p => p.Name, p => p.DefaultValue);
+
+                parameters = parameters.Merge(defaultParameters);
             }
 
-            if (member is ConstructorInfo)
-            {
-                var ctor = member as ConstructorInfo;
-                ctor.GetParameters().Where(p => p.HasDefaultValue).ToList().ForEach(p => data.Add(p.Name, p.DefaultValue));
-            }
-
-            return container.Resolve(type, new NamedParameterOverloads(data));
+            return container.Resolve(member.DeclaringType, new NamedParameterOverloads(parameters));
         }
 
         private static object MethodInvoke(
             object instance,
             MethodBase method,
-            DynamicDictionary nancyDictionary,
-            TinyIoCContainer container,
+            Dictionary<string, object> queryParameters,
             NancyModule module)
         {
+            if (method is ConstructorInfo)
+            {
+                // the associated member is a constructor, no need to invoke it.
+                return instance;
+            }
+
             IEnumerable<object> parameters =
-                ResolveMethodParameters(method, nancyDictionary, container, module);
+                ResolveMethodParameters(method, queryParameters, module);
 
             return method.Invoke(instance, parameters.ToArray());
         }
 
         private static IEnumerable<object> ResolveMethodParameters(
             MethodBase method,
-            DynamicDictionary nancyDictionary,
-            TinyIoCContainer container,
+            Dictionary<string, object> queryParameters,
             NancyModule module)
         {
-            IEnumerable<object> parameters = method.GetParameters().Select(parameterInfo =>
-            {
-                Type paramType = parameterInfo.ParameterType;
-                string paramName = parameterInfo.Name;
-
-                var isPrimitive = new Lazy<bool>(() => IsPrimitive(paramType));
-
-                var moduleProperty = new Lazy<PropertyInfo>(
-                    () => NancyModuleProperties.FirstOrDefault(
-                        p => p.PropertyType == paramType && p.CanRead));
-
-                if (nancyDictionary.ContainsKey(paramName))
-                {
-                    // 1. resolve using Nancy route parameters
-                    return nancyDictionary[paramName].Value;
-                }
-                else if (!isPrimitive.Value && moduleProperty.Value != null)
-                {
-                    // 2. resolve using NancyModule property value
-                    return moduleProperty.Value.GetValue(module);
-                }
-                else if (!isPrimitive.Value)
-                {
-                    // 3. resolve using model binding from request data
-                    MethodInfo bindMethod = BindMethod.MakeGenericMethod(paramType);
-                    return bindMethod.Invoke(null, new[] { module });
-                }
-                else
-                {
-                    // 4. failing to missing type
-                    return Type.Missing;
-                }
-            });
+            IEnumerable<object> parameters =
+                method.GetParameters()
+                    .Select(parameterInfo => ResolveMethodParameter(parameterInfo, queryParameters, module));
 
             return parameters;
         }
 
-        private static bool IsPrimitive(Type type)
+        private static object ResolveMethodParameter(
+            ParameterInfo parameterInfo,
+            Dictionary<string, object> queryParameters,
+            NancyModule module)
         {
-            return type.IsPrimitive ||
-                type == typeof(string) ||
-                type == typeof(Guid) ||
-                type == typeof(DateTime) ||
-                type == typeof(TimeSpan);
+            Type paramType = parameterInfo.ParameterType;
+            string paramName = parameterInfo.Name;
+
+            if (queryParameters.ContainsKey(paramName))
+            {
+                // 1. resolve using Nancy route parameters
+                return queryParameters[paramName];
+            }
+            else if (!paramType.IsPrimitive() && module.HasProperty(paramType))
+            {
+                // 2. resolve using NancyModule property value
+                return module.GetProperty(paramType);
+            }
+            else if (!paramType.IsPrimitive())
+            {
+                // 3. resolve using model binding from request data
+                return module.Bind(paramType);
+            }
+            else
+            {
+                // 4. failing to missing type
+                return Type.Missing;
+            }
         }
     }
 }
