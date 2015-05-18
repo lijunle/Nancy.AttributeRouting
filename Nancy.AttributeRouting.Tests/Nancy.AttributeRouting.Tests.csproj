@@ -71,6 +71,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UrlBuilderTests.cs" />
     <Compile Include="ViewAttributeTests.cs" />
+    <Compile Include="ViewModels\BeforeAttributeViewModel.cs" />
     <Compile Include="ViewModels\ComplexViewModel.cs" />
     <Compile Include="ViewModels\HtmlViewModel.cs" />
     <Compile Include="ViewModels\RoutePrefixViewModel.cs" />
