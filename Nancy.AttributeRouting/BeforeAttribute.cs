@@ -1,6 +1,8 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
+    using System.Linq;
+    using System.Reflection;
     using Nancy.TinyIoc;
 
     /// <summary>
@@ -24,5 +26,36 @@
         /// otherwise it returns the this value directly.
         /// </returns>
         public abstract Response Process(TinyIoCContainer container, NancyContext context);
+
+        internal static Response GetResponse(MethodBase method, TinyIoCContainer container, NancyContext context)
+        {
+            var attr = GetAttribute(method);
+            if (attr == null)
+            {
+                return null;
+            }
+
+            Response response = attr.Process(container, context);
+            return response;
+        }
+
+        private static BeforeAttribute GetAttribute(MethodBase method)
+        {
+            // 1. check the method itself
+            var attr = method.GetCustomAttribute<BeforeAttribute>(inherit: false);
+            if (attr != null)
+            {
+                return attr;
+            }
+
+            // 2. check the class which declares the method and its ancestors.
+            var attrs = method.DeclaringType.GetCustomAttributes<BeforeAttribute>(inherit: true);
+            if (attrs.Any())
+            {
+                return attrs.First();
+            }
+
+            return null;
+        }
     }
 }

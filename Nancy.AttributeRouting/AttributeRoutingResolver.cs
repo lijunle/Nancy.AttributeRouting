@@ -59,6 +59,12 @@
 
                 builder[path] = dynamicParameters =>
                 {
+                    Response beforeResponse = BeforeAttribute.GetResponse(member, container, module.Context);
+                    if (beforeResponse != null)
+                    {
+                        return beforeResponse;
+                    }
+
                     Dictionary<string, object> parameters = dynamicParameters.ToDictionary();
                     object instance = ConstructInstance(container, member, parameters);
                     object result = MethodInvoke(instance, member, parameters, module);
