@@ -28,6 +28,8 @@
         [InlineData("/route-prefix/inner", "Value", "inner value")]
         [InlineData("/route-prefix/inherit", "Value", "inherit value")]
         [InlineData("/route-prefix/inner/inherit", "Value", "inherit inner value")]
+        [InlineData("/before/rejected", "Result", "before-rejected")]
+        [InlineData("/before/passed", "Result", "before-passed")]
         public void Attribute_routing_should_accept_get_request(string path, string expectedKey, string expectedValue)
         {
             // Act
