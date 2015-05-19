@@ -58,21 +58,21 @@
             foreach (KeyValuePair<string, MethodBase> routing in Routings[httpMethod])
             {
                 string path = routing.Key;
-                MethodBase member = routing.Value;
+                MethodBase method = routing.Value;
 
                 builder[path] = dynamicParameters =>
                 {
-                    Response beforeResponse = BeforeAttribute.GetResponse(member, container, module.Context);
+                    Response beforeResponse = BeforeAttribute.GetResponse(method, container, module.Context);
                     if (beforeResponse != null)
                     {
                         return beforeResponse;
                     }
 
                     Dictionary<string, object> parameters = dynamicParameters.ToDictionary();
-                    object instance = ConstructInstance(container, member, parameters);
-                    object result = MethodInvoke(instance, member, parameters, module);
+                    object instance = ConstructInstance(container, method, parameters);
+                    object result = MethodInvoke(instance, method, parameters, module);
 
-                    string viewPath = ViewAttribute.GetPath(member);
+                    string viewPath = ViewAttribute.GetPath(method);
                     if (!string.IsNullOrEmpty(viewPath))
                     {
                         return module.Negotiate.WithModel(result).WithView(viewPath);
@@ -96,14 +96,14 @@
             return ctors.Concat(methods);
         }
 
-        private static bool HasRouteAttribute(MethodBase member)
+        private static bool HasRouteAttribute(MethodBase method)
         {
-            return member.GetCustomAttributes<RouteAttribute>().Any();
+            return method.GetCustomAttributes<RouteAttribute>().Any();
         }
 
-        private static object ConstructInstance(TinyIoCContainer container, MethodBase member, Dictionary<string, object> parameters)
+        private static object ConstructInstance(TinyIoCContainer container, MethodBase method, Dictionary<string, object> parameters)
         {
-            var ctor = member as ConstructorInfo;
+            var ctor = method as ConstructorInfo;
             if (ctor != null)
             {
                 Dictionary<string, object> defaultParameters =
@@ -112,7 +112,7 @@
                 parameters = parameters.Merge(defaultParameters);
             }
 
-            return container.Resolve(member.DeclaringType, new NamedParameterOverloads(parameters));
+            return container.Resolve(method.DeclaringType, new NamedParameterOverloads(parameters));
         }
 
         private static object MethodInvoke(
@@ -123,7 +123,7 @@
         {
             if (method is ConstructorInfo)
             {
-                // the associated member is a constructor, no need to invoke it.
+                // the associated method is a constructor, no need to invoke it.
                 return instance;
             }
 
