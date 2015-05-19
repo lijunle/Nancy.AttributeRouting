@@ -26,6 +26,15 @@
             get { return this.property ?? "Value"; }
         }
 
+        [Get("/")]
+        public ResultViewModel Index()
+        {
+            return new ResultViewModel
+            {
+                Result = "Index"
+            };
+        }
+
         [Get("/my/result")]
         public ResultViewModel GetResult()
         {
