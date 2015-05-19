@@ -29,37 +29,25 @@
         [Get("/")]
         public ResultViewModel Index()
         {
-            return new ResultViewModel
-            {
-                Result = "Index"
-            };
+            return new ResultViewModel("Index");
         }
 
         [Get("/my/result")]
         public ResultViewModel GetResult()
         {
-            return new ResultViewModel
-            {
-                Result = "MyResult"
-            };
+            return new ResultViewModel("MyResult");
         }
 
         [Get("/my/result/{value}")]
         public ResultViewModel GetResult(string value)
         {
-            return new ResultViewModel
-            {
-                Result = value
-            };
+            return new ResultViewModel(value);
         }
 
         [Get("/my/{property}/result/{value}")]
         public ResultViewModel GetResultWithProperty(string value)
         {
-            return new ResultViewModel
-            {
-                Result = this.property + "." + value
-            };
+            return new ResultViewModel(this.property + "." + value);
         }
 
         public string GetWithoutRoutings()
@@ -71,10 +59,7 @@
         [Get("/my/2")]
         public ResultViewModel GetByTwoRoutings()
         {
-            return new ResultViewModel
-            {
-                Result = "TheSameResultFromTwoRoutings"
-            };
+            return new ResultViewModel("TheSameResultFromTwoRoutings");
         }
 
         [Delete("/my")]
@@ -128,25 +113,24 @@
             [Get("/nested/result")]
             public ResultViewModel GetResult()
             {
-                return new ResultViewModel
-                {
-                    Result = "NestedResult"
-                };
+                return new ResultViewModel("NestedResult");
             }
 
             [Get("/nested/result/{value}")]
             public ResultViewModel GetResult(string value)
             {
-                return new ResultViewModel
-                {
-                    Result = "nested-" + value
-                };
+                return new ResultViewModel("nested-" + value);
             }
         }
 
         public class ResultViewModel
         {
-            public string Result { get; set; }
+            public ResultViewModel(string result)
+            {
+                this.Result = result;
+            }
+
+            public string Result { get; private set; }
         }
     }
 }
