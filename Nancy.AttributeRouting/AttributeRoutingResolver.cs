@@ -24,12 +24,15 @@
 
         static AttributeRoutingResolver()
         {
-            AppDomain.CurrentDomain.GetAssemblies()
+            IEnumerable<MethodBase> methods = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.SafeGetTypes())
                 .Where(type => !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
-                .SelectMany(GetMembersWithRouteAttribute)
-                .ToList()
-                .ForEach(method => RouteAttribute.AddToRoutings(Routings, method));
+                .SelectMany(GetMembersWithRouteAttribute);
+
+            foreach (MethodBase method in methods)
+            {
+                RouteAttribute.AddToRoutings(Routings, method);
+            }
         }
 
         /// <summary>

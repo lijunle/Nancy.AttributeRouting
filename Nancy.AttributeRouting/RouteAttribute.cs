@@ -25,8 +25,11 @@
             Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
             MethodBase member)
         {
-            member.GetCustomAttributes<RouteAttribute>().ToList()
-                .ForEach(attr => AddToRoutings(routings, attr, member));
+            IEnumerable<RouteAttribute> attrs = member.GetCustomAttributes<RouteAttribute>();
+            foreach (RouteAttribute attr in attrs)
+            {
+                AddToRoutings(routings, attr, member);
+            }
         }
 
         internal static string GetPath(MethodBase method)
