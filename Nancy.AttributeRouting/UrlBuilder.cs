@@ -281,7 +281,7 @@
                 segmentExtractor.Extract(path)
                     .Select(segment => GetSegmentValue(segment, parameters));
 
-            return string.Join("/", new[] { string.Empty }.Concat(segmentValues));
+            return string.Concat("/", string.Join("/", segmentValues));
         }
 
         private static string GetSegmentValue(string segment, IDictionary<string, string> parameters)
