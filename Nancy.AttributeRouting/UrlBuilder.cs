@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -145,8 +144,7 @@
         /// <returns>The constructed URL string.</returns>
         public string GetUrl<T>(Expression<Func<T>> expression, object parameters)
         {
-            IDictionary<string, string> dictionary = ObjectToDictionary(parameters);
-            return this.GetUrl<T>(expression, dictionary);
+            return this.GetUrl<T>(expression, parameters.ToDictionary());
         }
 
         /// <summary>
@@ -205,8 +203,7 @@
         /// <returns>The constructed URL string.</returns>
         public string GetUrl<T>(Expression<Func<T, object>> expression, object parameters)
         {
-            IDictionary<string, string> dictionary = ObjectToDictionary(parameters);
-            return this.GetUrl<T>(expression, dictionary);
+            return this.GetUrl<T>(expression, parameters.ToDictionary());
         }
 
         /// <summary>
@@ -253,13 +250,6 @@
                     .ToDictionary(tuple => tuple.Item1, tuple => Convert.ToString(tuple.Item2));
 
             return result;
-        }
-
-        private static IDictionary<string, string> ObjectToDictionary(object parameters)
-        {
-            return TypeDescriptor.GetProperties(parameters)
-                .OfType<PropertyDescriptor>()
-                .ToDictionary(p => p.Name, p => Convert.ToString(p.GetValue(parameters)));
         }
 
         #region Inspired From Nancy.Linker https://github.com/horsdal/Nancy.Linker
