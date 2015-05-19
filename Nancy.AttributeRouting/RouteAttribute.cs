@@ -23,10 +23,13 @@
 
         internal static void AddToRoutings(
             Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
-            MethodBase member)
+            MethodBase method)
         {
-            member.GetCustomAttributes<RouteAttribute>().ToList()
-                .ForEach(attr => AddToRoutings(routings, attr, member));
+            IEnumerable<RouteAttribute> attrs = method.GetCustomAttributes<RouteAttribute>();
+            foreach (RouteAttribute attr in attrs)
+            {
+                AddToRoutings(routings, attr, method);
+            }
         }
 
         internal static string GetPath(MethodBase method)
@@ -64,26 +67,26 @@
         private static void AddToRoutings(
             Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
             RouteAttribute attribute,
-            MethodBase member)
+            MethodBase method)
         {
-            HttpMethod method = attribute.method;
-            IEnumerable<string> prefix = RoutePrefixAttribute.GetPrefix(member.DeclaringType);
+            HttpMethod httpMethod = attribute.method;
+            IEnumerable<string> prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
             string path = string.Join("/", prefix.Concat(new string[] { attribute.path }));
 
-            if (routings[method].ContainsKey(path))
+            if (routings[httpMethod].ContainsKey(path))
             {
                 string message = string.Format(
                     "Attribute path {0} registered on two members, {1}.{2} and {3}.{4}.",
                     path,
-                    routings[method][path].DeclaringType.FullName,
-                    routings[method][path].Name,
-                    member.DeclaringType.FullName,
-                    member.Name);
+                    routings[httpMethod][path].DeclaringType.FullName,
+                    routings[httpMethod][path].Name,
+                    method.DeclaringType.FullName,
+                    method.Name);
 
                 throw new Exception(message);
             }
 
-            routings[method].Add(path, member);
+            routings[httpMethod].Add(path, method);
         }
 
         private static string JoinPrefixAndPath(IEnumerable<string> prefix, string path)
@@ -130,7 +133,7 @@
     }
 
     /// <summary>
-    /// The Delete attribute. It indicates that this member hit with HTTP DELETE method.
+    /// The Delete attribute. It indicates that this method hit with HTTP DELETE method.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public sealed class DeleteAttribute : RouteAttribute
@@ -146,7 +149,7 @@
     }
 
     /// <summary>
-    /// The Get attribute. It indicates that this member hit with HTTP GET method.
+    /// The Get attribute. It indicates that this method hit with HTTP GET method.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public sealed class GetAttribute : RouteAttribute
@@ -162,7 +165,7 @@
     }
 
     /// <summary>
-    /// The Options attribute. It indicates that this member hit with HTTP OPTIONS method.
+    /// The Options attribute. It indicates that this method hit with HTTP OPTIONS method.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public sealed class OptionsAttribute : RouteAttribute
@@ -178,7 +181,7 @@
     }
 
     /// <summary>
-    /// The Patch attribute. It indicates that this member hit with HTTP PATCH method.
+    /// The Patch attribute. It indicates that this method hit with HTTP PATCH method.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public sealed class PatchAttribute : RouteAttribute
@@ -194,7 +197,7 @@
     }
 
     /// <summary>
-    /// The Post attribute. It indicates that this member hit with HTTP POST method.
+    /// The Post attribute. It indicates that this method hit with HTTP POST method.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public sealed class PostAttribute : RouteAttribute
@@ -210,7 +213,7 @@
     }
 
     /// <summary>
-    /// The Put attribute. It indicates that this member hit with HTTP PUT method.
+    /// The Put attribute. It indicates that this method hit with HTTP PUT method.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public sealed class PutAttribute : RouteAttribute

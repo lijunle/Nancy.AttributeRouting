@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -145,8 +144,7 @@
         /// <returns>The constructed URL string.</returns>
         public string GetUrl<T>(Expression<Func<T>> expression, object parameters)
         {
-            IDictionary<string, string> dictionary = ObjectToDictionary(parameters);
-            return this.GetUrl<T>(expression, dictionary);
+            return this.GetUrl<T>(expression, parameters.ToDictionary());
         }
 
         /// <summary>
@@ -175,7 +173,7 @@
             IDictionary<string, string> constructorParameters =
                 MethodCallToDictionary(newCall.Constructor, newCall.Arguments);
 
-            return ExtractParametersToPath(this.segmentExtractor, path, Merge(constructorParameters, parameters));
+            return ExtractParametersToPath(this.segmentExtractor, path, parameters.Merge(constructorParameters));
         }
 
         /// <summary>
@@ -205,8 +203,7 @@
         /// <returns>The constructed URL string.</returns>
         public string GetUrl<T>(Expression<Func<T, object>> expression, object parameters)
         {
-            IDictionary<string, string> dictionary = ObjectToDictionary(parameters);
-            return this.GetUrl<T>(expression, dictionary);
+            return this.GetUrl<T>(expression, parameters.ToDictionary());
         }
 
         /// <summary>
@@ -235,7 +232,7 @@
             IDictionary<string, string> methodParameters =
                 MethodCallToDictionary(methodCall.Method, methodCall.Arguments);
 
-            return ExtractParametersToPath(this.segmentExtractor, path, Merge(methodParameters, parameters));
+            return ExtractParametersToPath(this.segmentExtractor, path, parameters.Merge(methodParameters));
         }
 
         private static IDictionary<string, string> MethodCallToDictionary(
@@ -255,21 +252,6 @@
             return result;
         }
 
-        private static IDictionary<string, string> ObjectToDictionary(object parameters)
-        {
-            return TypeDescriptor.GetProperties(parameters)
-                .OfType<PropertyDescriptor>()
-                .ToDictionary(p => p.Name, p => Convert.ToString(p.GetValue(parameters)));
-        }
-
-        private static IDictionary<string, string> Merge(
-            IDictionary<string, string> dict1,
-            IDictionary<string, string> dict2)
-        {
-            dict2.ToList().ForEach(kvp => dict1[kvp.Key] = kvp.Value);
-            return dict1;
-        }
-
         #region Inspired From Nancy.Linker https://github.com/horsdal/Nancy.Linker
 
         private static string ExtractParametersToPath(
@@ -281,7 +263,7 @@
                 segmentExtractor.Extract(path)
                     .Select(segment => GetSegmentValue(segment, parameters));
 
-            return string.Join("/", new[] { string.Empty }.Concat(segmentValues));
+            return string.Concat("/", string.Join("/", segmentValues));
         }
 
         private static string GetSegmentValue(string segment, IDictionary<string, string> parameters)

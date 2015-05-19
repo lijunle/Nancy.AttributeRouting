@@ -11,6 +11,7 @@
         private static readonly Browser Browser = new Browser(new DefaultNancyBootstrapper());
 
         [Theory]
+        [InlineData("/", "Result", "Index")]
         [InlineData("/my-view-model", "Property", "Value")]
         [InlineData("/my-view-model/all", "Property", "all-properties")]
         [InlineData("/my-view-model/my-property", "Property", "my-property")]

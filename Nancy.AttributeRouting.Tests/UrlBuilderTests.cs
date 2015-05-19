@@ -32,6 +32,13 @@
         }
 
         [Fact]
+        public void GetUrl_from_index_should_return_valid_URL()
+        {
+            string url = Url.Builder.GetUrl<MyViewModel>(v => v.Index());
+            Assert.Equal("/", url); // empty string is not a valid URL, should return single slash
+        }
+
+        [Fact]
         public void GetUrl_should_throw_exception_when_method_has_two_attributes()
         {
             Assert.Throws<Exception>(

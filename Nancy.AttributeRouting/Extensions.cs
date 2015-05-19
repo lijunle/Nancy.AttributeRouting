@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
     using Nancy.ModelBinding;
@@ -23,7 +24,14 @@
                 type == typeof(TimeSpan);
         }
 
-        public static Dictionary<T1, T2> Merge<T1, T2>(this Dictionary<T1, T2> origin, Dictionary<T1, T2> dictionary)
+        public static IDictionary<string, string> ToDictionary(this object thisObject)
+        {
+            return TypeDescriptor.GetProperties(thisObject)
+                .OfType<PropertyDescriptor>()
+                .ToDictionary(p => p.Name, p => Convert.ToString(p.GetValue(thisObject)));
+        }
+
+        public static Dictionary<T1, T2> Merge<T1, T2>(this IDictionary<T1, T2> origin, IDictionary<T1, T2> dictionary)
         {
             var result = new Dictionary<T1, T2>(origin);
 
