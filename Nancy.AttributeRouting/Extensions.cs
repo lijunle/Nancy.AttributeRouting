@@ -23,7 +23,7 @@
                 type == typeof(TimeSpan);
         }
 
-        public static Dictionary<T1, T2> Merge<T1, T2>(this Dictionary<T1, T2> origin, Dictionary<T1, T2> dictionary)
+        public static Dictionary<T1, T2> Merge<T1, T2>(this IDictionary<T1, T2> origin, IDictionary<T1, T2> dictionary)
         {
             var result = new Dictionary<T1, T2>(origin);
 

@@ -175,7 +175,7 @@
             IDictionary<string, string> constructorParameters =
                 MethodCallToDictionary(newCall.Constructor, newCall.Arguments);
 
-            return ExtractParametersToPath(this.segmentExtractor, path, Merge(constructorParameters, parameters));
+            return ExtractParametersToPath(this.segmentExtractor, path, parameters.Merge(constructorParameters));
         }
 
         /// <summary>
@@ -235,7 +235,7 @@
             IDictionary<string, string> methodParameters =
                 MethodCallToDictionary(methodCall.Method, methodCall.Arguments);
 
-            return ExtractParametersToPath(this.segmentExtractor, path, Merge(methodParameters, parameters));
+            return ExtractParametersToPath(this.segmentExtractor, path, parameters.Merge(methodParameters));
         }
 
         private static IDictionary<string, string> MethodCallToDictionary(
@@ -260,14 +260,6 @@
             return TypeDescriptor.GetProperties(parameters)
                 .OfType<PropertyDescriptor>()
                 .ToDictionary(p => p.Name, p => Convert.ToString(p.GetValue(parameters)));
-        }
-
-        private static IDictionary<string, string> Merge(
-            IDictionary<string, string> dict1,
-            IDictionary<string, string> dict2)
-        {
-            dict2.ToList().ForEach(kvp => dict1[kvp.Key] = kvp.Value);
-            return dict1;
         }
 
         #region Inspired From Nancy.Linker https://github.com/horsdal/Nancy.Linker
