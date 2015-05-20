@@ -2,58 +2,62 @@
 {
     public class HtmlViewModel
     {
-        [Get("/html")]
-        [View("view")]
-        public HtmlViewModel()
-        {
-        }
-
         public string Message
         {
             get { return "Hello world!"; }
         }
 
+        [Get("/html")]
+        [View("view")]
+        public HtmlViewModel GetView()
+        {
+            return this;
+        }
+
         [ViewPrefix("Inner")]
         public class InnerViewModel
         {
-            [Get("/html/inner")]
-            [View("inner")]
-            public InnerViewModel()
-            {
-            }
-
             public virtual string Message
             {
                 get { return "Get inner message."; }
+            }
+
+            [Get("/html/inner")]
+            [View("inner")]
+            public InnerViewModel GetInnerView()
+            {
+                return this;
             }
         }
 
         [ViewPrefix("Deeper")]
         public class DeeperViewModel : InnerViewModel
         {
-            [Get("/html/deeper")]
-            [View("deeper")]
-            public DeeperViewModel()
-            {
-            }
-
             public override string Message
             {
                 get { return "Get deeper message."; }
+            }
+
+            [Get("/html/deeper")]
+            [View("deeper")]
+            public DeeperViewModel GetDeeperView()
+            {
+                return this;
             }
         }
 
         public class InheritPrefixViewModel : InnerViewModel
         {
-            [Get("/html/inner/inherit")]
-            [View("inherit")]
-            public InheritPrefixViewModel()
-            {
-            }
-
             public override string Message
             {
                 get { return "Inherit prefix message."; }
+            }
+
+            [Get("/html/inner/inherit")]
+            [View("inherit")]
+            public InheritPrefixViewModel GetView()
+            {
+                return this;
             }
         }
     }

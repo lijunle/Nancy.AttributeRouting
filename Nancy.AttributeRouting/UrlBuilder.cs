@@ -16,45 +16,6 @@
     public interface IUrlBuilder
     {
         /// <summary>
-        /// Gets URL from the constructor of <typeparamref name="T"/> class.
-        /// </summary>
-        /// <param name="expression">
-        /// The lambda expression to construct a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
-        string GetUrl<T>(Expression<Func<T>> expression);
-
-        /// <summary>
-        /// Gets URL from the constructor of <typeparamref name="T"/> class.
-        /// </summary>
-        /// <param name="expression">
-        /// The lambda expression to construct a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameter object to provide additional information to construct the URL. The object
-        /// will be converted into dictionary then invoke another overload.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
-        string GetUrl<T>(Expression<Func<T>> expression, object parameters);
-
-        /// <summary>
-        /// Gets URL from the constructor of <typeparamref name="T"/> class.
-        /// </summary>
-        /// <param name="expression">
-        /// The lambda expression to construct a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameter dictionary to provide additional information to construct the URL. The
-        /// dictionary key is the routing template placeholder, the dictionary value is the actual
-        /// value to replace the placeholder.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
-        string GetUrl<T>(Expression<Func<T>> expression, IDictionary<string, string> parameters);
-
-        /// <summary>
         /// Gets URL from the method call of a <typeparamref name="T"/> instance.
         /// </summary>
         /// <param name="expression">
@@ -115,65 +76,6 @@
         public UrlBuilder(IRouteSegmentExtractor segmentExtractor)
         {
             this.segmentExtractor = segmentExtractor;
-        }
-
-        /// <summary>
-        /// Gets URL from the constructor of <typeparamref name="T"/> class.
-        /// </summary>
-        /// <param name="expression">
-        /// The lambda expression to construct a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
-        public string GetUrl<T>(Expression<Func<T>> expression)
-        {
-            return this.GetUrl<T>(expression, new Dictionary<string, string>());
-        }
-
-        /// <summary>
-        /// Gets URL from the constructor of <typeparamref name="T"/> class.
-        /// </summary>
-        /// <param name="expression">
-        /// The lambda expression to construct a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameter object to provide additional information to construct the URL. The object
-        /// will be converted into dictionary then invoke another overload.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
-        public string GetUrl<T>(Expression<Func<T>> expression, object parameters)
-        {
-            return this.GetUrl<T>(expression, parameters.ToDictionary());
-        }
-
-        /// <summary>
-        /// Gets URL from the constructor of <typeparamref name="T"/> class.
-        /// </summary>
-        /// <param name="expression">
-        /// The lambda expression to construct a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameter dictionary to provide additional information to construct the URL. The
-        /// dictionary key is the routing template placeholder, the dictionary value is the actual
-        /// value to replace the placeholder.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
-        public string GetUrl<T>(Expression<Func<T>> expression, IDictionary<string, string> parameters)
-        {
-            var newCall = expression.Body as NewExpression;
-            if (newCall == null)
-            {
-                throw new Exception(ExpressionNotValidMessage);
-            }
-
-            string path = RouteAttribute.GetPath(newCall.Constructor);
-
-            IDictionary<string, string> constructorParameters =
-                MethodCallToDictionary(newCall.Constructor, newCall.Arguments);
-
-            return ExtractParametersToPath(this.segmentExtractor, path, parameters.Merge(constructorParameters));
         }
 
         /// <summary>

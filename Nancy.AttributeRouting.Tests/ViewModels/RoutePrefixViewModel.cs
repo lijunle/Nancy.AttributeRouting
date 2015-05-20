@@ -3,54 +3,75 @@
     [RoutePrefix("/route-prefix")]
     public class RoutePrefixViewModel
     {
-        [Get("/")]
-        public RoutePrefixViewModel()
-        {
-        }
-
         public virtual string Value
         {
             get { return "value"; }
         }
 
+        [Get("/")]
+        public RoutePrefixViewModel Get()
+        {
+            return this;
+        }
+
         [RoutePrefix("/inner")]
         public class InnerPrefixViewModel : RoutePrefixViewModel
         {
-            [Get("/")]
-            public InnerPrefixViewModel()
-            {
-            }
-
             public override string Value
             {
                 get { return "inner value"; }
+            }
+
+            [Get("/")]
+            public InnerPrefixViewModel GetInnerPrefix()
+            {
+                return this;
             }
         }
 
         public class InheritPrefixViewModel : RoutePrefixViewModel
         {
-            [Get("/inherit")]
-            public InheritPrefixViewModel()
-            {
-            }
-
             public override string Value
             {
                 get { return "inherit value"; }
+            }
+
+            [Get("/inherit")]
+            public InheritPrefixViewModel GetInheritPrefix()
+            {
+                return this;
             }
         }
 
         [RoutePrefix("inherit")]
         public class InheritInnerViewModel : InnerPrefixViewModel
         {
-            [Get("/")]
-            public InheritInnerViewModel()
-            {
-            }
-
             public override string Value
             {
                 get { return "inherit inner value"; }
+            }
+
+            [Get("/")]
+            public InheritInnerViewModel GetInheritInner()
+            {
+                return this;
+            }
+        }
+
+        [RoutePrefix("{prefix}")]
+        public class PlaceholderViewModel : RoutePrefixViewModel
+        {
+            private readonly string prefix;
+
+            public PlaceholderViewModel(string prefix)
+            {
+                this.prefix = prefix;
+            }
+
+            [Get("{value}")]
+            public object GetResultWithProperty(string value)
+            {
+                return new { Result = this.prefix + "." + value };
             }
         }
     }

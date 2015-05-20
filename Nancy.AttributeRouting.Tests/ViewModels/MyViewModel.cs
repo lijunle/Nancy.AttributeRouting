@@ -2,24 +2,7 @@
 {
     public class MyViewModel
     {
-        private readonly string property;
-
-        [Get("/my-view-model")]
-        public MyViewModel()
-        {
-        }
-
-        [Get("/my-view-model/{property}")]
-        public MyViewModel(string property)
-        {
-            this.property = property;
-        }
-
-        [Get("/my-view-model/all")]
-        public MyViewModel(bool all = true)
-        {
-            this.property = "all-properties";
-        }
+        private string property;
 
         public string Property
         {
@@ -30,6 +13,26 @@
         public ResultViewModel Index()
         {
             return new ResultViewModel("Index");
+        }
+
+        [Get("/my-view-model")]
+        public MyViewModel GetWithDefaultProperty()
+        {
+            return this;
+        }
+
+        [Get("/my-view-model/{property}")]
+        public MyViewModel GetWithProperty(string property)
+        {
+            this.property = property;
+            return this;
+        }
+
+        [Get("/my-view-model/all")]
+        public MyViewModel GetWithAllProperties(bool all = true)
+        {
+            this.property = "all-properties";
+            return this;
         }
 
         [Get("/my/result")]
@@ -44,12 +47,6 @@
             return new ResultViewModel(value);
         }
 
-        [Get("/my/{property}/result/{value}")]
-        public ResultViewModel GetResultWithProperty(string value)
-        {
-            return new ResultViewModel(this.property + "." + value);
-        }
-
         public string GetWithoutRoutings()
         {
             return string.Empty;
@@ -62,52 +59,17 @@
             return new ResultViewModel("TheSameResultFromTwoRoutings");
         }
 
-        [Delete("/my")]
-        public string Delete()
-        {
-            return "MyDelete";
-        }
-
-        [Get("/my")]
-        public string Get()
-        {
-            return "MyGet";
-        }
-
-        [Options("/my")]
-        public string Options()
-        {
-            return "MyOptions";
-        }
-
-        [Patch("/my")]
-        public string Patch()
-        {
-            return "MyPatch";
-        }
-
-        [Post("/my")]
-        public string Post()
-        {
-            return "MyPost";
-        }
-
-        [Put("/my")]
-        public string Put()
-        {
-            return "MyPut";
-        }
-
         public class NestedViewModel
         {
-            [Get("/nested-view-model")]
-            public NestedViewModel()
-            {
-            }
-
             public string NestedProperty
             {
                 get { return "NestedValue"; }
+            }
+
+            [Get("/nested-view-model")]
+            public NestedViewModel Get()
+            {
+                return this;
             }
 
             [Get("/nested/result")]

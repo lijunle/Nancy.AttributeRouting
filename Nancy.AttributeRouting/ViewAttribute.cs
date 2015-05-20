@@ -15,7 +15,7 @@
     /// View('View/index.html')
     /// </code>
     /// </example>
-    [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class ViewAttribute : Attribute
     {
         private readonly string path;
