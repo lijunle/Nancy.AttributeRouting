@@ -47,12 +47,6 @@
             return new ResultViewModel(value);
         }
 
-        [Get("/my/{property}/result/{value}")]
-        public ResultViewModel GetResultWithProperty(string value)
-        {
-            return new ResultViewModel(this.property + "." + value);
-        }
-
         public string GetWithoutRoutings()
         {
             return string.Empty;

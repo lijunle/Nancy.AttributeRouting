@@ -19,7 +19,6 @@
         [InlineData("/my/result", "Result", "MyResult")]
         [InlineData("/nested/result", "Result", "NestedResult")]
         [InlineData("/my/result/custom-value", "Result", "custom-value")]
-        [InlineData("/my/property/result/custom-value", "Result", "property.custom-value")]
         [InlineData("/nested/result/custom-value", "Result", "nested-custom-value")]
         [InlineData("/my/1", "Result", "TheSameResultFromTwoRoutings")]
         [InlineData("/my/2", "Result", "TheSameResultFromTwoRoutings")]

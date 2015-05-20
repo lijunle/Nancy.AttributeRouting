@@ -86,13 +86,6 @@
         }
 
         [Fact]
-        public void GetUrl_with_extra_route_parameter_should_set_with_object_parameters()
-        {
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.GetResultWithProperty("passed-value"), new { property = "passed-property" });
-            Assert.Equal("/my/passed-property/result/passed-value", url);
-        }
-
-        [Fact]
         public void GetUrl_with_other_HTTP_method_attribute_should_return_URL()
         {
             string url = Url.Builder.GetUrl<HttpMethodViewModel>(v => v.Put());
