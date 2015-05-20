@@ -13,14 +13,14 @@
         [Fact]
         public void GetUrl_from_constructor_should_return_URL()
         {
-            string url = Url.Builder.GetUrl<MyViewModel>(() => new MyViewModel());
+            string url = Url.Builder.GetUrl<MyViewModel>(m => m.GetWithDefaultProperty());
             Assert.Equal("/my-view-model", url);
         }
 
         [Fact]
         public void GetUrl_from_parameter_constructor_should_return_URL()
         {
-            string url = Url.Builder.GetUrl<MyViewModel>(() => new MyViewModel("constructor-value"));
+            string url = Url.Builder.GetUrl<MyViewModel>(m => m.GetWithProperty("constructor-value"));
             Assert.Equal("/my-view-model/constructor-value", url);
         }
 
@@ -147,8 +147,7 @@
         public void GetUrl_should_build_a_full_URL_from_RoutePrefix_0()
         {
             // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel>(
-                () => new RoutePrefixViewModel());
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel>(m => m.Get());
 
             // Assert
             Assert.Equal("/route-prefix", url);
@@ -158,8 +157,7 @@
         public void GetUrl_should_build_a_full_URL_from_RoutePrefix_1()
         {
             // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InnerPrefixViewModel>(
-                () => new RoutePrefixViewModel.InnerPrefixViewModel());
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InnerPrefixViewModel>(m => m.GetInnerPrefix());
 
             // Assert
             Assert.Equal("/route-prefix/inner", url);
@@ -169,8 +167,7 @@
         public void GetUrl_should_build_a_full_URL_from_RoutePrefix_2()
         {
             // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritPrefixViewModel>(
-                () => new RoutePrefixViewModel.InheritPrefixViewModel());
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritPrefixViewModel>(m => m.GetInheritPrefix());
 
             // Assert
             Assert.Equal("/route-prefix/inherit", url);
@@ -180,8 +177,7 @@
         public void GetUrl_should_build_a_full_URL_from_RoutePrefix_3()
         {
             // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritInnerViewModel>(
-                () => new RoutePrefixViewModel.InheritInnerViewModel());
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritInnerViewModel>(m => m.GetInheritInner());
 
             // Assert
             Assert.Equal("/route-prefix/inner/inherit", url);
