@@ -9,7 +9,7 @@
     /// <summary>
     /// The Route attribute indicates the routing path to handle the request.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public abstract class RouteAttribute : Attribute
     {
         private readonly HttpMethod method;

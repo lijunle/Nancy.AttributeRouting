@@ -8,7 +8,7 @@
     /// <summary>
     /// Before attribute provides a hook to execute before enter the view model execution.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Constructor | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public abstract class BeforeAttribute : Attribute
     {
         /// <summary>
