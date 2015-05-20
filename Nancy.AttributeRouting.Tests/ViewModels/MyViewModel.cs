@@ -2,20 +2,17 @@
 {
     public class MyViewModel
     {
-        private readonly string property;
+        private string property;
 
-        //[Get("/my-view-model")]
         public MyViewModel()
         {
         }
 
-        //[Get("/my-view-model/{property}")]
         public MyViewModel(string property)
         {
             this.property = property;
         }
 
-        //[Get("/my-view-model/all")]
         public MyViewModel(bool all = true)
         {
             this.property = "all-properties";
@@ -30,6 +27,26 @@
         public ResultViewModel Index()
         {
             return new ResultViewModel("Index");
+        }
+
+        [Get("/my-view-model")]
+        public MyViewModel GetWithDefaultProperty()
+        {
+            return this;
+        }
+
+        [Get("/my-view-model/{property}")]
+        public MyViewModel GetWithProperty(string property)
+        {
+            this.property = property;
+            return this;
+        }
+
+        [Get("/my-view-model/all")]
+        public MyViewModel GetWithAllProperties(bool all = true)
+        {
+            this.property = "all-properties";
+            return this;
         }
 
         [Get("/my/result")]
@@ -100,7 +117,6 @@
 
         public class NestedViewModel
         {
-            //[Get("/nested-view-model")]
             public NestedViewModel()
             {
             }
@@ -108,6 +124,12 @@
             public string NestedProperty
             {
                 get { return "NestedValue"; }
+            }
+
+            [Get("/nested-view-model")]
+            public NestedViewModel Get()
+            {
+                return this;
             }
 
             [Get("/nested/result")]

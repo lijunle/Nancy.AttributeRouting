@@ -6,7 +6,6 @@
     {
         private readonly IUrlBuilder urlBuilder;
 
-        //[Get("/complex/with-injection")]
         public ComplexViewModel(IUrlBuilder urlBuilder)
         {
             this.urlBuilder = urlBuilder;
@@ -16,8 +15,14 @@
         {
             get
             {
-                return this.urlBuilder.GetUrl<ComplexViewModel>(() => new ComplexViewModel(null));
+                return this.urlBuilder.GetUrl<ComplexViewModel>(m => m.GetWithInjection());
             }
+        }
+
+        [Get("/complex/with-injection")]
+        public ComplexViewModel GetWithInjection()
+        {
+            return this;
         }
 
         [Get("/complex/non-string/{age:int}/{graduated:bool}/{id:guid}/{birth:datetime}")]
