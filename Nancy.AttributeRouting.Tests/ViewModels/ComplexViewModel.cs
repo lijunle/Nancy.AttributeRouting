@@ -26,12 +26,6 @@
             return new { id, birth, age, graduated };
         }
 
-        [Get("/complex/redirect/to/url")]
-        public Response GetByInjectedComponent(IResponseFormatter response)
-        {
-            return response.AsRedirect("/url");
-        }
-
         [Post("/complex/post/form")]
         public string GetByInjectedRequestData(Form form)
         {
