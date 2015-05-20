@@ -38,9 +38,9 @@
         }
 
         [Get("/complex/get/optional/{name?}")]
-        public string GetWithOptionalParameter(string name = "OptionalName")
+        public object GetWithOptionalParameter(string name = "OptionalName")
         {
-            return name;
+            return new { Name = name };
         }
 
         [Get("/complex/special/{str}")]

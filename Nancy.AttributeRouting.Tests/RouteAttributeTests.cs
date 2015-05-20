@@ -21,6 +21,8 @@
         [InlineData("/nested/result/custom-value", "Result", "nested-custom-value")]
         [InlineData("/my/1", "Result", "TheSameResultFromTwoRoutings")]
         [InlineData("/my/2", "Result", "TheSameResultFromTwoRoutings")]
+        [InlineData("/complex/get/optional", "Name", "OptionalName")]
+        [InlineData("/complex/get/optional/override-name", "Name", "override-name")]
         [InlineData("/complex/special/Space%20Here", "Str", "Space Here")]
         [InlineData("/complex/special/%E4%B8%AD%E6%96%87", "Str", "中文")]
         [InlineData("/route-prefix", "Result", "value")]
@@ -116,32 +118,6 @@
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("complex-user=complex-password", response.Body.AsString());
-        }
-
-        [Fact]
-        public void Resolve_should_handle_optional_parameters()
-        {
-            // Act
-            BrowserResponse response = Browser.Get(
-                "/complex/get/optional",
-                with => with.Accept("application/json"));
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("OptionalName", response.Body.AsString());
-        }
-
-        [Fact]
-        public void Resolve_should_override_optional_parameters()
-        {
-            // Act
-            BrowserResponse response = Browser.Get(
-                "/complex/get/optional/override-name",
-                with => with.Accept("application/json"));
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("override-name", response.Body.AsString());
         }
     }
 }
