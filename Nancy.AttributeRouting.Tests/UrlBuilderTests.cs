@@ -176,6 +176,13 @@
             Assert.Equal("/route-prefix/inner/inherit", url);
         }
 
+        [Fact]
+        public void GetUrl_with_extra_route_parameter_should_set_parameters_to_route_prefix()
+        {
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.PlaceholderViewModel>(v => v.GetResultWithProperty("passed-value"), new { prefix = "passed-prefix" });
+            Assert.Equal("/route-prefix/passed-prefix/passed-value", url);
+        }
+
         public class Url : NancyModule
         {
             public Url(IUrlBuilder urlbuilder)

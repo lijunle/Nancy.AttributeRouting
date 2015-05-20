@@ -28,6 +28,7 @@
         [InlineData("/route-prefix/inner", "Value", "inner value")]
         [InlineData("/route-prefix/inherit", "Value", "inherit value")]
         [InlineData("/route-prefix/inner/inherit", "Value", "inherit inner value")]
+        [InlineData("/route-prefix/custom-prefix/custom-value", "Result", "custom-prefix.custom-value")]
         [InlineData("/before/rejected", "Result", "before-rejected")]
         [InlineData("/before/passed", "Result", "before-passed")]
         [InlineData("/before/child/rejected", "Result", "rejected-from-child")]

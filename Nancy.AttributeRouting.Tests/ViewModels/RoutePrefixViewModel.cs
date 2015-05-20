@@ -57,5 +57,22 @@
                 return this;
             }
         }
+
+        [RoutePrefix("{prefix}")]
+        public class PlaceholderViewModel : RoutePrefixViewModel
+        {
+            private readonly string prefix;
+
+            public PlaceholderViewModel(string prefix)
+            {
+                this.prefix = prefix;
+            }
+
+            [Get("{value}")]
+            public object GetResultWithProperty(string value)
+            {
+                return new { Result = this.prefix + "." + value };
+            }
+        }
     }
 }
