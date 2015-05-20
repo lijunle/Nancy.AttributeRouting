@@ -10,9 +10,9 @@
         }
 
         [Get("/")]
-        public ResultViewModel Index()
+        public object Index()
         {
-            return new ResultViewModel("Index");
+            return new { Result = "Index" };
         }
 
         [Get("/my-view-model")]
@@ -29,15 +29,15 @@
         }
 
         [Get("/my/result")]
-        public ResultViewModel GetResult()
+        public object GetResult()
         {
-            return new ResultViewModel("MyResult");
+            return new { Result = "MyResult" };
         }
 
         [Get("/my/result/{value}")]
-        public ResultViewModel GetResult(string value)
+        public object GetResult(string value)
         {
-            return new ResultViewModel(value);
+            return new { Result = value };
         }
 
         public string GetWithoutRoutings()
@@ -47,9 +47,9 @@
 
         [Get("/my/1")]
         [Get("/my/2")]
-        public ResultViewModel GetByTwoRoutings()
+        public object GetByTwoRoutings()
         {
-            return new ResultViewModel("TheSameResultFromTwoRoutings");
+            return new { Result = "TheSameResultFromTwoRoutings" };
         }
 
         public class NestedViewModel
@@ -66,26 +66,16 @@
             }
 
             [Get("/nested/result")]
-            public ResultViewModel GetResult()
+            public object GetResult()
             {
-                return new ResultViewModel("NestedResult");
+                return new { Result = "NestedResult" };
             }
 
             [Get("/nested/result/{value}")]
-            public ResultViewModel GetResult(string value)
+            public object GetResult(string value)
             {
-                return new ResultViewModel("nested-" + value);
+                return new { Result = "nested-" + value };
             }
-        }
-
-        public class ResultViewModel
-        {
-            public ResultViewModel(string result)
-            {
-                this.Result = result;
-            }
-
-            public string Result { get; private set; }
         }
     }
 }
