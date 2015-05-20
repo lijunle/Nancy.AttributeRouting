@@ -9,9 +9,6 @@
 
     internal static class Extensions
     {
-        private static readonly Dictionary<Type, PropertyInfo> NancyModulePropertiesLookup =
-            ConstructNancyModulePropertiesLookup();
-
         private static readonly MethodInfo BindMethod =
             typeof(ModuleExtensions).GetMethod("Bind", new Type[] { typeof(INancyModule) });
 
@@ -49,37 +46,10 @@
             return result;
         }
 
-        public static bool HasProperty(this NancyModule module, Type type)
-        {
-            bool result = NancyModulePropertiesLookup.ContainsKey(type);
-            return result;
-        }
-
-        public static object GetProperty(this NancyModule module, Type type)
-        {
-            PropertyInfo propertyInfo = NancyModulePropertiesLookup[type];
-            object property = propertyInfo.GetValue(module);
-            return property;
-        }
-
         public static object Bind(this NancyModule module, Type type)
         {
             MethodInfo bindMethod = BindMethod.MakeGenericMethod(type);
             return bindMethod.Invoke(null, new[] { module });
-        }
-
-        private static Dictionary<Type, PropertyInfo> ConstructNancyModulePropertiesLookup()
-        {
-            IEnumerable<PropertyInfo> properties = typeof(NancyModule).GetProperties().Where(p => p.CanRead);
-
-            // avoid using LINQ here due to duplicated keys
-            var lookup = new Dictionary<Type, PropertyInfo>();
-            foreach (PropertyInfo propertyInfo in properties)
-            {
-                lookup[propertyInfo.PropertyType] = propertyInfo;
-            }
-
-            return lookup;
         }
     }
 }

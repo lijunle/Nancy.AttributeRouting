@@ -100,17 +100,6 @@
         }
 
         [Fact]
-        public void Resolver_should_inject_component_to_method()
-        {
-            // Act
-            BrowserResponse response = Browser.Get("/complex/redirect/to/url");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.SeeOther, response.StatusCode);
-            Assert.Equal("/url", response.Headers["Location"]);
-        }
-
-        [Fact]
         public void Resolver_should_inject_request_data_to_method()
         {
             // Arrange

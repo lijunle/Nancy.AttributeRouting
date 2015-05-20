@@ -158,19 +158,14 @@
                 // 1. resolve using Nancy route parameters
                 return queryParameters[paramName];
             }
-            else if (!paramType.IsPrimitive() && module.HasProperty(paramType))
-            {
-                // 2. resolve using NancyModule property value
-                return module.GetProperty(paramType);
-            }
             else if (!paramType.IsPrimitive())
             {
-                // 3. resolve using model binding from request data
+                // 2. resolve using model binding from request data
                 return module.Bind(paramType);
             }
             else
             {
-                // 4. failing to missing type
+                // 3. failing to missing type
                 return Type.Missing;
             }
         }
