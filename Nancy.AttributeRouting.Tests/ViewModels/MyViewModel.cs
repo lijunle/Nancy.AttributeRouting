@@ -4,20 +4,6 @@
     {
         private string property;
 
-        public MyViewModel()
-        {
-        }
-
-        public MyViewModel(string property)
-        {
-            this.property = property;
-        }
-
-        public MyViewModel(bool all = true)
-        {
-            this.property = "all-properties";
-        }
-
         public string Property
         {
             get { return this.property ?? "Value"; }
@@ -117,10 +103,6 @@
 
         public class NestedViewModel
         {
-            public NestedViewModel()
-            {
-            }
-
             public string NestedProperty
             {
                 get { return "NestedValue"; }

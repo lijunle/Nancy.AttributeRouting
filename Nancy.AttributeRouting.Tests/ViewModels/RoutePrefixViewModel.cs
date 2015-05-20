@@ -3,10 +3,6 @@
     [RoutePrefix("/route-prefix")]
     public class RoutePrefixViewModel
     {
-        public RoutePrefixViewModel()
-        {
-        }
-
         public virtual string Value
         {
             get { return "value"; }
@@ -21,10 +17,6 @@
         [RoutePrefix("/inner")]
         public class InnerPrefixViewModel : RoutePrefixViewModel
         {
-            public InnerPrefixViewModel()
-            {
-            }
-
             public override string Value
             {
                 get { return "inner value"; }
@@ -39,10 +31,6 @@
 
         public class InheritPrefixViewModel : RoutePrefixViewModel
         {
-            public InheritPrefixViewModel()
-            {
-            }
-
             public override string Value
             {
                 get { return "inherit value"; }
@@ -58,10 +46,6 @@
         [RoutePrefix("inherit")]
         public class InheritInnerViewModel : InnerPrefixViewModel
         {
-            public InheritInnerViewModel()
-            {
-            }
-
             public override string Value
             {
                 get { return "inherit inner value"; }
