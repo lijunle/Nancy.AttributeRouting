@@ -4,18 +4,18 @@
     {
         private readonly string property;
 
-        [Get("/my-view-model")]
+        //[Get("/my-view-model")]
         public MyViewModel()
         {
         }
 
-        [Get("/my-view-model/{property}")]
+        //[Get("/my-view-model/{property}")]
         public MyViewModel(string property)
         {
             this.property = property;
         }
 
-        [Get("/my-view-model/all")]
+        //[Get("/my-view-model/all")]
         public MyViewModel(bool all = true)
         {
             this.property = "all-properties";
@@ -100,7 +100,7 @@
 
         public class NestedViewModel
         {
-            [Get("/nested-view-model")]
+            //[Get("/nested-view-model")]
             public NestedViewModel()
             {
             }

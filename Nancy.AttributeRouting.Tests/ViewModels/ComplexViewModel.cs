@@ -6,7 +6,7 @@
     {
         private readonly IUrlBuilder urlBuilder;
 
-        [Get("/complex/with-injection")]
+        //[Get("/complex/with-injection")]
         public ComplexViewModel(IUrlBuilder urlBuilder)
         {
             this.urlBuilder = urlBuilder;

@@ -3,7 +3,7 @@
     [RoutePrefix("/route-prefix")]
     public class RoutePrefixViewModel
     {
-        [Get("/")]
+        //[Get("/")]
         public RoutePrefixViewModel()
         {
         }
@@ -16,7 +16,7 @@
         [RoutePrefix("/inner")]
         public class InnerPrefixViewModel : RoutePrefixViewModel
         {
-            [Get("/")]
+            //[Get("/")]
             public InnerPrefixViewModel()
             {
             }
@@ -29,7 +29,7 @@
 
         public class InheritPrefixViewModel : RoutePrefixViewModel
         {
-            [Get("/inherit")]
+            //[Get("/inherit")]
             public InheritPrefixViewModel()
             {
             }
@@ -43,7 +43,7 @@
         [RoutePrefix("inherit")]
         public class InheritInnerViewModel : InnerPrefixViewModel
         {
-            [Get("/")]
+            //[Get("/")]
             public InheritInnerViewModel()
             {
             }

@@ -2,8 +2,8 @@
 {
     public class HtmlViewModel
     {
-        [Get("/html")]
-        [View("view")]
+        //[Get("/html")]
+        //[View("view")]
         public HtmlViewModel()
         {
         }
@@ -16,8 +16,8 @@
         [ViewPrefix("Inner")]
         public class InnerViewModel
         {
-            [Get("/html/inner")]
-            [View("inner")]
+            //[Get("/html/inner")]
+            //[View("inner")]
             public InnerViewModel()
             {
             }
@@ -31,8 +31,8 @@
         [ViewPrefix("Deeper")]
         public class DeeperViewModel : InnerViewModel
         {
-            [Get("/html/deeper")]
-            [View("deeper")]
+            //[Get("/html/deeper")]
+            //[View("deeper")]
             public DeeperViewModel()
             {
             }
@@ -45,8 +45,8 @@
 
         public class InheritPrefixViewModel : InnerViewModel
         {
-            [Get("/html/inner/inherit")]
-            [View("inherit")]
+            //[Get("/html/inner/inherit")]
+            //[View("inherit")]
             public InheritPrefixViewModel()
             {
             }
