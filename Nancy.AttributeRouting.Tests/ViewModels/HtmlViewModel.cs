@@ -2,62 +2,42 @@
 {
     public class HtmlViewModel
     {
-        public string Message
-        {
-            get { return "Hello world!"; }
-        }
-
         [Get("/html")]
         [View("view")]
-        public HtmlViewModel GetView()
+        public object GetView()
         {
-            return this;
+            return new { Message = "Hello world!" };
         }
 
         [ViewPrefix("Inner")]
         public class InnerViewModel
         {
-            public virtual string Message
-            {
-                get { return "Get inner message."; }
-            }
-
             [Get("/html/inner")]
             [View("inner")]
-            public InnerViewModel GetInnerView()
+            public object GetInnerView()
             {
-                return this;
+                return new { Message = "Get inner message." };
             }
         }
 
         [ViewPrefix("Deeper")]
         public class DeeperViewModel : InnerViewModel
         {
-            public override string Message
-            {
-                get { return "Get deeper message."; }
-            }
-
             [Get("/html/deeper")]
             [View("deeper")]
-            public DeeperViewModel GetDeeperView()
+            public object GetDeeperView()
             {
-                return this;
+                return new { Message = "Get deeper message." };
             }
         }
 
         public class InheritPrefixViewModel : InnerViewModel
         {
-            public override string Message
-            {
-                get { return "Inherit prefix message."; }
-            }
-
             [Get("/html/inner/inherit")]
             [View("inherit")]
-            public InheritPrefixViewModel GetView()
+            public object GetView()
             {
-                return this;
+                return new { Message = "Inherit prefix message." };
             }
         }
     }

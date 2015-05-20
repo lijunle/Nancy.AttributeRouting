@@ -3,58 +3,38 @@
     [RoutePrefix("/route-prefix")]
     public class RoutePrefixViewModel
     {
-        public virtual string Value
-        {
-            get { return "value"; }
-        }
-
         [Get("/")]
-        public RoutePrefixViewModel Get()
+        public object Get()
         {
-            return this;
+            return new { Result = "value" };
         }
 
         [RoutePrefix("/inner")]
         public class InnerPrefixViewModel : RoutePrefixViewModel
         {
-            public override string Value
-            {
-                get { return "inner value"; }
-            }
-
             [Get("/")]
-            public InnerPrefixViewModel GetInnerPrefix()
+            public object GetInnerPrefix()
             {
-                return this;
+                return new { Result = "inner value" };
             }
         }
 
         public class InheritPrefixViewModel : RoutePrefixViewModel
         {
-            public override string Value
-            {
-                get { return "inherit value"; }
-            }
-
             [Get("/inherit")]
-            public InheritPrefixViewModel GetInheritPrefix()
+            public object GetInheritPrefix()
             {
-                return this;
+                return new { Result = "inherit value" };
             }
         }
 
         [RoutePrefix("inherit")]
         public class InheritInnerViewModel : InnerPrefixViewModel
         {
-            public override string Value
-            {
-                get { return "inherit inner value"; }
-            }
-
             [Get("/")]
-            public InheritInnerViewModel GetInheritInner()
+            public object GetInheritInner()
             {
-                return this;
+                return new { Result = "inherit inner value" };
             }
         }
 

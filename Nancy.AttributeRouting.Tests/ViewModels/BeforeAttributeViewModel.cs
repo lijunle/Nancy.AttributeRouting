@@ -7,7 +7,7 @@
     public class BeforeAttributeViewModel
     {
         [Get("rejected")]
-        [Rejected]
+        [Rejected("before-rejected")]
         public virtual object Reject()
         {
             return new { Result = "should-not-be-here" };
@@ -60,11 +60,6 @@
         private class RejectedAttribute : BeforeAttribute
         {
             private readonly string message;
-
-            public RejectedAttribute()
-                : this("before-rejected")
-            {
-            }
 
             public RejectedAttribute(string message)
             {
