@@ -27,7 +27,7 @@
         [Fact]
         public void GetUrl_from_method_should_return_URL()
         {
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.Get());
+            string url = Url.Builder.GetUrl<HttpMethodViewModel>(v => v.Get());
             Assert.Equal("/my", url);
         }
 
@@ -95,7 +95,7 @@
         [Fact]
         public void GetUrl_with_other_HTTP_method_attribute_should_return_URL()
         {
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.Put());
+            string url = Url.Builder.GetUrl<HttpMethodViewModel>(v => v.Put());
             Assert.Equal("/my", url);
         }
 
