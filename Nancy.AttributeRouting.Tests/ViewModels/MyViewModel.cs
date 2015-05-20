@@ -28,13 +28,6 @@
             return this;
         }
 
-        [Get("/my-view-model/all")]
-        public MyViewModel GetWithAllProperties(bool all = true)
-        {
-            this.property = "all-properties";
-            return this;
-        }
-
         [Get("/my/result")]
         public ResultViewModel GetResult()
         {
