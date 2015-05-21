@@ -51,7 +51,7 @@
 
         private static void Resolve(
             TinyIoCContainer container,
-            NancyModule module,
+            INancyModule module,
             RouteBuilder builder,
             HttpMethod httpMethod)
         {
@@ -68,32 +68,24 @@
                         return beforeResponse;
                     }
 
-                    Dictionary<string, object> parameters = dynamicParameters.ToDictionary();
-                    object instance = ConstructInstance(container, method, parameters);
-                    object result = MethodInvoke(instance, method, parameters, module);
+                    // dynamicParameter is an instance of Nancy.DynamicDictionary
+                    IDictionary<string, object> parameters = dynamicParameters.ToDictionary();
 
-                    string viewPath = ViewAttribute.GetPath(method);
-                    if (!string.IsNullOrEmpty(viewPath))
-                    {
-                        return module.Negotiate.WithModel(result).WithView(viewPath);
-                    }
+                    object result = ConstructResult(container, method, module, parameters);
+                    object response = ConstructResponse(method, module, result);
 
-                    return result;
+                    return response;
                 };
             }
         }
 
         private static IEnumerable<MethodBase> GetMembersWithRouteAttribute(Type type)
         {
-            IEnumerable<MethodBase> ctors = type
-                .GetConstructors(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                .Where(HasRouteAttribute);
-
             IEnumerable<MethodBase> methods = type
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(HasRouteAttribute);
 
-            return ctors.Concat(methods);
+            return methods;
         }
 
         private static bool HasRouteAttribute(MethodBase method)
@@ -101,54 +93,40 @@
             return method.GetCustomAttributes<RouteAttribute>().Any();
         }
 
-        private static object ConstructInstance(TinyIoCContainer container, MethodBase method, Dictionary<string, object> parameters)
+        private static object ConstructResponse(
+            MethodBase method,
+            INancyModule module,
+            object result)
         {
-            var ctor = method as ConstructorInfo;
-            if (ctor != null)
+            string viewPath = ViewAttribute.GetPath(method);
+            if (!string.IsNullOrEmpty(viewPath))
             {
-                Dictionary<string, object> defaultParameters =
-                    ctor.GetParameters().Where(p => p.HasDefaultValue).ToDictionary(p => p.Name, p => p.DefaultValue);
-
-                parameters = parameters.Merge(defaultParameters);
+                return module.Negotiate.WithModel(result).WithView(viewPath);
             }
 
-            return container.Resolve(method.DeclaringType, new NamedParameterOverloads(parameters));
+            return result;
         }
 
-        private static object MethodInvoke(
-            object instance,
+        private static object ConstructResult(
+            TinyIoCContainer container,
             MethodBase method,
-            Dictionary<string, object> queryParameters,
-            NancyModule module)
+            INancyModule module,
+            IDictionary<string, object> parameters)
         {
-            if (method is ConstructorInfo)
-            {
-                // the associated method is a constructor, no need to invoke it.
-                return instance;
-            }
+            object instance = container.Resolve(method.DeclaringType, new NamedParameterOverloads(parameters));
 
-            IEnumerable<object> parameters =
-                ResolveMethodParameters(method, queryParameters, module);
+            IEnumerable<object> parameterValues =
+                method.GetParameters().Select(
+                    parameterInfo => ResolveMethodParameter(parameterInfo, parameters, module));
 
-            return method.Invoke(instance, parameters.ToArray());
-        }
-
-        private static IEnumerable<object> ResolveMethodParameters(
-            MethodBase method,
-            Dictionary<string, object> queryParameters,
-            NancyModule module)
-        {
-            IEnumerable<object> parameters =
-                method.GetParameters()
-                    .Select(parameterInfo => ResolveMethodParameter(parameterInfo, queryParameters, module));
-
-            return parameters;
+            object result = method.Invoke(instance, parameterValues.ToArray());
+            return result;
         }
 
         private static object ResolveMethodParameter(
             ParameterInfo parameterInfo,
-            Dictionary<string, object> queryParameters,
-            NancyModule module)
+            IDictionary<string, object> queryParameters,
+            INancyModule module)
         {
             Type paramType = parameterInfo.ParameterType;
             string paramName = parameterInfo.Name;
