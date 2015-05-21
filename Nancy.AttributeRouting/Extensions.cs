@@ -28,7 +28,7 @@
                 .ToDictionary(p => p.Name, p => Convert.ToString(p.GetValue(thisObject)));
         }
 
-        public static Dictionary<T1, T2> Merge<T1, T2>(this IDictionary<T1, T2> origin, IDictionary<T1, T2> dictionary)
+        public static IDictionary<T1, T2> Merge<T1, T2>(this IDictionary<T1, T2> origin, IDictionary<T1, T2> dictionary)
         {
             var result = new Dictionary<T1, T2>(origin);
 
@@ -46,7 +46,7 @@
             return result;
         }
 
-        public static object Bind(this NancyModule module, Type type)
+        public static object Bind(this INancyModule module, Type type)
         {
             MethodInfo bindMethod = BindMethod.MakeGenericMethod(type);
             return bindMethod.Invoke(null, new[] { module });
