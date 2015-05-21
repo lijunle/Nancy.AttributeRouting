@@ -60,14 +60,17 @@
                 string path = routing.Key;
                 MethodBase method = routing.Value;
 
+                module.Before += (context) =>
+                {
+                    Response response = path == context.ResolvedRoute.Description.Path
+                        ? BeforeAttribute.GetResponse(method, container, context)
+                        : null;
+
+                    return response;
+                };
+
                 builder[path] = dynamicParameters =>
                 {
-                    Response beforeResponse = BeforeAttribute.GetResponse(method, container, module.Context);
-                    if (beforeResponse != null)
-                    {
-                        return beforeResponse;
-                    }
-
                     // dynamicParameter is an instance of Nancy.DynamicDictionary
                     IDictionary<string, object> parameters = dynamicParameters.ToDictionary();
 
