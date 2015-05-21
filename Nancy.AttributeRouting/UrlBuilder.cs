@@ -62,8 +62,7 @@
     public class UrlBuilder : IUrlBuilder
     {
         private static readonly string ExpressionNotValidMessage =
-            "GetUrl expression body must be a method call (e.g., `UrlBuilder.GetUrl<Model>(model => model.Get())`)," +
-            " or new constructor call (e.g., `UrlBuilder.GetUrl<Model>(() => new Model())`).";
+            "GetUrl expression body must be a method call (e.g., `UrlBuilder.GetUrl<SomeViewModel>(m => m.Get())`).";
 
         private readonly IRouteSegmentExtractor segmentExtractor;
 
