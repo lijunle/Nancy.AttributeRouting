@@ -119,5 +119,21 @@
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("complex-user=complex-password", response.Body.AsString());
         }
+
+        [Theory]
+        [InlineData("GET", "rejected-get-same-name")]
+        [InlineData("POST", "rejected-post-same-name")]
+        public void Before_hook_should_handle_same_routing_path(string httpMethod, string expectedValue)
+        {
+            // Act
+            BrowserResponse response = Browser.HandleRequest(
+                httpMethod, "/before/same-name", with => with.Accept("application/json"));
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = (IDictionary<string, object>)response.Body.DeserializeJson<object>();
+            Assert.Equal(expectedValue, body["Result"]);
+        }
     }
 }
