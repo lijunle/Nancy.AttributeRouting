@@ -62,7 +62,7 @@
 
                 module.Before += (context) =>
                 {
-                    Response response = path == context.ResolvedRoute.Description.Path
+                    Response response = context.ResolvedRoute.IsSameAs(httpMethod, path)
                         ? BeforeAttribute.GetResponse(method, container, context)
                         : null;
 

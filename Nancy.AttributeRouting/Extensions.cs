@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Reflection;
     using Nancy.ModelBinding;
+    using Nancy.Routing;
 
     internal static class Extensions
     {
@@ -50,6 +51,12 @@
         {
             MethodInfo bindMethod = BindMethod.MakeGenericMethod(type);
             return bindMethod.Invoke(null, new[] { module });
+        }
+
+        public static bool IsSameAs(this Route route, HttpMethod httpMethod, string path)
+        {
+            return string.Equals(route.Description.Method, httpMethod.ToString(), StringComparison.OrdinalIgnoreCase)
+                && route.Description.Path == path;
         }
     }
 }

@@ -20,6 +20,20 @@
             return new { Result = "before-passed" };
         }
 
+        [Get("same-name")]
+        [Rejected("rejected-get-same-name")]
+        public object GetSameName()
+        {
+            return new { Result = "should-not-be-here" };
+        }
+
+        [Post("same-name")]
+        [Rejected("rejected-post-same-name")]
+        public object PostSameName()
+        {
+            return new { Result = "should-not-be-here" };
+        }
+
         public class PassedChildViewModel : BeforeAttributeViewModel
         {
             [Get("child/passed")]
