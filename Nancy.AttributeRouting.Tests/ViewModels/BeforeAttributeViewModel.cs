@@ -6,6 +6,13 @@
     [RoutePrefix("before")]
     public class BeforeAttributeViewModel
     {
+        [Get("/")]
+        [Rejected("reject-root-path")]
+        public object RejectRootPath()
+        {
+            return new { Result = "should-not-be-here" };
+        }
+
         [Get("rejected")]
         [Rejected("before-rejected")]
         public virtual object Reject()
