@@ -58,18 +58,19 @@
             foreach (KeyValuePair<string, MethodBase> routing in Routings[httpMethod])
             {
                 string path = routing.Key;
+                string name = string.Format("{0} {1}", httpMethod, path);
                 MethodBase method = routing.Value;
 
                 module.Before += (context) =>
                 {
-                    Response response = context.ResolvedRoute.IsSameAs(httpMethod, path)
+                    Response response = context.ResolvedRoute.Description.Name == name
                         ? BeforeAttribute.GetResponse(method, container, context)
                         : null;
 
                     return response;
                 };
 
-                builder[path] = dynamicParameters =>
+                builder[name, path] = dynamicParameters =>
                 {
                     // dynamicParameter is an instance of Nancy.DynamicDictionary
                     IDictionary<string, object> parameters = dynamicParameters.ToDictionary();
