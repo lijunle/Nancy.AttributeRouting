@@ -147,36 +147,6 @@
         }
 
         [Fact]
-        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_1()
-        {
-            // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InnerPrefixViewModel>(m => m.GetInnerPrefix());
-
-            // Assert
-            Assert.Equal("/route-prefix/inner", url);
-        }
-
-        [Fact]
-        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_2()
-        {
-            // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritPrefixViewModel>(m => m.GetInheritPrefix());
-
-            // Assert
-            Assert.Equal("/route-prefix/inherit", url);
-        }
-
-        [Fact]
-        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_3()
-        {
-            // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritInnerViewModel>(m => m.GetInheritInner());
-
-            // Assert
-            Assert.Equal("/route-prefix/inner/inherit", url);
-        }
-
-        [Fact]
         public void GetUrl_with_extra_route_parameter_should_set_parameters_to_route_prefix()
         {
             string url = Url.Builder.GetUrl<RoutePrefixViewModel.PlaceholderViewModel>(v => v.GetResultWithProperty("passed-value"), new { prefix = "passed-prefix" });

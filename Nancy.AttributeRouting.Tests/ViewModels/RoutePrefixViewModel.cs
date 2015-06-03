@@ -9,38 +9,8 @@
             return new { Result = "value" };
         }
 
-        [RoutePrefix(typeof(RoutePrefixViewModel), "/inner")]
-        public class InnerPrefixViewModel : RoutePrefixViewModel
-        {
-            [Get("/")]
-            public object GetInnerPrefix()
-            {
-                return new { Result = "inner value" };
-            }
-        }
-
-        [RoutePrefix(typeof(RoutePrefixViewModel), "")]
-        public class InheritPrefixViewModel : RoutePrefixViewModel
-        {
-            [Get("/inherit")]
-            public object GetInheritPrefix()
-            {
-                return new { Result = "inherit value" };
-            }
-        }
-
-        [RoutePrefix(typeof(InnerPrefixViewModel), "inherit")]
-        public class InheritInnerViewModel : InnerPrefixViewModel
-        {
-            [Get("/")]
-            public object GetInheritInner()
-            {
-                return new { Result = "inherit inner value" };
-            }
-        }
-
         [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
-        public class PlaceholderViewModel : RoutePrefixViewModel
+        public class PlaceholderViewModel
         {
             private readonly string prefix;
 
