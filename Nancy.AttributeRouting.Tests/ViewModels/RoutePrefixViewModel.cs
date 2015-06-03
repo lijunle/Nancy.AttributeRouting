@@ -9,7 +9,7 @@
             return new { Result = "value" };
         }
 
-        [RoutePrefix("/inner")]
+        [RoutePrefix(typeof(RoutePrefixViewModel), "/inner")]
         public class InnerPrefixViewModel : RoutePrefixViewModel
         {
             [Get("/")]
@@ -19,6 +19,7 @@
             }
         }
 
+        [RoutePrefix(typeof(RoutePrefixViewModel), "")]
         public class InheritPrefixViewModel : RoutePrefixViewModel
         {
             [Get("/inherit")]
@@ -28,7 +29,7 @@
             }
         }
 
-        [RoutePrefix("inherit")]
+        [RoutePrefix(typeof(InnerPrefixViewModel), "inherit")]
         public class InheritInnerViewModel : InnerPrefixViewModel
         {
             [Get("/")]
@@ -38,7 +39,7 @@
             }
         }
 
-        [RoutePrefix("{prefix}")]
+        [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
         public class PlaceholderViewModel : RoutePrefixViewModel
         {
             private readonly string prefix;

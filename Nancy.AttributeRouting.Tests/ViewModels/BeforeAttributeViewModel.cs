@@ -41,6 +41,7 @@
             return new { Result = "should-not-be-here" };
         }
 
+        [RoutePrefix(typeof(BeforeAttributeViewModel), "")]
         public class PassedChildViewModel : BeforeAttributeViewModel
         {
             [Get("child/passed")]
@@ -52,6 +53,7 @@
             }
         }
 
+        [RoutePrefix(typeof(BeforeAttributeViewModel), "")]
         [Rejected("rejected-from-child")]
         public class RejectedChildViewModel : BeforeAttributeViewModel
         {
@@ -63,11 +65,13 @@
             }
         }
 
+        [RoutePrefix(typeof(BeforeAttributeViewModel), "")]
         [Rejected("rejected-from-nearest")]
         public class NearestChildViewModel : RejectedChildViewModel
         {
         }
 
+        [RoutePrefix(typeof(BeforeAttributeViewModel), "")]
         public class LeafChildViewModel : NearestChildViewModel
         {
             [Get("child/nearest")]
