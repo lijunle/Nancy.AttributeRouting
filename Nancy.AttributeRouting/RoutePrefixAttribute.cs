@@ -17,15 +17,27 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="RoutePrefixAttribute"/> class.
         /// </summary>
-        /// <param name="prefix">The string to prefix to the route attribute path.</param>
+        /// <param name="prefix">The prefix string for the route attribute path.</param>
         public RoutePrefixAttribute(string prefix)
+            : this(null, prefix)
         {
-            this.prefix = prefix.Trim('/');
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RoutePrefixAttribute"/> class.
+        /// </summary>
+        /// <param name="prefixType">The prefix of this type leveraged as prefix of prefix.</param>
+        /// <param name="prefix">The prefix string for the route attribute path.</param>
+        public RoutePrefixAttribute(Type prefixType, string prefix)
+        {
+            IEnumerable<string> typePrefix = GetPrefix(prefixType);
+            IEnumerable<string> prefixes = typePrefix.Concat(new string[] { prefix.Trim('/') });
+            this.prefix = string.Join("/", prefixes);
         }
 
         internal static IEnumerable<string> GetPrefix(Type type)
         {
-            if (type == typeof(object))
+            if (type == null || type == typeof(object))
             {
                 return new string[] { string.Empty };
             }
