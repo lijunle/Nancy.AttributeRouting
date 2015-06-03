@@ -58,8 +58,8 @@
                 throw new Exception(message);
             }
 
-            IEnumerable<string> prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = string.Join("/", prefix.Concat(new string[] { attr.path }));
+            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = string.Format("/{0}/{1}", prefix, attr.path);
 
             return path;
         }
@@ -70,8 +70,8 @@
             MethodBase method)
         {
             HttpMethod httpMethod = attribute.method;
-            IEnumerable<string> prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = string.Join("/", prefix.Concat(new string[] { attribute.path }));
+            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = string.Format("/{0}/{1}", prefix, attribute.path);
 
             if (routings[httpMethod].ContainsKey(path))
             {
