@@ -9,37 +9,47 @@
             return new { Result = "value" };
         }
 
-        [RoutePrefix("/inner")]
-        public class InnerPrefixViewModel : RoutePrefixViewModel
+        [RoutePrefix(typeof(RoutePrefixViewModel), "")]
+        public class TypePrefixViewModel
+        {
+            [Get("/type-prefix")]
+            public object GetTypePrefix()
+            {
+                return new { Result = "from-type-prefix" };
+            }
+        }
+
+        [RoutePrefix(typeof(RoutePrefixViewModel), "child-prefix")]
+        public class ChildPrefixViewModel
         {
             [Get("/")]
-            public object GetInnerPrefix()
+            public object GetChildPrefix()
             {
-                return new { Result = "inner value" };
+                return new { Result = "from-child-prefix" };
             }
         }
 
-        public class InheritPrefixViewModel : RoutePrefixViewModel
-        {
-            [Get("/inherit")]
-            public object GetInheritPrefix()
-            {
-                return new { Result = "inherit value" };
-            }
-        }
-
-        [RoutePrefix("inherit")]
-        public class InheritInnerViewModel : InnerPrefixViewModel
+        [RoutePrefix(typeof(ChildPrefixViewModel), "grandchild")]
+        public class GrandchildViewModel
         {
             [Get("/")]
-            public object GetInheritInner()
+            public object GetGrandchild()
             {
-                return new { Result = "inherit inner value" };
+                return new { Result = "from-grandchild" };
             }
         }
 
-        [RoutePrefix("{prefix}")]
-        public class PlaceholderViewModel : RoutePrefixViewModel
+        public class InheritViewModel : RoutePrefixViewModel
+        {
+            [Get("/route-prefix/inherit")]
+            public object GetInherit()
+            {
+                return new { Result = "inherit-not-affect-routing" };
+            }
+        }
+
+        [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
+        public class PlaceholderViewModel
         {
             private readonly string prefix;
 

@@ -150,30 +150,40 @@
         public void GetUrl_should_build_a_full_URL_from_RoutePrefix_1()
         {
             // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InnerPrefixViewModel>(m => m.GetInnerPrefix());
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.TypePrefixViewModel>(m => m.GetTypePrefix());
 
             // Assert
-            Assert.Equal("/route-prefix/inner", url);
+            Assert.Equal("/route-prefix/type-prefix", url);
         }
 
         [Fact]
         public void GetUrl_should_build_a_full_URL_from_RoutePrefix_2()
         {
             // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritPrefixViewModel>(m => m.GetInheritPrefix());
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.ChildPrefixViewModel>(m => m.GetChildPrefix());
 
             // Assert
-            Assert.Equal("/route-prefix/inherit", url);
+            Assert.Equal("/route-prefix/child-prefix", url);
         }
 
         [Fact]
         public void GetUrl_should_build_a_full_URL_from_RoutePrefix_3()
         {
             // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritInnerViewModel>(m => m.GetInheritInner());
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.GrandchildViewModel>(m => m.GetGrandchild());
 
             // Assert
-            Assert.Equal("/route-prefix/inner/inherit", url);
+            Assert.Equal("/route-prefix/child-prefix/grandchild", url);
+        }
+
+        [Fact]
+        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_4()
+        {
+            // Act
+            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritViewModel>(m => m.GetInherit());
+
+            // Assert
+            Assert.Equal("/route-prefix/inherit", url);
         }
 
         [Fact]

@@ -38,7 +38,7 @@
 
             try
             {
-                attr = method.GetCustomAttribute<RouteAttribute>(false);
+                attr = method.GetCustomAttribute<RouteAttribute>(inherit: false);
             }
             catch (AmbiguousMatchException e)
             {
@@ -58,8 +58,8 @@
                 throw new Exception(message);
             }
 
-            IEnumerable<string> prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = string.Join("/", prefix.Concat(new string[] { attr.path }));
+            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = string.Format("/{0}/{1}", prefix, attr.path);
 
             return path;
         }
@@ -70,8 +70,8 @@
             MethodBase method)
         {
             HttpMethod httpMethod = attribute.method;
-            IEnumerable<string> prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = string.Join("/", prefix.Concat(new string[] { attribute.path }));
+            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = string.Format("/{0}/{1}", prefix, attribute.path);
 
             if (routings[httpMethod].ContainsKey(path))
             {
@@ -92,43 +92,6 @@
         private static string JoinPrefixAndPath(IEnumerable<string> prefix, string path)
         {
             return string.Join("/", prefix.Concat(new string[] { path }));
-        }
-    }
-
-    /// <summary>
-    /// The RoutePrefix attribute. It decorates on class, indicates the path from route attribute on
-    /// the class and child class will be prefixed.
-    /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
-    [AttributeUsage(AttributeTargets.Class)]
-    public class RoutePrefixAttribute : Attribute
-    {
-        private readonly string prefix;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RoutePrefixAttribute"/> class.
-        /// </summary>
-        /// <param name="prefix">The string to prefix to the route attribute path.</param>
-        public RoutePrefixAttribute(string prefix)
-        {
-            this.prefix = prefix.Trim('/');
-        }
-
-        internal static IEnumerable<string> GetPrefix(Type type)
-        {
-            if (type == typeof(object))
-            {
-                return new string[] { string.Empty };
-            }
-
-            IEnumerable<string> prefix = GetPrefix(type.BaseType);
-            var attr = type.GetCustomAttribute<RoutePrefixAttribute>(false);
-            if (attr == null)
-            {
-                return prefix;
-            }
-
-            return prefix.Concat(new string[] { attr.prefix });
         }
     }
 
