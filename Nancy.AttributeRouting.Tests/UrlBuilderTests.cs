@@ -12,34 +12,6 @@
         private readonly Browser app = new Browser(new DefaultNancyBootstrapper());
 
         [Fact]
-        public void GetUrl_from_constructor_should_return_URL()
-        {
-            string url = Url.Builder.GetUrl<MyViewModel>(m => m.GetWithDefaultProperty());
-            Assert.Equal("/my-view-model", url);
-        }
-
-        [Fact]
-        public void GetUrl_from_parameter_constructor_should_return_URL()
-        {
-            string url = Url.Builder.GetUrl<MyViewModel>(m => m.GetWithProperty("constructor-value"));
-            Assert.Equal("/my-view-model/constructor-value", url);
-        }
-
-        [Fact]
-        public void GetUrl_from_method_should_return_URL()
-        {
-            string url = Url.Builder.GetUrl<HttpMethodViewModel>(v => v.Get());
-            Assert.Equal("/my", url);
-        }
-
-        [Fact]
-        public void GetUrl_from_index_should_return_valid_URL()
-        {
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.Index());
-            Assert.Equal("/", url); // empty string is not a valid URL, should return single slash
-        }
-
-        [Fact]
         public void GetUrl_should_throw_exception_when_method_has_two_attributes()
         {
             Assert.Throws<Exception>(
@@ -54,13 +26,6 @@
         }
 
         [Fact]
-        public void GetUrl_with_object_parameters_should_return_URL()
-        {
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.GetResult(null), new { value = "object-value" });
-            Assert.Equal("/my/result/object-value", url);
-        }
-
-        [Fact]
         public void GetUrl_with_dictionary_parameters_should_return_URL()
         {
             var dictionary = new Dictionary<string, string>
@@ -70,42 +35,6 @@
 
             string url = Url.Builder.GetUrl<MyViewModel>(v => v.GetResult(null), dictionary);
             Assert.Equal("/my/result/dictionary-value", url);
-        }
-
-        [Fact]
-        public void GetUrl_with_direct_parameters_should_return_URL()
-        {
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.GetResult("direct-value"));
-            Assert.Equal("/my/result/direct-value", url);
-        }
-
-        [Fact]
-        public void GetUrl_with_explicit_parameters_should_override_direct_parameters()
-        {
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.GetResult("direct-value"), new { value = "explicit-value" });
-            Assert.Equal("/my/result/explicit-value", url);
-        }
-
-        [Fact]
-        public void GetUrl_with_other_HTTP_method_attribute_should_return_URL()
-        {
-            string url = Url.Builder.GetUrl<HttpMethodViewModel>(v => v.Put());
-            Assert.Equal("/my", url);
-        }
-
-        [Fact]
-        public void GetUrl_with_variable_should_return_URL()
-        {
-            string value = "variable-value";
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.GetResult(value));
-            Assert.Equal("/my/result/variable-value", url);
-        }
-
-        [Fact]
-        public void GetUrl_with_computed_value_should_return_URL()
-        {
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.GetResult(string.Format("{0}-{1}", "part1", "part2")));
-            Assert.Equal("/my/result/part1-part2", url);
         }
 
         [Fact]
@@ -125,79 +54,80 @@
             Assert.Equal(expectedUrl, url);
         }
 
-        [Theory]
-        [InlineData("Space Here", "Space%20Here")]
-        [InlineData("中文", "%E4%B8%AD%E6%96%87")]
-        public void GetUrl_with_special_characters_should_build_normalized_URL(string str, string expectedStr)
-        {
-            // Act
-            string url = Url.Builder.GetUrl<ComplexViewModel>(v => v.GetWithSpecialCharacters(str));
-
-            // Assert
-            Assert.Equal("/complex/special/" + expectedStr, url);
-        }
-
-        [Fact]
-        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_0()
-        {
-            // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel>(m => m.Get());
-
-            // Assert
-            Assert.Equal("/route-prefix", url);
-        }
-
-        [Fact]
-        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_1()
-        {
-            // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.TypePrefixViewModel>(m => m.GetTypePrefix());
-
-            // Assert
-            Assert.Equal("/route-prefix/type-prefix", url);
-        }
-
-        [Fact]
-        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_2()
-        {
-            // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.ChildPrefixViewModel>(m => m.GetChildPrefix());
-
-            // Assert
-            Assert.Equal("/route-prefix/child-prefix", url);
-        }
-
-        [Fact]
-        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_3()
-        {
-            // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.GrandchildViewModel>(m => m.GetGrandchild());
-
-            // Assert
-            Assert.Equal("/route-prefix/child-prefix/grandchild", url);
-        }
-
-        [Fact]
-        public void GetUrl_should_build_a_full_URL_from_RoutePrefix_4()
-        {
-            // Act
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.InheritViewModel>(m => m.GetInherit());
-
-            // Assert
-            Assert.Equal("/route-prefix/inherit", url);
-        }
-
-        [Fact]
-        public void GetUrl_with_extra_route_parameter_should_set_parameters_to_route_prefix()
-        {
-            string url = Url.Builder.GetUrl<RoutePrefixViewModel.PlaceholderViewModel>(v => v.GetResultWithProperty("passed-value"), new { prefix = "passed-prefix" });
-            Assert.Equal("/route-prefix/passed-prefix/passed-value", url);
-        }
-
         public static IEnumerable<object[]> TestCases
         {
             get
             {
+                yield return new TestCase<MyViewModel>(
+                    m => m.GetWithDefaultProperty(),
+                    "/my-view-model");
+
+                yield return new TestCase<MyViewModel>(
+                    m => m.GetWithProperty("constructor-value"),
+                    "/my-view-model/constructor-value");
+
+                yield return new TestCase<HttpMethodViewModel>(
+                    v => v.Get(),
+                    "/my");
+
+                yield return new TestCase<MyViewModel>(
+                    v => v.Index(),
+                    "/"); // empty string is not a valid URL, should return single slash
+
+                yield return new TestCase<MyViewModel>(
+                    v => v.GetResult(null),
+                    new { value = "object-value" },
+                    "/my/result/object-value");
+
+                yield return new TestCase<MyViewModel>(
+                    v => v.GetResult("direct-value"),
+                    "/my/result/direct-value");
+
+                yield return new TestCase<MyViewModel>(
+                    v => v.GetResult("direct-value"),
+                    new { value = "explicit-value" },
+                    "/my/result/explicit-value");
+
+                yield return new TestCase<HttpMethodViewModel>(
+                    v => v.Put(),
+                    "/my");
+
+                yield return new TestCase<MyViewModel>(
+                    v => v.GetResult("variable-value"),
+                    "/my/result/variable-value");
+
+                yield return new TestCase<MyViewModel>(
+                    v => v.GetResult(string.Format("{0}-{1}", "part1", "part2")),
+                    "/my/result/part1-part2");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetWithSpecialCharacters("Space Here"),
+                    "/complex/special/Space%20Here");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetWithSpecialCharacters("中文"),
+                    "/complex/special/%E4%B8%AD%E6%96%87");
+
+                yield return new TestCase<RoutePrefixViewModel>(
+                    m => m.Get(),
+                    "/route-prefix");
+
+                yield return new TestCase<RoutePrefixViewModel.TypePrefixViewModel>(
+                    m => m.GetTypePrefix(),
+                    "/route-prefix/type-prefix");
+
+                yield return new TestCase<RoutePrefixViewModel.ChildPrefixViewModel>(
+                    m => m.GetChildPrefix(),
+                    "/route-prefix/child-prefix");
+
+                yield return new TestCase<RoutePrefixViewModel.GrandchildViewModel>(
+                    m => m.GetGrandchild(),
+                    "/route-prefix/child-prefix/grandchild");
+
+                yield return new TestCase<RoutePrefixViewModel.InheritViewModel>(
+                    m => m.GetInherit(),
+                    "/route-prefix/inherit");
+
                 yield return new TestCase<RoutePrefixViewModel.PlaceholderViewModel>(
                     v => v.GetResultWithProperty("passed-value"),
                     new { prefix = "passed-prefix" },
