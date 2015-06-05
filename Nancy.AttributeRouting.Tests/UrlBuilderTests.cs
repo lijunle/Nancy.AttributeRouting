@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using Nancy.AttributeRouting.Tests.ViewModels;
     using Nancy.Testing;
     using Xunit;
@@ -193,6 +194,24 @@
             Assert.Equal("/route-prefix/passed-prefix/passed-value", url);
         }
 
+        public static IEnumerable<object[]> TestCases
+        {
+            get
+            {
+                yield return new TestCase<RoutePrefixViewModel.PlaceholderViewModel>(
+                    v => v.GetResultWithProperty("passed-value"),
+                    new { prefix = "passed-prefix" },
+                    "/route-prefix/passed-prefix/passed-value");
+            }
+        }
+
+        [Theory]
+        [MemberData("TestCases")]
+        public void Test_URL_builder(ITestCase testCase)
+        {
+            testCase.Run();
+        }
+
         public class Url : NancyModule
         {
             public Url(IUrlBuilder urlbuilder)
@@ -201,6 +220,46 @@
             }
 
             public static IUrlBuilder Builder { get; private set; }
+        }
+
+        public interface ITestCase
+        {
+            void Run();
+        }
+
+        public class TestCase<T> : ITestCase where T : class
+        {
+            private readonly Expression<Func<T, object>> expression;
+
+            private readonly object parameters;
+
+            private readonly string url;
+
+            public TestCase(Expression<Func<T, object>> expression, string url)
+                : this(expression, new { }, url)
+            {
+            }
+
+            public TestCase(Expression<Func<T, object>> expression, object parameters, string url)
+            {
+                this.expression = expression;
+                this.parameters = parameters;
+                this.url = url;
+            }
+
+            public static implicit operator object[](TestCase<T> testCase)
+            {
+                return new object[] { testCase };
+            }
+
+            public void Run()
+            {
+                // Act
+                string url = Url.Builder.GetUrl<T>(this.expression, this.parameters);
+
+                // Assert
+                Assert.Equal(this.url, url);
+            }
         }
     }
 }
