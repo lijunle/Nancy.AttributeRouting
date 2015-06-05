@@ -25,12 +25,6 @@
             return this;
         }
 
-        [Get("/complex/non-string/{age:int}/{graduated:bool}/{id:guid}/{birth:datetime}")]
-        public object GetComplexRoute(Guid id, DateTime birth, int age, bool graduated)
-        {
-            return new { id, birth, age, graduated };
-        }
-
         [Get("/complex/guid/{id:guid}")]
         public string GetGuid(Guid id)
         {

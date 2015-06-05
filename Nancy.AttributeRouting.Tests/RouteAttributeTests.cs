@@ -1,6 +1,5 @@
 ﻿namespace Nancy.AttributeRouting.Tests
 {
-    using System;
     using System.Collections.Generic;
     using Nancy.AttributeRouting.Tests.ViewModels;
     using Nancy.Testing;
@@ -79,29 +78,6 @@
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(expectedBody, response.Body.AsString());
-        }
-
-        [Fact]
-        public void Complex_primitive_type_should_be_passed_into_method()
-        {
-            // Arrange
-            int age = 98;
-            bool graduated = true;
-            string id = "D696DBC7-A14B-405B-B4B5-6CCBE9309FFF";
-            string birth = "2001-02-03T04:05:06Z";
-            string url = string.Format("/complex/non-string/{0}/{1}/{2}/{3}", age, graduated, id, birth);
-
-            // Act
-            BrowserResponse response = Browser.Get(url, with => with.Accept("application/json"));
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            var body = (IDictionary<string, object>)response.Body.DeserializeJson<object>();
-            Assert.Equal(age, body["Age"]);
-            Assert.Equal(graduated, body["Graduated"]);
-            Assert.Equal(Guid.Parse(id), Guid.Parse((string)body["Id"]));
-            Assert.Equal(DateTime.Parse(birth), DateTime.Parse((string)body["Birth"]));
         }
 
         [Fact]
