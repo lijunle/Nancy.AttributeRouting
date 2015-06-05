@@ -89,6 +89,22 @@
                         true),
                     "/complex/non-string/12/True/ed1527c7-fee5-40b2-b228-5ead3b2f55a4/" + Uri.EscapeDataString("2/3/2001 4:05:06 AM"));
 
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetGuid(Guid.Parse("ED1527C7-FEE5-40B2-B228-5EAD3B2F55A4")),
+                    "/complex/guid/ed1527c7-fee5-40b2-b228-5ead3b2f55a4");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetDateTime(DateTime.Parse("2001-02-03T04:05:06.0789")),
+                    "/complex/datetime/" + Uri.EscapeDataString("2/3/2001 4:05:06 AM"));
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetInt(1234),
+                    "/complex/int/1234");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetBoolean(true),
+                    "/complex/boolean/True");
+
                 // expression tree does not allow optional parameter, no way to get routing optional parameter
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetWithOptionalParameter(null),

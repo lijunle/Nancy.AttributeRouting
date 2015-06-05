@@ -66,6 +66,21 @@
             Assert.Equal(expectedResult, response.Body.AsString());
         }
 
+        [Theory]
+        [InlineData("/complex/guid/ED1527C7-FEE5-40B2-B228-5EAD3B2F55A4", "ed1527c7-fee5-40b2-b228-5ead3b2f55a4")]
+        [InlineData("/complex/datetime/2001-02-03T04%3A05%3A06.0789", "2/3/2001 4:05:06 AM")]
+        [InlineData("/complex/int/000987", "987")]
+        [InlineData("/complex/boolean/true", "True")]
+        public void Complex_primitive_type_should_be_parsed_into_method(string path, string expectedBody)
+        {
+            // Act
+            BrowserResponse response = Browser.Get(path, with => with.Accept("application/json"));
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(expectedBody, response.Body.AsString());
+        }
+
         [Fact]
         public void Complex_primitive_type_should_be_passed_into_method()
         {

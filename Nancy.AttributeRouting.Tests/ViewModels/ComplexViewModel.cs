@@ -31,6 +31,30 @@
             return new { id, birth, age, graduated };
         }
 
+        [Get("/complex/guid/{id:guid}")]
+        public string GetGuid(Guid id)
+        {
+            return id.ToString();
+        }
+
+        [Get("/complex/datetime/{time:datetime}")]
+        public string GetDateTime(DateTime time)
+        {
+            return time.ToString();
+        }
+
+        [Get("/complex/int/{number:int}")]
+        public string GetInt(int number)
+        {
+            return number.ToString();
+        }
+
+        [Get("/complex/boolean/{flag:bool}")]
+        public string GetBoolean(bool flag)
+        {
+            return flag.ToString();
+        }
+
         [Post("/complex/post/form")]
         public string GetByInjectedRequestData(Form form)
         {
