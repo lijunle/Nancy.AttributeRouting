@@ -25,39 +25,19 @@
                 () => Url.Builder.GetUrl<MyViewModel>(v => v.GetWithoutRoutings()));
         }
 
-        [Fact]
-        public void GetUrl_with_dictionary_parameters_should_return_URL()
-        {
-            var dictionary = new Dictionary<string, string>
-            {
-                { "value", "dictionary-value" }
-            };
-
-            string url = Url.Builder.GetUrl<MyViewModel>(v => v.GetResult(null), dictionary);
-            Assert.Equal("/my/result/dictionary-value", url);
-        }
-
-        [Fact]
-        public void GetUrl_with_non_string_type_should_return_URL()
-        {
-            // Arrange
-            Guid id = Guid.NewGuid();
-            DateTime birth = DateTime.UtcNow;
-
-            // Act
-            string url = Url.Builder.GetUrl<ComplexViewModel>(v => v.GetComplexRoute(id, birth, 12, true));
-
-            // Assert
-            string expectedUrl = string.Format(
-                "/complex/non-string/12/True/{0}/{1}", id, Uri.EscapeDataString(birth.ToString()));
-
-            Assert.Equal(expectedUrl, url);
-        }
-
         public static IEnumerable<object[]> TestCases
         {
             get
             {
+                yield return new TestCase<MyViewModel>(
+                    v => v.GetResult(null),
+                    new Dictionary<string, string> { { "value", "dictionary-value" } },
+                    "/my/result/dictionary-value");
+
+                yield return new TestCase<ComplexViewModel>(
+                    v => v.GetComplexRoute(Guid.Parse("ED1527C7-FEE5-40B2-B228-5EAD3B2F55A4"), DateTime.Parse("2001-02-03T04:05:06.0789"), 12, true),
+                    "/complex/non-string/12/True/ed1527c7-fee5-40b2-b228-5ead3b2f55a4/2%2F3%2F2001%204%3A05%3A06%20AM");
+
                 yield return new TestCase<MyViewModel>(
                     m => m.GetWithDefaultProperty(),
                     "/my-view-model");
@@ -161,19 +141,29 @@
         {
             private readonly Expression<Func<T, object>> expression;
 
+            private readonly IDictionary<string, string> dictionary;
+
             private readonly object parameters;
 
             private readonly string url;
 
             public TestCase(Expression<Func<T, object>> expression, string url)
-                : this(expression, new { }, url)
             {
+                this.expression = expression;
+                this.url = url;
             }
 
             public TestCase(Expression<Func<T, object>> expression, object parameters, string url)
             {
                 this.expression = expression;
                 this.parameters = parameters;
+                this.url = url;
+            }
+
+            public TestCase(Expression<Func<T, object>> expression, IDictionary<string, string> dictionary, string url)
+            {
+                this.expression = expression;
+                this.dictionary = dictionary;
                 this.url = url;
             }
 
@@ -185,7 +175,11 @@
             public void Run()
             {
                 // Act
-                string url = Url.Builder.GetUrl<T>(this.expression, this.parameters);
+                string url = this.parameters != null
+                    ? Url.Builder.GetUrl<T>(this.expression, this.parameters)
+                    : this.dictionary != null
+                    ? Url.Builder.GetUrl<T>(this.expression, this.dictionary)
+                    : Url.Builder.GetUrl<T>(this.expression);
 
                 // Assert
                 Assert.Equal(this.url, url);
