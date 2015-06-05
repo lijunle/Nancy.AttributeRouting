@@ -34,6 +34,10 @@
                     "/my-view-model/constructor-value");
 
                 yield return new TestCase<MyViewModel>(
+                    m => m.GetResult(),
+                    "/my/result");
+
+                yield return new TestCase<MyViewModel>(
                     m => m.GetResult(null),
                     new { value = "object-value" },
                     "/my/result/object-value");
@@ -47,34 +51,35 @@
                     m => m.GetResult("direct-value"),
                     "/my/result/direct-value");
 
+                // explicit value will override direct value
                 yield return new TestCase<MyViewModel>(
                     m => m.GetResult("direct-value"),
                     new { value = "explicit-value" },
                     "/my/result/explicit-value");
 
-                yield return new TestCase<MyViewModel>(
-                    m => m.GetResult("variable-value"),
-                    "/my/result/variable-value");
-
-                yield return new TestCase<MyViewModel>(
-                    m => m.GetResult(string.Format("{0}-{1}", "part1", "part2")),
-                    "/my/result/part1-part2");
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Delete(),
+                    "/my");
 
                 yield return new TestCase<HttpMethodViewModel>(
                     m => m.Get(),
                     "/my");
 
                 yield return new TestCase<HttpMethodViewModel>(
-                    m => m.Put(),
+                    m => m.Options(),
                     "/my");
 
-                yield return new TestCase<ComplexViewModel>(
-                    m => m.GetWithSpecialCharacters("Space Here"),
-                    "/complex/special/Space%20Here");
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Patch(),
+                    "/my");
 
-                yield return new TestCase<ComplexViewModel>(
-                    m => m.GetWithSpecialCharacters("中文"),
-                    "/complex/special/%E4%B8%AD%E6%96%87");
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Post(),
+                    "/my");
+
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Put(),
+                    "/my");
 
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetComplexRoute(
@@ -83,6 +88,23 @@
                         12,
                         true),
                     "/complex/non-string/12/True/ed1527c7-fee5-40b2-b228-5ead3b2f55a4/" + Uri.EscapeDataString("2/3/2001 4:05:06 AM"));
+
+                // TODO test optional parameter
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetWithOptionalParameter(null),
+                    "/complex/get/optional/");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetWithOptionalParameter("passed-name"),
+                    "/complex/get/optional/passed-name");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetWithSpecialCharacters("Space Here"),
+                    "/complex/special/Space%20Here");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetWithSpecialCharacters("中文"),
+                    "/complex/special/%E4%B8%AD%E6%96%87");
 
                 yield return new TestCase<RoutePrefixViewModel>(
                     m => m.Get(),
