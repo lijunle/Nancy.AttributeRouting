@@ -89,7 +89,7 @@
                         true),
                     "/complex/non-string/12/True/ed1527c7-fee5-40b2-b228-5ead3b2f55a4/" + Uri.EscapeDataString("2/3/2001 4:05:06 AM"));
 
-                // TODO test optional parameter
+                // expression tree does not allow optional parameter, no way to get routing optional parameter
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetWithOptionalParameter(null),
                     "/complex/get/optional/");

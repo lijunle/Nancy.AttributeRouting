@@ -21,7 +21,7 @@
         [InlineData("/nested/result/custom-value", "Result", "nested-custom-value")]
         [InlineData("/my/1", "Result", "TheSameResultFromTwoRoutings")]
         [InlineData("/my/2", "Result", "TheSameResultFromTwoRoutings")]
-        [InlineData("/complex/get/optional", "Name", "OptionalName")]
+        [InlineData("/complex/get/optional", "Name", "default")]
         [InlineData("/complex/get/optional/override-name", "Name", "override-name")]
         [InlineData("/complex/special/Space%20Here", "Str", "Space Here")]
         [InlineData("/complex/special/%E4%B8%AD%E6%96%87", "Str", "中文")]

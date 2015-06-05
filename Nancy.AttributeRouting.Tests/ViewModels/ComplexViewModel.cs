@@ -37,8 +37,8 @@
             return string.Format("{0}={1}", form.User, form.Password);
         }
 
-        [Get("/complex/get/optional/{name?}")]
-        public object GetWithOptionalParameter(string name = "OptionalName")
+        [Get("/complex/get/optional/{name?default}")]
+        public object GetWithOptionalParameter(string name = null)
         {
             return new { Name = name };
         }
