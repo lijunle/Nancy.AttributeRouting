@@ -11,37 +11,19 @@
     {
         private readonly Browser app = new Browser(new DefaultNancyBootstrapper());
 
-        [Fact]
-        public void GetUrl_should_throw_exception_when_method_has_two_attributes()
+        public interface ITestCase
         {
-            Assert.Throws<Exception>(
-                () => Url.Builder.GetUrl<MyViewModel>(m => m.GetByTwoRoutings()));
-        }
-
-        [Fact]
-        public void GetUrl_should_throw_exception_when_method_has_no_attributes()
-        {
-            Assert.Throws<Exception>(
-                () => Url.Builder.GetUrl<MyViewModel>(m => m.GetWithoutRoutings()));
+            void Run();
         }
 
         public static IEnumerable<object[]> TestCases
         {
             get
             {
+                // empty string is not a valid URL, should return single slash
                 yield return new TestCase<MyViewModel>(
-                    m => m.GetResult(null),
-                    new Dictionary<string, string> { { "value", "dictionary-value" } },
-                    "/my/result/dictionary-value");
-
-                yield return new TestCase<ComplexViewModel>(
-                    m => m.GetComplexRoute(
-                        Guid.Parse("ED1527C7-FEE5-40B2-B228-5EAD3B2F55A4"),
-                        DateTime.Parse("2001-02-03T04:05:06.0789"),
-                        12,
-                        true),
-                    "/complex/non-string/12/True/ed1527c7-fee5-40b2-b228-5ead3b2f55a4/" +
-                        Uri.EscapeDataString("2/3/2001 4:05:06 AM"));
+                    m => m.Index(),
+                    "/");
 
                 yield return new TestCase<MyViewModel>(
                     m => m.GetWithDefaultProperty(),
@@ -51,18 +33,15 @@
                     m => m.GetWithProperty("constructor-value"),
                     "/my-view-model/constructor-value");
 
-                yield return new TestCase<HttpMethodViewModel>(
-                    m => m.Get(),
-                    "/my");
-
-                yield return new TestCase<MyViewModel>(
-                    m => m.Index(),
-                    "/"); // empty string is not a valid URL, should return single slash
-
                 yield return new TestCase<MyViewModel>(
                     m => m.GetResult(null),
                     new { value = "object-value" },
                     "/my/result/object-value");
+
+                yield return new TestCase<MyViewModel>(
+                    m => m.GetResult(null),
+                    new Dictionary<string, string> { { "value", "dictionary-value" } },
+                    "/my/result/dictionary-value");
 
                 yield return new TestCase<MyViewModel>(
                     m => m.GetResult("direct-value"),
@@ -73,10 +52,6 @@
                     new { value = "explicit-value" },
                     "/my/result/explicit-value");
 
-                yield return new TestCase<HttpMethodViewModel>(
-                    m => m.Put(),
-                    "/my");
-
                 yield return new TestCase<MyViewModel>(
                     m => m.GetResult("variable-value"),
                     "/my/result/variable-value");
@@ -85,6 +60,14 @@
                     m => m.GetResult(string.Format("{0}-{1}", "part1", "part2")),
                     "/my/result/part1-part2");
 
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Get(),
+                    "/my");
+
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Put(),
+                    "/my");
+
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetWithSpecialCharacters("Space Here"),
                     "/complex/special/Space%20Here");
@@ -92,6 +75,14 @@
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetWithSpecialCharacters("中文"),
                     "/complex/special/%E4%B8%AD%E6%96%87");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetComplexRoute(
+                        Guid.Parse("ED1527C7-FEE5-40B2-B228-5EAD3B2F55A4"),
+                        DateTime.Parse("2001-02-03T04:05:06.0789"),
+                        12,
+                        true),
+                    "/complex/non-string/12/True/ed1527c7-fee5-40b2-b228-5ead3b2f55a4/" + Uri.EscapeDataString("2/3/2001 4:05:06 AM"));
 
                 yield return new TestCase<RoutePrefixViewModel>(
                     m => m.Get(),
@@ -127,6 +118,20 @@
             testCase.Run();
         }
 
+        [Fact]
+        public void GetUrl_should_throw_exception_when_method_has_two_attributes()
+        {
+            Assert.Throws<Exception>(
+                () => Url.Builder.GetUrl<MyViewModel>(m => m.GetByTwoRoutings()));
+        }
+
+        [Fact]
+        public void GetUrl_should_throw_exception_when_method_has_no_attributes()
+        {
+            Assert.Throws<Exception>(
+                () => Url.Builder.GetUrl<MyViewModel>(m => m.GetWithoutRoutings()));
+        }
+
         public class Url : NancyModule
         {
             public Url(IUrlBuilder urlbuilder)
@@ -135,11 +140,6 @@
             }
 
             public static IUrlBuilder Builder { get; private set; }
-        }
-
-        public interface ITestCase
-        {
-            void Run();
         }
 
         public class TestCase<T> : ITestCase where T : class
