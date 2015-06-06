@@ -41,7 +41,10 @@
         [InlineData("/interface", "Result", "query-from-interface")]
         [InlineData("/interface/passed-to-interface", "Result", "passed-to-interface")]
         [InlineData("/interface/child", "Result", "from-child-interface")]
-        public void Attribute_routing_should_accept_get_request(string path, string expectedKey, string expectedValue)
+        public void Attribute_routing_should_accept_get_request(
+            string path,
+            string expectedKey,
+            string expectedValue)
         {
             // Act
             BrowserResponse response = Browser.Get(path, with => with.Accept("application/json"));

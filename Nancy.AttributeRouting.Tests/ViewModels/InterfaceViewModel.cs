@@ -1,19 +1,18 @@
 ﻿namespace Nancy.AttributeRouting.Tests.ViewModels
 {
-    [RoutePrefix("interface")]
     public interface IInterfaceViewModel
     {
-        [Get("")]
+        [Get("interface")]
         object Get();
 
-        [Get("{value}")]
+        [Get("interface/{value}")]
         object GetWithParamter(string value);
     }
 
-    [RoutePrefix(typeof(IInterfaceViewModel), "child")]
+    [RoutePrefix(typeof(IInterfaceViewModel), "interface")]
     public interface IChildViewModel
     {
-        [Get("")]
+        [Get("child")]
         object Get();
     }
 
