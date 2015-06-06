@@ -61,6 +61,7 @@
     <Compile Include="RoutePrefixAttribute.cs" />
     <Compile Include="UrlBuilder.cs" />
     <Compile Include="ViewAttribute.cs" />
+    <Compile Include="ViewPrefixAttribute.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
