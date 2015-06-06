@@ -1,8 +1,6 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -19,26 +17,33 @@
         /// </summary>
         /// <param name="prefix">The path prefix.</param>
         public ViewPrefixAttribute(string prefix)
+            : this(null, prefix)
         {
-            this.prefix = prefix.Trim('/');
         }
 
-        internal static IEnumerable<string> GetPrefix(Type type)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewPrefixAttribute"/> class.
+        /// </summary>
+        /// <param name="prefixType">The prefix of this type leveraged as prefix of prefix.</param>
+        /// <param name="prefix">The path prefix.</param>
+        public ViewPrefixAttribute(Type prefixType, string prefix)
         {
-            if (type == typeof(object))
-            {
-                return new string[0];
-            }
+            string typePrefix = GetPrefix(prefixType);
+            string trimPrefix = prefix.Trim('/');
+            this.prefix = string.Format("{0}/{1}", typePrefix, trimPrefix).Trim('/');
+        }
 
-            IEnumerable<string> basePrefix = GetPrefix(type.BaseType);
+        internal static string GetPrefix(Type type)
+        {
+            if (type == null || type == typeof(object))
+            {
+                return string.Empty;
+            }
 
             var attr = type.GetCustomAttribute<ViewPrefixAttribute>(false);
-            if (attr == null)
-            {
-                return basePrefix;
-            }
+            string prefix = attr == null ? string.Empty : attr.prefix;
 
-            return basePrefix.Concat(new string[] { attr.prefix });
+            return prefix;
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -36,8 +34,8 @@
                 return string.Empty;
             }
 
-            IEnumerable<string> prefix = ViewPrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = string.Join("/", prefix.Concat(new string[] { attr.path }));
+            string prefix = ViewPrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = string.Format("{0}/{1}", prefix, attr.path);
 
             return path;
         }
