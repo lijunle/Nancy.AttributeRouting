@@ -20,6 +20,7 @@
         [InlineData("/nested/result/custom-value", "Result", "nested-custom-value")]
         [InlineData("/my/1", "Result", "TheSameResultFromTwoRoutings")]
         [InlineData("/my/2", "Result", "TheSameResultFromTwoRoutings")]
+        [InlineData("/complex/with-injection", "Url", "/complex/with-injection")]
         [InlineData("/complex/get/optional", "Name", "default")]
         [InlineData("/complex/get/optional/override-name", "Name", "override-name")]
         [InlineData("/complex/special/Space%20Here", "Str", "Space Here")]
@@ -79,19 +80,6 @@
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(expectedBody, response.Body.AsString());
-        }
-
-        [Fact]
-        public void Resolver_should_inject_component_to_constructor()
-        {
-            // Act
-            BrowserResponse response = Browser.Get("/complex/with-injection", with => with.Accept("application/json"));
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            var body = (IDictionary<string, object>)response.Body.DeserializeJson<object>();
-            Assert.Equal("/complex/with-injection", body["Url"]);
         }
 
         [Fact]

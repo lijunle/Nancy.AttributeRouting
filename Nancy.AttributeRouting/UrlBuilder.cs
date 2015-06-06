@@ -55,10 +55,7 @@
         string GetUrl<T>(Expression<Func<T, object>> expression, IDictionary<string, string> parameters);
     }
 
-    /// <summary>
-    /// The URL builder. It accepts an expression related to a view model, then construct the URL
-    /// string corresponding to the view model call.
-    /// </summary>
+    /// <inheritdoc/>
     public class UrlBuilder : IUrlBuilder
     {
         private static readonly string ExpressionNotValidMessage =
@@ -66,60 +63,25 @@
 
         private readonly IRouteSegmentExtractor segmentExtractor;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UrlBuilder"/> class.
-        /// </summary>
-        /// <param name="segmentExtractor">
-        /// The routing segment extractor. The Nancy IoC container will resolve this for us.
-        /// </param>
+        /// <inheritdoc/>
         public UrlBuilder(IRouteSegmentExtractor segmentExtractor)
         {
             this.segmentExtractor = segmentExtractor;
         }
 
-        /// <summary>
-        /// Gets URL from the method call of a <typeparamref name="T"/> instance.
-        /// </summary>
-        /// <param name="expression">
-        /// The method call lambda expression from a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
+        /// <inheritdoc/>
         public string GetUrl<T>(Expression<Func<T, object>> expression)
         {
             return this.GetUrl<T>(expression, new Dictionary<string, string>());
         }
 
-        /// <summary>
-        /// Gets URL from the method call of a <typeparamref name="T"/> instance.
-        /// </summary>
-        /// <param name="expression">
-        /// The method call lambda expression from a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameter object to provide additional information to construct the URL. The object
-        /// will be converted into dictionary then invoke another overload.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
+        /// <inheritdoc/>
         public string GetUrl<T>(Expression<Func<T, object>> expression, object parameters)
         {
             return this.GetUrl<T>(expression, parameters.ToDictionary());
         }
 
-        /// <summary>
-        /// Gets URL from the method call of a <typeparamref name="T"/> instance.
-        /// </summary>
-        /// <param name="expression">
-        /// The method call lambda expression from a <typeparamref name="T"/> instance.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameter dictionary to provide additional information to construct the URL. The
-        /// dictionary key is the routing template placeholder, the dictionary value is the actual
-        /// value to replace the placeholder.
-        /// </param>
-        /// <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
-        /// <returns>The constructed URL string.</returns>
+        /// <inheritdoc/>
         public string GetUrl<T>(Expression<Func<T, object>> expression, IDictionary<string, string> parameters)
         {
             var methodCall = expression.Body as MethodCallExpression;
