@@ -151,6 +151,10 @@
                 yield return new TestCase<IInterfaceViewModel>(
                     m => m.GetWithParamter("value"),
                     "/interface/value");
+
+                yield return new TestCase<IChildViewModel>(
+                    m => m.Get(),
+                    "/interface/child");
             }
         }
 

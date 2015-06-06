@@ -10,6 +10,13 @@
         object GetWithParamter(string value);
     }
 
+    [RoutePrefix(typeof(IInterfaceViewModel), "child")]
+    public interface IChildViewModel
+    {
+        [Get("")]
+        object Get();
+    }
+
     public class InterfaceViewModel : IInterfaceViewModel
     {
         public object Get()
@@ -20,6 +27,14 @@
         public object GetWithParamter(string value)
         {
             return new { Result = value };
+        }
+
+        public class ChildViewModel : IChildViewModel
+        {
+            public object Get()
+            {
+                return new { Result = "from-child-interface" };
+            }
         }
     }
 }
