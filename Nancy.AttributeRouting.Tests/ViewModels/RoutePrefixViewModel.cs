@@ -57,5 +57,27 @@
                 return new { Result = prefix + "." + value };
             }
         }
+
+        [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
+        public class ConstructorPrefixViewModel
+        {
+            private readonly string prefix;
+
+            public ConstructorPrefixViewModel()
+            {
+                this.prefix = "parameters-not-pass-to-constructor";
+            }
+
+            public ConstructorPrefixViewModel(string prefix)
+            {
+                this.prefix = prefix;
+            }
+
+            [Get("/")]
+            public object Get()
+            {
+                return new { Result = this.prefix };
+            }
+        }
     }
 }
