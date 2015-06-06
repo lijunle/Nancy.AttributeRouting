@@ -48,7 +48,7 @@
                 string name = string.Format("{0} {1}", httpMethod, path);
                 MethodBase method = routing.Value;
 
-                module.Before += (context) =>
+                module.Before += context =>
                 {
                     Response response = context.ResolvedRoute.Description.Name == name
                         ? BeforeAttribute.GetResponse(method, container, context)
