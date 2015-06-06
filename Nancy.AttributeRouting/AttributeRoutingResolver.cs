@@ -11,7 +11,7 @@
     /// </summary>
     public class AttributeRoutingResolver : NancyModule
     {
-        private static readonly Dictionary<HttpMethod, Dictionary<string, MethodBase>> Routings =
+        internal static readonly Dictionary<HttpMethod, Dictionary<string, MethodBase>> Routings =
             new Dictionary<HttpMethod, Dictionary<string, MethodBase>>
             {
                 { HttpMethod.Delete, new Dictionary<string, MethodBase>() },
@@ -21,19 +21,6 @@
                 { HttpMethod.Post, new Dictionary<string, MethodBase>() },
                 { HttpMethod.Put, new Dictionary<string, MethodBase>() },
             };
-
-        static AttributeRoutingResolver()
-        {
-            IEnumerable<MethodBase> methods = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.SafeGetTypes())
-                .Where(type => !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
-                .SelectMany(GetMembersWithRouteAttribute);
-
-            foreach (MethodBase method in methods)
-            {
-                RouteAttribute.AddToRoutings(Routings, method);
-            }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributeRoutingResolver"/> class.
@@ -81,20 +68,6 @@
                     return response;
                 };
             }
-        }
-
-        private static IEnumerable<MethodBase> GetMembersWithRouteAttribute(Type type)
-        {
-            IEnumerable<MethodBase> methods = type
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                .Where(HasRouteAttribute);
-
-            return methods;
-        }
-
-        private static bool HasRouteAttribute(MethodBase method)
-        {
-            return method.GetCustomAttributes<RouteAttribute>().Any();
         }
 
         private static object ConstructResponse(
