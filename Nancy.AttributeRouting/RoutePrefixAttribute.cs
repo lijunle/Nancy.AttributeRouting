@@ -7,7 +7,7 @@
     /// The RoutePrefix attribute. It decorates on class, indicates the path from route attribute on
     /// the class and child class will be prefixed.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class RoutePrefixAttribute : Attribute
     {
         private readonly string prefix;

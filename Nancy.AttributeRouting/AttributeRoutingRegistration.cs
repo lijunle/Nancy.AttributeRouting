@@ -14,7 +14,7 @@
         {
             IEnumerable<MethodBase> methods = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.SafeGetTypes())
-                .Where(type => !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
+                .Where(DoesSupportType)
                 .SelectMany(GetMethodsWithRouteAttribute);
 
             foreach (MethodBase method in methods)
@@ -53,6 +53,22 @@
         private static bool HasRouteAttribute(MethodBase method)
         {
             return method.GetCustomAttributes<RouteAttribute>().Any();
+        }
+
+        private static bool DoesSupportType(Type type)
+        {
+            if (type.IsInterface)
+            {
+                return true;
+            }
+            else if (!type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

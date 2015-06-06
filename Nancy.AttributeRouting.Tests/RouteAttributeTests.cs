@@ -38,6 +38,8 @@
         [InlineData("/before/child/rejected", "Result", "rejected-from-child")]
         [InlineData("/before/child/passed", "Result", "passed-from-child")]
         [InlineData("/before/child/nearest", "Result", "rejected-from-nearest")]
+        [InlineData("/interface", "Result", "query-from-interface")]
+        [InlineData("/interface/passed-to-interface", "Result", "passed-to-interface")]
         public void Attribute_routing_should_accept_get_request(string path, string expectedKey, string expectedValue)
         {
             // Act

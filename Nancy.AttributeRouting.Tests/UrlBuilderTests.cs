@@ -143,6 +143,14 @@
                     m => m.Get(),
                     new { prefix = "passed-constructor-parameters" },
                     "/route-prefix/passed-constructor-parameters");
+
+                yield return new TestCase<IInterfaceViewModel>(
+                    m => m.Get(),
+                    "/interface");
+
+                yield return new TestCase<IInterfaceViewModel>(
+                    m => m.GetWithParamter("value"),
+                    "/interface/value");
             }
         }
 
