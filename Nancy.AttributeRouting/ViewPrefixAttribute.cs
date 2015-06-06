@@ -7,7 +7,7 @@
     /// The ViewPrefix attribute. It decorates on class, indicates the View attribute works with
     /// this prefix to locate paths.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class ViewPrefixAttribute : Attribute
     {
         private readonly string prefix;
