@@ -14,6 +14,8 @@
         public interface ITestCase
         {
             void Run();
+
+            void ExpectException();
         }
 
         public static IEnumerable<object[]> TestCases
@@ -141,6 +143,15 @@
             }
         }
 
+        public static IEnumerable<object[]> ExceptionCases
+        {
+            get
+            {
+                yield return new TestCase<MyViewModel>(m => m.GetByTwoRoutings());
+                yield return new TestCase<MyViewModel>(m => m.GetWithoutRoutings());
+            }
+        }
+
         [Theory]
         [MemberData("TestCases")]
         public void Test_URL_builder(ITestCase testCase)
@@ -148,18 +159,11 @@
             testCase.Run();
         }
 
-        [Fact]
-        public void GetUrl_should_throw_exception_when_method_has_two_attributes()
+        [Theory]
+        [MemberData("ExceptionCases")]
+        public void Throws_URL_builder_exception(ITestCase testCase)
         {
-            Assert.Throws<Exception>(
-                () => Url.Builder.GetUrl<MyViewModel>(m => m.GetByTwoRoutings()));
-        }
-
-        [Fact]
-        public void GetUrl_should_throw_exception_when_method_has_no_attributes()
-        {
-            Assert.Throws<Exception>(
-                () => Url.Builder.GetUrl<MyViewModel>(m => m.GetWithoutRoutings()));
+            testCase.ExpectException();
         }
 
         public class Url : NancyModule
@@ -181,6 +185,11 @@
             private readonly object parameters;
 
             private readonly string url;
+
+            public TestCase(Expression<Func<T, object>> expression)
+            {
+                this.expression = expression;
+            }
 
             public TestCase(Expression<Func<T, object>> expression, string url)
             {
@@ -218,6 +227,12 @@
 
                 // Assert
                 Assert.Equal(this.url, url);
+            }
+
+            public void ExpectException()
+            {
+                // TODO catch specified URL builder exception
+                Assert.Throws<Exception>(() => Url.Builder.GetUrl<T>(this.expression));
             }
 
             public override string ToString()
