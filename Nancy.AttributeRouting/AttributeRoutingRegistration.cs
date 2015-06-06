@@ -8,9 +8,9 @@
     using Nancy.TinyIoc;
 
     /// <inheritdoc/>
-    public class Registration : IRegistrations
+    public class AttributeRoutingRegistration : IRegistrations
     {
-        static Registration()
+        static AttributeRoutingRegistration()
         {
             IEnumerable<MethodBase> methods = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.SafeGetTypes())
