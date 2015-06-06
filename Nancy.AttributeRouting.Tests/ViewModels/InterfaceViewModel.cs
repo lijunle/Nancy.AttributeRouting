@@ -16,6 +16,13 @@
         object Get();
     }
 
+    public interface IHtmlViewModel
+    {
+        [Get("interface/html")]
+        [View("view")]
+        object Get();
+    }
+
     public class InterfaceViewModel : IInterfaceViewModel
     {
         public object Get()
@@ -33,6 +40,14 @@
             public object Get()
             {
                 return new { Result = "from-child-interface" };
+            }
+        }
+
+        public class HtmlViewModel : IHtmlViewModel
+        {
+            public object Get()
+            {
+                return new { Message = "Get HTML from interface." };
             }
         }
     }
