@@ -150,8 +150,11 @@
         {
             get
             {
-                yield return new ExceptionTestCase<MyViewModel, MultipleRouteAttributesException>(m => m.GetByTwoRoutings());
-                yield return new ExceptionTestCase<MyViewModel, NoRouteAttributeException>(m => m.GetWithoutRoutings());
+                yield return new ExceptionTestCase<MyViewModel, MultipleRouteAttributesException>(
+                    m => m.GetByTwoRoutings());
+
+                yield return new ExceptionTestCase<MyViewModel, NoRouteAttributeException>(
+                    m => m.GetWithoutRoutings());
             }
         }
 
@@ -181,7 +184,7 @@
 
         public class TestCase<T> : ITestCase where T : class
         {
-            protected readonly Expression<Func<T, object>> expression;
+            protected readonly Expression<Func<T, object>> Expression;
 
             private readonly IDictionary<string, string> dictionary;
 
@@ -191,25 +194,25 @@
 
             public TestCase(Expression<Func<T, object>> expression)
             {
-                this.expression = expression;
+                this.Expression = expression;
             }
 
             public TestCase(Expression<Func<T, object>> expression, string url)
             {
-                this.expression = expression;
+                this.Expression = expression;
                 this.url = url;
             }
 
             public TestCase(Expression<Func<T, object>> expression, object parameters, string url)
             {
-                this.expression = expression;
+                this.Expression = expression;
                 this.parameters = parameters;
                 this.url = url;
             }
 
             public TestCase(Expression<Func<T, object>> expression, IDictionary<string, string> dictionary, string url)
             {
-                this.expression = expression;
+                this.Expression = expression;
                 this.dictionary = dictionary;
                 this.url = url;
             }
@@ -223,10 +226,10 @@
             {
                 // Act
                 string url = this.parameters != null
-                    ? Url.Builder.GetUrl<T>(this.expression, this.parameters)
+                    ? Url.Builder.GetUrl<T>(this.Expression, this.parameters)
                     : this.dictionary != null
-                    ? Url.Builder.GetUrl<T>(this.expression, this.dictionary)
-                    : Url.Builder.GetUrl<T>(this.expression);
+                    ? Url.Builder.GetUrl<T>(this.Expression, this.dictionary)
+                    : Url.Builder.GetUrl<T>(this.Expression);
 
                 // Assert
                 Assert.Equal(this.url, url);
@@ -234,7 +237,7 @@
 
             public override string ToString()
             {
-                return string.Format("{0} {1}", typeof(T).Name, this.expression);
+                return string.Format("{0} {1}", typeof(T).Name, this.Expression);
             }
         }
 
@@ -249,7 +252,7 @@
 
             public override void Run()
             {
-                Assert.Throws<U>(() => Url.Builder.GetUrl<T>(this.expression));
+                Assert.Throws<U>(() => Url.Builder.GetUrl<T>(this.Expression));
             }
         }
     }
