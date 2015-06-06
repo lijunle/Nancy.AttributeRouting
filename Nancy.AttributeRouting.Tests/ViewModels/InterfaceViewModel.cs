@@ -23,6 +23,14 @@
         object Get();
     }
 
+    [ViewPrefix("Prefix")]
+    public interface IHtmlChildViewModel
+    {
+        [Get("interface/html/child")]
+        [View("view-prefix")]
+        object Get();
+    }
+
     public class InterfaceViewModel : IInterfaceViewModel
     {
         public object Get()
@@ -48,6 +56,14 @@
             public object Get()
             {
                 return new { Message = "Get HTML from interface." };
+            }
+        }
+
+        public class HtmlChildViewModel : IHtmlChildViewModel
+        {
+            public object Get()
+            {
+                return new { Message = "Get HTML with view prefix from interface." };
             }
         }
     }

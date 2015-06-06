@@ -14,6 +14,7 @@
         [InlineData("/html/prefix/type", "Get type prefix message.")]
         [InlineData("/html/prefix/deeper", "Get deeper prefix message.")]
         [InlineData("/interface/html", "Get HTML from interface.")]
+        [InlineData("/interface/html/child", "Get HTML with view prefix from interface.")]
         public void View_attribute_should_point_out_file_location(string url, string expectedContent)
         {
             // Act
