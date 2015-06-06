@@ -3,6 +3,11 @@
     using System;
     using System.Reflection;
 
+    /// <summary>
+    /// <see cref="MultipleRouteAttributesException"/> indicates multiple route attributes are
+    /// decorated on method.
+    /// </summary>
+    [Serializable]
     public class MultipleRouteAttributesException : Exception
     {
         internal MultipleRouteAttributesException(MethodBase method, Exception innerException)

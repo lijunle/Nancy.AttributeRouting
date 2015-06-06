@@ -4,6 +4,11 @@
     using System.Collections.Generic;
     using System.Reflection;
 
+    /// <summary>
+    /// <see cref="DuplicatedRoutingPathsException"/> indicates two or more methods are decorated
+    /// with a same routing path on a same HTTP method.
+    /// </summary>
+    [Serializable]
     public class DuplicatedRoutingPathsException : Exception
     {
         internal DuplicatedRoutingPathsException(

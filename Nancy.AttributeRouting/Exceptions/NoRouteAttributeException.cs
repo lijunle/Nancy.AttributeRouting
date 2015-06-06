@@ -3,6 +3,10 @@
     using System;
     using System.Reflection;
 
+    /// <summary>
+    /// <see cref="NoRouteAttributeException"/> indicates no route attribute is decorated on method.
+    /// </summary>
+    [Serializable]
     public class NoRouteAttributeException : Exception
     {
         internal NoRouteAttributeException(MethodBase method)
