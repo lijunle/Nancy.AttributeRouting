@@ -10,9 +10,9 @@
 
         [Theory]
         [InlineData("/html", "Hello world!")]
-        [InlineData("/html/inner", "Get inner message.")]
-        [InlineData("/html/deeper", "Get deeper message.")]
-        [InlineData("/html/inner/inherit", "Inherit prefix message.")]
+        [InlineData("/html/prefix", "Get view prefix message.")]
+        [InlineData("/html/prefix/type", "Get type prefix message.")]
+        [InlineData("/html/prefix/deeper", "Get deeper prefix message.")]
         public void View_attribute_should_point_out_file_location(string url, string expectedContent)
         {
             // Act
