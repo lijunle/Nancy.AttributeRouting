@@ -4,29 +4,29 @@
     using System.Reflection;
 
     /// <summary>
-    /// The RoutePrefix attribute. It decorates on class, indicates the path from route attribute on
-    /// the class and child class will be prefixed.
+    /// The ViewPrefix attribute. It decorates on class, indicates the View attribute works with
+    /// this prefix to locate paths.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class RoutePrefixAttribute : Attribute
+    public class ViewPrefixAttribute : Attribute
     {
         private readonly string prefix;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RoutePrefixAttribute"/> class.
+        /// Initializes a new instance of the <see cref="ViewPrefixAttribute"/> class.
         /// </summary>
-        /// <param name="prefix">The prefix string for the route attribute path.</param>
-        public RoutePrefixAttribute(string prefix)
+        /// <param name="prefix">The path prefix.</param>
+        public ViewPrefixAttribute(string prefix)
             : this(null, prefix)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RoutePrefixAttribute"/> class.
+        /// Initializes a new instance of the <see cref="ViewPrefixAttribute"/> class.
         /// </summary>
         /// <param name="prefixType">The prefix of this type leveraged as prefix of prefix.</param>
-        /// <param name="prefix">The prefix string for the route attribute path.</param>
-        public RoutePrefixAttribute(Type prefixType, string prefix)
+        /// <param name="prefix">The path prefix.</param>
+        public ViewPrefixAttribute(Type prefixType, string prefix)
         {
             string typePrefix = GetPrefix(prefixType);
             string trimPrefix = prefix.Trim('/');
@@ -40,7 +40,7 @@
                 return string.Empty;
             }
 
-            var attr = type.GetCustomAttribute<RoutePrefixAttribute>(inherit: false);
+            var attr = type.GetCustomAttribute<ViewPrefixAttribute>(false);
             string prefix = attr == null ? string.Empty : attr.prefix;
 
             return prefix;

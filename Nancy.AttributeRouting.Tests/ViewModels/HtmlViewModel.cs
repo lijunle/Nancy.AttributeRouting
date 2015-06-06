@@ -9,35 +9,36 @@
             return new { Message = "Hello world!" };
         }
 
-        [ViewPrefix("Inner")]
-        public class InnerViewModel
+        [ViewPrefix("Prefix")]
+        public class ViewPrefixViewModel
         {
-            [Get("/html/inner")]
-            [View("inner")]
+            [Get("/html/prefix")]
+            [View("view-prefix")]
             public object GetInnerView()
             {
-                return new { Message = "Get inner message." };
+                return new { Message = "Get view prefix message." };
             }
         }
 
-        [ViewPrefix("Deeper")]
-        public class DeeperViewModel : InnerViewModel
+        [ViewPrefix(typeof(ViewPrefixViewModel), "")]
+        public class TypePrefixViewModel
         {
-            [Get("/html/deeper")]
-            [View("deeper")]
-            public object GetDeeperView()
-            {
-                return new { Message = "Get deeper message." };
-            }
-        }
-
-        public class InheritPrefixViewModel : InnerViewModel
-        {
-            [Get("/html/inner/inherit")]
-            [View("inherit")]
+            [Get("/html/prefix/type")]
+            [View("type-prefix")]
             public object GetView()
             {
-                return new { Message = "Inherit prefix message." };
+                return new { Message = "Get type prefix message." };
+            }
+        }
+
+        [ViewPrefix(typeof(ViewPrefixViewModel), "Deeper")]
+        public class DeeperViewModel
+        {
+            [Get("/html/prefix/deeper")]
+            [View("deeper-prefix")]
+            public object GetDeeperView()
+            {
+                return new { Message = "Get deeper prefix message." };
             }
         }
     }
