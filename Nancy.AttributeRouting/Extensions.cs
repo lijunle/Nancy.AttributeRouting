@@ -62,5 +62,10 @@
             MethodInfo bindMethod = BindMethod.MakeGenericMethod(type);
             return bindMethod.Invoke(null, new[] { module });
         }
+
+        public static string GetFullName(this MethodBase method)
+        {
+            return string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
+        }
     }
 }

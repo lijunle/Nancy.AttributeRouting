@@ -13,8 +13,8 @@
         private static string GenerateMessage(MethodBase method)
         {
             string message = string.Format(
-                "Does not find any route attribute decorated on method {0}.",
-                method.Name);
+                "No route attribute is decorated on method {0}.",
+                method.GetFullName());
 
             return message;
         }

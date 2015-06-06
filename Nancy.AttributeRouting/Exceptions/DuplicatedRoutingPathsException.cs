@@ -21,13 +21,14 @@
             string path,
             MethodBase method)
         {
+            string registeredMethodName = routings[httpMethod][path].GetFullName();
+            string pendingMethodName = method.GetFullName();
+
             string message = string.Format(
-                "Attribute path {0} registered on two members, {1}.{2} and {3}.{4}.",
+                "Routing path {0} has already been decorated on method {1}, but also decorated on method {2}.",
                 path,
-                routings[httpMethod][path].DeclaringType.FullName,
-                routings[httpMethod][path].Name,
-                method.DeclaringType.FullName,
-                method.Name);
+                registeredMethodName,
+                pendingMethodName);
 
             return message;
         }

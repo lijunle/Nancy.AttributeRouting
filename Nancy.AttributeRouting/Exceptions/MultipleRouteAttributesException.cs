@@ -13,8 +13,8 @@
         private static string GenerateMessage(MethodBase method)
         {
             string message = string.Format(
-                "Method {0} decorates with more than one route attributes.",
-                method.Name);
+                "Multiple route attributes are decorated on method {0}.",
+                method.GetFullName());
 
             return message;
         }
