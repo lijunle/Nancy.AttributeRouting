@@ -136,10 +136,14 @@
                     m => m.GetInherit(),
                     "/route-prefix/inherit");
 
-                yield return new TestCase<RoutePrefixViewModel.PlaceholderViewModel>(
-                    m => m.GetResultWithProperty("passed-value"),
-                    new { prefix = "passed-prefix" },
+                yield return new TestCase<RoutePrefixViewModel.ParameterizedPrefixViewModel>(
+                    m => m.GetResultWithProperty("passed-prefix", "passed-value"),
                     "/route-prefix/passed-prefix/passed-value");
+
+                yield return new TestCase<RoutePrefixViewModel.ConstructorPrefixViewModel>(
+                    m => m.Get(),
+                    new { prefix = "passed-constructor-parameters" },
+                    "/route-prefix/passed-constructor-parameters");
             }
         }
 

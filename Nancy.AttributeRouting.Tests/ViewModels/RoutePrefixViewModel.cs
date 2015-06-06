@@ -49,19 +49,34 @@
         }
 
         [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
-        public class PlaceholderViewModel
+        public class ParameterizedPrefixViewModel
+        {
+            [Get("{value}")]
+            public object GetResultWithProperty(string prefix, string value)
+            {
+                return new { Result = prefix + "." + value };
+            }
+        }
+
+        [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
+        public class ConstructorPrefixViewModel
         {
             private readonly string prefix;
 
-            public PlaceholderViewModel(string prefix)
+            public ConstructorPrefixViewModel()
+            {
+                this.prefix = "parameters-not-pass-to-constructor";
+            }
+
+            public ConstructorPrefixViewModel(string prefix)
             {
                 this.prefix = prefix;
             }
 
-            [Get("{value}")]
-            public object GetResultWithProperty(string value)
+            [Get("/")]
+            public object Get()
             {
-                return new { Result = this.prefix + "." + value };
+                return new { Result = this.prefix };
             }
         }
     }

@@ -30,6 +30,7 @@
         [InlineData("/route-prefix/child-prefix/grandchild", "Result", "from-grandchild")]
         [InlineData("/route-prefix/inherit", "Result", "inherit-not-affect-routing")]
         [InlineData("/route-prefix/custom-prefix/custom-value", "Result", "custom-prefix.custom-value")]
+        [InlineData("/route-prefix/constructor-prefix", "Result", "parameters-not-pass-to-constructor")]
         [InlineData("/before", "Result", "reject-root-path")]
         [InlineData("/before/rejected", "Result", "before-rejected")]
         [InlineData("/before/passed", "Result", "before-passed")]

@@ -117,7 +117,7 @@
             INancyModule module,
             IDictionary<string, object> parameters)
         {
-            object instance = container.Resolve(method.DeclaringType, new NamedParameterOverloads(parameters));
+            object instance = container.Resolve(method.DeclaringType);
 
             IEnumerable<object> parameterValues =
                 method.GetParameters().Select(
