@@ -29,7 +29,8 @@
         public RoutePrefixAttribute(Type prefixType, string prefix)
         {
             string typePrefix = GetPrefix(prefixType);
-            this.prefix = string.Format("{0}/{1}", typePrefix, prefix).Trim('/');
+            string trimPrefix = prefix.Trim('/');
+            this.prefix = string.Format("{0}/{1}", typePrefix, trimPrefix).Trim('/');
         }
 
         internal static string GetPrefix(Type type)
