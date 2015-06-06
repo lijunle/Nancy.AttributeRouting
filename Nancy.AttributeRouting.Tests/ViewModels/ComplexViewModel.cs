@@ -25,10 +25,28 @@
             return this;
         }
 
-        [Get("/complex/non-string/{age:int}/{graduated:bool}/{id:guid}/{birth:datetime}")]
-        public object GetComplexRoute(Guid id, DateTime birth, int age, bool graduated)
+        [Get("/complex/guid/{id:guid}")]
+        public string GetGuid(Guid id)
         {
-            return new { id, birth, age, graduated };
+            return id.ToString();
+        }
+
+        [Get("/complex/datetime/{time:datetime}")]
+        public string GetDateTime(DateTime time)
+        {
+            return time.ToString();
+        }
+
+        [Get("/complex/int/{number:int}")]
+        public string GetInt(int number)
+        {
+            return number.ToString();
+        }
+
+        [Get("/complex/boolean/{flag:bool}")]
+        public string GetBoolean(bool flag)
+        {
+            return flag.ToString();
         }
 
         [Post("/complex/post/form")]
@@ -37,8 +55,8 @@
             return string.Format("{0}={1}", form.User, form.Password);
         }
 
-        [Get("/complex/get/optional/{name?}")]
-        public object GetWithOptionalParameter(string name = "OptionalName")
+        [Get("/complex/get/optional/{name?default}")]
+        public object GetWithOptionalParameter(string name = null)
         {
             return new { Name = name };
         }

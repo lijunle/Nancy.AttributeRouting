@@ -1,6 +1,5 @@
 ﻿namespace Nancy.AttributeRouting.Tests
 {
-    using System;
     using System.Collections.Generic;
     using Nancy.AttributeRouting.Tests.ViewModels;
     using Nancy.Testing;
@@ -21,7 +20,7 @@
         [InlineData("/nested/result/custom-value", "Result", "nested-custom-value")]
         [InlineData("/my/1", "Result", "TheSameResultFromTwoRoutings")]
         [InlineData("/my/2", "Result", "TheSameResultFromTwoRoutings")]
-        [InlineData("/complex/get/optional", "Name", "OptionalName")]
+        [InlineData("/complex/get/optional", "Name", "default")]
         [InlineData("/complex/get/optional/override-name", "Name", "override-name")]
         [InlineData("/complex/special/Space%20Here", "Str", "Space Here")]
         [InlineData("/complex/special/%E4%B8%AD%E6%96%87", "Str", "中文")]
@@ -66,27 +65,19 @@
             Assert.Equal(expectedResult, response.Body.AsString());
         }
 
-        [Fact]
-        public void Complex_primitive_type_should_be_passed_into_method()
+        [Theory]
+        [InlineData("/complex/guid/ED1527C7-FEE5-40B2-B228-5EAD3B2F55A4", "ed1527c7-fee5-40b2-b228-5ead3b2f55a4")]
+        [InlineData("/complex/datetime/2001-02-03T04%3A05%3A06.0789", "2/3/2001 4:05:06 AM")]
+        [InlineData("/complex/int/000987", "987")]
+        [InlineData("/complex/boolean/true", "True")]
+        public void Complex_primitive_type_should_be_parsed_into_method(string path, string expectedBody)
         {
-            // Arrange
-            int age = 98;
-            bool graduated = true;
-            string id = "D696DBC7-A14B-405B-B4B5-6CCBE9309FFF";
-            string birth = "2001-02-03T04:05:06Z";
-            string url = string.Format("/complex/non-string/{0}/{1}/{2}/{3}", age, graduated, id, birth);
-
             // Act
-            BrowserResponse response = Browser.Get(url, with => with.Accept("application/json"));
+            BrowserResponse response = Browser.Get(path, with => with.Accept("application/json"));
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-            var body = (IDictionary<string, object>)response.Body.DeserializeJson<object>();
-            Assert.Equal(age, body["Age"]);
-            Assert.Equal(graduated, body["Graduated"]);
-            Assert.Equal(Guid.Parse(id), Guid.Parse((string)body["Id"]));
-            Assert.Equal(DateTime.Parse(birth), DateTime.Parse((string)body["Birth"]));
+            Assert.Equal(expectedBody, response.Body.AsString());
         }
 
         [Fact]

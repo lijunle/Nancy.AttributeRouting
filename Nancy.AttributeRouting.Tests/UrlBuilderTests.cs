@@ -14,6 +14,8 @@
         public interface ITestCase
         {
             void Run();
+
+            void ExpectException();
         }
 
         public static IEnumerable<object[]> TestCases
@@ -34,6 +36,10 @@
                     "/my-view-model/constructor-value");
 
                 yield return new TestCase<MyViewModel>(
+                    m => m.GetResult(),
+                    "/my/result");
+
+                yield return new TestCase<MyViewModel>(
                     m => m.GetResult(null),
                     new { value = "object-value" },
                     "/my/result/object-value");
@@ -47,26 +53,60 @@
                     m => m.GetResult("direct-value"),
                     "/my/result/direct-value");
 
+                // explicit value will override direct value
                 yield return new TestCase<MyViewModel>(
                     m => m.GetResult("direct-value"),
                     new { value = "explicit-value" },
                     "/my/result/explicit-value");
 
-                yield return new TestCase<MyViewModel>(
-                    m => m.GetResult("variable-value"),
-                    "/my/result/variable-value");
-
-                yield return new TestCase<MyViewModel>(
-                    m => m.GetResult(string.Format("{0}-{1}", "part1", "part2")),
-                    "/my/result/part1-part2");
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Delete(),
+                    "/my");
 
                 yield return new TestCase<HttpMethodViewModel>(
                     m => m.Get(),
                     "/my");
 
                 yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Options(),
+                    "/my");
+
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Patch(),
+                    "/my");
+
+                yield return new TestCase<HttpMethodViewModel>(
+                    m => m.Post(),
+                    "/my");
+
+                yield return new TestCase<HttpMethodViewModel>(
                     m => m.Put(),
                     "/my");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetGuid(Guid.Parse("ED1527C7-FEE5-40B2-B228-5EAD3B2F55A4")),
+                    "/complex/guid/ed1527c7-fee5-40b2-b228-5ead3b2f55a4");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetDateTime(DateTime.Parse("2001-02-03T04:05:06.0789")),
+                    "/complex/datetime/" + Uri.EscapeDataString("2/3/2001 4:05:06 AM"));
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetInt(1234),
+                    "/complex/int/1234");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetBoolean(true),
+                    "/complex/boolean/True");
+
+                // expression tree does not allow optional parameter, no way to get routing optional parameter
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetWithOptionalParameter(null),
+                    "/complex/get/optional/");
+
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetWithOptionalParameter("passed-name"),
+                    "/complex/get/optional/passed-name");
 
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetWithSpecialCharacters("Space Here"),
@@ -75,14 +115,6 @@
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetWithSpecialCharacters("中文"),
                     "/complex/special/%E4%B8%AD%E6%96%87");
-
-                yield return new TestCase<ComplexViewModel>(
-                    m => m.GetComplexRoute(
-                        Guid.Parse("ED1527C7-FEE5-40B2-B228-5EAD3B2F55A4"),
-                        DateTime.Parse("2001-02-03T04:05:06.0789"),
-                        12,
-                        true),
-                    "/complex/non-string/12/True/ed1527c7-fee5-40b2-b228-5ead3b2f55a4/" + Uri.EscapeDataString("2/3/2001 4:05:06 AM"));
 
                 yield return new TestCase<RoutePrefixViewModel>(
                     m => m.Get(),
@@ -111,6 +143,15 @@
             }
         }
 
+        public static IEnumerable<object[]> ExceptionCases
+        {
+            get
+            {
+                yield return new TestCase<MyViewModel>(m => m.GetByTwoRoutings());
+                yield return new TestCase<MyViewModel>(m => m.GetWithoutRoutings());
+            }
+        }
+
         [Theory]
         [MemberData("TestCases")]
         public void Test_URL_builder(ITestCase testCase)
@@ -118,18 +159,11 @@
             testCase.Run();
         }
 
-        [Fact]
-        public void GetUrl_should_throw_exception_when_method_has_two_attributes()
+        [Theory]
+        [MemberData("ExceptionCases")]
+        public void Throws_URL_builder_exception(ITestCase testCase)
         {
-            Assert.Throws<Exception>(
-                () => Url.Builder.GetUrl<MyViewModel>(m => m.GetByTwoRoutings()));
-        }
-
-        [Fact]
-        public void GetUrl_should_throw_exception_when_method_has_no_attributes()
-        {
-            Assert.Throws<Exception>(
-                () => Url.Builder.GetUrl<MyViewModel>(m => m.GetWithoutRoutings()));
+            testCase.ExpectException();
         }
 
         public class Url : NancyModule
@@ -151,6 +185,11 @@
             private readonly object parameters;
 
             private readonly string url;
+
+            public TestCase(Expression<Func<T, object>> expression)
+            {
+                this.expression = expression;
+            }
 
             public TestCase(Expression<Func<T, object>> expression, string url)
             {
@@ -188,6 +227,12 @@
 
                 // Assert
                 Assert.Equal(this.url, url);
+            }
+
+            public void ExpectException()
+            {
+                // TODO catch specified URL builder exception
+                Assert.Throws<Exception>(() => Url.Builder.GetUrl<T>(this.expression));
             }
 
             public override string ToString()
