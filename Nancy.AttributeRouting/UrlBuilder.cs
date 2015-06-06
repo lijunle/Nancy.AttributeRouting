@@ -87,7 +87,7 @@
             var methodCall = expression.Body as MethodCallExpression;
             if (methodCall == null)
             {
-                throw new Exception(ExpressionNotValidMessage);
+                throw new ArgumentException(ExpressionNotValidMessage, "expression");
             }
 
             string path = RouteAttribute.GetPath(methodCall.Method);

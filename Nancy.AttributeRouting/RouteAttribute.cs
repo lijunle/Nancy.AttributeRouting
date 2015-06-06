@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
+    using Nancy.AttributeRouting.Exceptions;
 
     /// <summary>
     /// The Route attribute indicates the routing path to handle the request.
@@ -31,20 +32,12 @@
             }
             catch (AmbiguousMatchException e)
             {
-                string message = string.Format(
-                    "Method {0} associates with more than one route attributes.",
-                    method.Name);
-
-                throw new Exception(message, e);
+                throw new MultipleRouteAttributesException(method, e);
             }
 
             if (attr == null)
             {
-                string message = string.Format(
-                    "Does not find any route attribute with method {0}.",
-                    method.Name);
-
-                throw new Exception(message);
+                throw new NoRouteAttributeException(method);
             }
 
             string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
@@ -64,15 +57,7 @@
 
             if (routings[httpMethod].ContainsKey(path))
             {
-                string message = string.Format(
-                    "Attribute path {0} registered on two members, {1}.{2} and {3}.{4}.",
-                    path,
-                    routings[httpMethod][path].DeclaringType.FullName,
-                    routings[httpMethod][path].Name,
-                    method.DeclaringType.FullName,
-                    method.Name);
-
-                throw new Exception(message);
+                throw new DuplicatedRoutingPathsException(routings, httpMethod, path, method);
             }
 
             routings[httpMethod].Add(path, method);
