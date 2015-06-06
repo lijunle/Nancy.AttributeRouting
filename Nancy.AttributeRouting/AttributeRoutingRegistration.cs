@@ -19,7 +19,7 @@
 
             foreach (MethodBase method in methods)
             {
-                RouteAttribute.AddToRoutings(AttributeRoutingResolver.Routings, method);
+                AttributeRoutingResolver.Routings.Register(method);
             }
         }
 

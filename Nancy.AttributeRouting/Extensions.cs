@@ -21,6 +21,17 @@
                 type == typeof(TimeSpan);
         }
 
+        public static void Register(
+            this Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
+            MethodBase method)
+        {
+            IEnumerable<RouteAttribute> attrs = method.GetCustomAttributes<RouteAttribute>();
+            foreach (RouteAttribute attr in attrs)
+            {
+                RouteAttribute.Register(routings, attr, method);
+            }
+        }
+
         public static IDictionary<string, string> ToDictionary(this object thisObject)
         {
             return TypeDescriptor.GetProperties(thisObject)

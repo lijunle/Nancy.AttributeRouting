@@ -21,17 +21,6 @@
             this.method = method;
         }
 
-        internal static void AddToRoutings(
-            Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
-            MethodBase method)
-        {
-            IEnumerable<RouteAttribute> attrs = method.GetCustomAttributes<RouteAttribute>();
-            foreach (RouteAttribute attr in attrs)
-            {
-                AddToRoutings(routings, attr, method);
-            }
-        }
-
         internal static string GetPath(MethodBase method)
         {
             RouteAttribute attr;
@@ -64,7 +53,7 @@
             return path;
         }
 
-        private static void AddToRoutings(
+        internal static void Register(
             Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
             RouteAttribute attribute,
             MethodBase method)
