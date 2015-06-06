@@ -15,7 +15,7 @@
             IEnumerable<MethodBase> methods = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.SafeGetTypes())
                 .Where(type => !type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
-                .SelectMany(GetMembersWithRouteAttribute);
+                .SelectMany(GetMethodsWithRouteAttribute);
 
             foreach (MethodBase method in methods)
             {
@@ -41,7 +41,7 @@
             get { yield return new TypeRegistration(typeof(IUrlBuilder), typeof(UrlBuilder)); }
         }
 
-        private static IEnumerable<MethodBase> GetMembersWithRouteAttribute(Type type)
+        private static IEnumerable<MethodBase> GetMethodsWithRouteAttribute(Type type)
         {
             IEnumerable<MethodBase> methods = type
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
