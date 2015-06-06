@@ -49,19 +49,12 @@
         }
 
         [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
-        public class PlaceholderViewModel
+        public class ParameterizedPrefixViewModel
         {
-            private readonly string prefix;
-
-            public PlaceholderViewModel(string prefix)
-            {
-                this.prefix = prefix;
-            }
-
             [Get("{value}")]
-            public object GetResultWithProperty(string value)
+            public object GetResultWithProperty(string prefix, string value)
             {
-                return new { Result = this.prefix + "." + value };
+                return new { Result = prefix + "." + value };
             }
         }
     }
