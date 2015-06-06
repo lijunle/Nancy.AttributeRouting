@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Nancy.AttributeRouting.Exceptions;
     using Nancy.AttributeRouting.Tests.ViewModels;
     using Nancy.Testing;
     using Xunit;
@@ -14,8 +15,6 @@
         public interface ITestCase
         {
             void Run();
-
-            void ExpectException();
         }
 
         public static IEnumerable<object[]> TestCases
@@ -151,8 +150,11 @@
         {
             get
             {
-                yield return new TestCase<MyViewModel>(m => m.GetByTwoRoutings());
-                yield return new TestCase<MyViewModel>(m => m.GetWithoutRoutings());
+                yield return new ExceptionTestCase<MyViewModel, MultipleRouteAttributesException>(
+                    m => m.GetByTwoRoutings());
+
+                yield return new ExceptionTestCase<MyViewModel, NoRouteAttributeException>(
+                    m => m.GetWithoutRoutings());
             }
         }
 
@@ -167,7 +169,7 @@
         [MemberData("ExceptionCases")]
         public void Throws_URL_builder_exception(ITestCase testCase)
         {
-            testCase.ExpectException();
+            testCase.Run();
         }
 
         public class Url : NancyModule
@@ -182,7 +184,7 @@
 
         public class TestCase<T> : ITestCase where T : class
         {
-            private readonly Expression<Func<T, object>> expression;
+            protected readonly Expression<Func<T, object>> Expression;
 
             private readonly IDictionary<string, string> dictionary;
 
@@ -192,25 +194,25 @@
 
             public TestCase(Expression<Func<T, object>> expression)
             {
-                this.expression = expression;
+                this.Expression = expression;
             }
 
             public TestCase(Expression<Func<T, object>> expression, string url)
             {
-                this.expression = expression;
+                this.Expression = expression;
                 this.url = url;
             }
 
             public TestCase(Expression<Func<T, object>> expression, object parameters, string url)
             {
-                this.expression = expression;
+                this.Expression = expression;
                 this.parameters = parameters;
                 this.url = url;
             }
 
             public TestCase(Expression<Func<T, object>> expression, IDictionary<string, string> dictionary, string url)
             {
-                this.expression = expression;
+                this.Expression = expression;
                 this.dictionary = dictionary;
                 this.url = url;
             }
@@ -220,28 +222,37 @@
                 return new object[] { testCase };
             }
 
-            public void Run()
+            public virtual void Run()
             {
                 // Act
                 string url = this.parameters != null
-                    ? Url.Builder.GetUrl<T>(this.expression, this.parameters)
+                    ? Url.Builder.GetUrl<T>(this.Expression, this.parameters)
                     : this.dictionary != null
-                    ? Url.Builder.GetUrl<T>(this.expression, this.dictionary)
-                    : Url.Builder.GetUrl<T>(this.expression);
+                    ? Url.Builder.GetUrl<T>(this.Expression, this.dictionary)
+                    : Url.Builder.GetUrl<T>(this.Expression);
 
                 // Assert
                 Assert.Equal(this.url, url);
             }
 
-            public void ExpectException()
-            {
-                // TODO catch specified URL builder exception
-                Assert.Throws<Exception>(() => Url.Builder.GetUrl<T>(this.expression));
-            }
-
             public override string ToString()
             {
-                return string.Format("{0} {1}", typeof(T).Name, this.expression);
+                return string.Format("{0} {1}", typeof(T).Name, this.Expression);
+            }
+        }
+
+        public class ExceptionTestCase<T, U> : TestCase<T>
+            where T : class
+            where U : Exception
+        {
+            public ExceptionTestCase(Expression<Func<T, object>> expression)
+                : base(expression)
+            {
+            }
+
+            public override void Run()
+            {
+                Assert.Throws<U>(() => Url.Builder.GetUrl<T>(this.Expression));
             }
         }
     }
