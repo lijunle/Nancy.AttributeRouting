@@ -1,9 +1,12 @@
 ﻿namespace Nancy.AttributeRouting.Tests.ViewModels
 {
+    [RoutePrefix("interface")]
     public interface IInterfaceViewModel
     {
+        [Get("")]
         object Get();
 
+        [Get("{value}")]
         object GetWithParamter(string value);
     }
 
