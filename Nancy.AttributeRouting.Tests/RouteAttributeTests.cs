@@ -137,7 +137,12 @@
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
 
-            ISet<Type> validExceptionTypes = new HashSet<Type> { typeof(MultipleBeforeAttributeException) };
+            ISet<Type> validExceptionTypes = new HashSet<Type>
+            {
+                typeof(RequestExecutionException),
+                typeof(MultipleBeforeAttributeException),
+            };
+
             ISet<Type> exceptionTypes = GetExceptionTypes(response);
             Assert.Subset(validExceptionTypes, exceptionTypes);
         }
