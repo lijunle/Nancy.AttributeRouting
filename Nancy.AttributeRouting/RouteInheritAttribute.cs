@@ -3,10 +3,18 @@
     using System;
     using System.Reflection;
 
+    /// <summary>
+    /// <see cref="RouteInheritAttribute"/> indicates a type inherit another type's routing
+    /// information, including routing prefix, view prefix and before hooks.
+    /// </summary>
     public class RouteInheritAttribute : Attribute
     {
         private readonly Type type;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RouteInheritAttribute"/> class.
+        /// </summary>
+        /// <param name="type">The type to inherit its routing information.</param>
         public RouteInheritAttribute(Type type)
         {
             this.type = type;

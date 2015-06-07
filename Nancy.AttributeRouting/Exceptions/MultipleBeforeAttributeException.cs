@@ -3,6 +3,10 @@
     using System;
     using System.Reflection;
 
+    /// <summary>
+    /// <see cref="MultipleBeforeAttributeException"/> indicates multiple before attributes are
+    /// decorated on method or type.
+    /// </summary>
     [Serializable]
     public sealed class MultipleBeforeAttributeException : Exception
     {
