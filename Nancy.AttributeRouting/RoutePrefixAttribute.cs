@@ -33,7 +33,7 @@
                 return cachedPrefix;
             }
 
-            string prefix = GetPrefix(type, recursive: true).ToString();
+            string prefix = GetPrefix(type, recursive: true).ToString().Trim('/');
 
             Cache.Add(type, prefix);
 
