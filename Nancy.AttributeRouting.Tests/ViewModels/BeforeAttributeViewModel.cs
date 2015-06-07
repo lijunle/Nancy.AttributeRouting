@@ -14,6 +14,13 @@
             object Get();
         }
 
+        [RouteInherit(typeof(IRejectedByInterfaceViewModel))]
+        public interface IRejectedByInterfaceAncestorViewModel
+        {
+            [Get("before/rejected/by-interface-ancestor")]
+            object Get();
+        }
+
         [Get("/")]
         [Rejected("reject-root-path")]
         public object RejectRootPath()
@@ -54,6 +61,15 @@
             public object Get()
             {
                 // interface rejected attribute applies here
+                return new { Result = "should-not-be-here" };
+            }
+        }
+
+        public class RejectedByInterfaceAncestorViewModel : IRejectedByInterfaceAncestorViewModel
+        {
+            public object Get()
+            {
+                // interface ancestor rejected attribute applies here
                 return new { Result = "should-not-be-here" };
             }
         }
