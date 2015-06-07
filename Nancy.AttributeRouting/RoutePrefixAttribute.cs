@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reflection;
+    using System.Text;
 
     /// <summary>
     /// The RoutePrefix attribute. It decorates on class, indicates the path from route attribute on
@@ -21,17 +22,23 @@
             this.prefix = prefix;
         }
 
-        internal static string GetPrefix(Type type)
+        internal static StringBuilder GetPrefix(Type type)
         {
             if (type == null || type == typeof(object))
             {
-                return string.Empty;
+                return new StringBuilder();
             }
 
-            var attr = type.GetCustomAttribute<RoutePrefixAttribute>(inherit: false);
-            string prefix = attr == null ? string.Empty : attr.prefix;
+            Type ancestorType = RouteInheritAttribute.GetAncestorType(type);
+            StringBuilder builder = GetPrefix(ancestorType);
 
-            return prefix;
+            var attr = type.GetCustomAttribute<RoutePrefixAttribute>(inherit: false);
+            if (attr != null)
+            {
+                builder.Append('/').Append(attr.prefix);
+            }
+
+            return builder;
         }
     }
 }

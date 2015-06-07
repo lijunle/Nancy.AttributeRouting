@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
     using Nancy.AttributeRouting.Exceptions;
 
     /// <summary>
@@ -40,8 +41,8 @@
                 throw new NoRouteAttributeException(method);
             }
 
-            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = string.Format("/{0}/{1}", prefix, attr.path);
+            StringBuilder prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = prefix.Append('/').Append(attr.path).ToString();
 
             return path;
         }
@@ -52,8 +53,8 @@
             MethodBase method)
         {
             HttpMethod httpMethod = attribute.method;
-            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = string.Format("/{0}/{1}", prefix, attribute.path);
+            StringBuilder prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = prefix.Append('/').Append(attribute.path).ToString();
 
             if (routings[httpMethod].ContainsKey(path))
             {
