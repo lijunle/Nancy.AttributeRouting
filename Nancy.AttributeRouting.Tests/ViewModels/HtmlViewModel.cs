@@ -20,7 +20,7 @@
             }
         }
 
-        [ViewPrefix(typeof(ViewPrefixViewModel), "")]
+        [RouteInherit(typeof(ViewPrefixViewModel))]
         public class TypePrefixViewModel
         {
             [Get("/html/prefix/type")]
@@ -31,7 +31,8 @@
             }
         }
 
-        [ViewPrefix(typeof(ViewPrefixViewModel), "Deeper")]
+        [RouteInherit(typeof(ViewPrefixViewModel))]
+        [ViewPrefix("Deeper")]
         public class DeeperViewModel
         {
             [Get("/html/prefix/deeper")]

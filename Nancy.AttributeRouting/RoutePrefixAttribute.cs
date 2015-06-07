@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reflection;
+    using System.Text;
 
     /// <summary>
     /// The RoutePrefix attribute. It decorates on class, indicates the path from route attribute on
@@ -17,33 +18,27 @@
         /// </summary>
         /// <param name="prefix">The prefix string for the route attribute path.</param>
         public RoutePrefixAttribute(string prefix)
-            : this(null, prefix)
         {
+            this.prefix = prefix;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RoutePrefixAttribute"/> class.
-        /// </summary>
-        /// <param name="prefixType">The prefix of this type leveraged as prefix of prefix.</param>
-        /// <param name="prefix">The prefix string for the route attribute path.</param>
-        public RoutePrefixAttribute(Type prefixType, string prefix)
-        {
-            string typePrefix = GetPrefix(prefixType);
-            string trimPrefix = prefix.Trim('/');
-            this.prefix = string.Format("{0}/{1}", typePrefix, trimPrefix).Trim('/');
-        }
-
-        internal static string GetPrefix(Type type)
+        internal static StringBuilder GetPrefix(Type type)
         {
             if (type == null || type == typeof(object))
             {
-                return string.Empty;
+                return new StringBuilder();
             }
 
-            var attr = type.GetCustomAttribute<RoutePrefixAttribute>(inherit: false);
-            string prefix = attr == null ? string.Empty : attr.prefix;
+            Type ancestorType = RouteInheritAttribute.GetAncestorType(type);
+            StringBuilder builder = GetPrefix(ancestorType);
 
-            return prefix;
+            var attr = type.GetCustomAttribute<RoutePrefixAttribute>(inherit: false);
+            if (attr != null)
+            {
+                builder.Append('/').Append(attr.prefix);
+            }
+
+            return builder;
         }
     }
 }

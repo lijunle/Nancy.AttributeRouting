@@ -9,7 +9,7 @@
             return new { Result = "value" };
         }
 
-        [RoutePrefix(typeof(RoutePrefixViewModel), "")]
+        [RouteInherit(typeof(RoutePrefixViewModel))]
         public class TypePrefixViewModel
         {
             [Get("/type-prefix")]
@@ -19,7 +19,8 @@
             }
         }
 
-        [RoutePrefix(typeof(RoutePrefixViewModel), "child-prefix")]
+        [RouteInherit(typeof(RoutePrefixViewModel))]
+        [RoutePrefix("child-prefix")]
         public class ChildPrefixViewModel
         {
             [Get("/")]
@@ -29,7 +30,8 @@
             }
         }
 
-        [RoutePrefix(typeof(ChildPrefixViewModel), "grandchild")]
+        [RouteInherit(typeof(ChildPrefixViewModel))]
+        [RoutePrefix("grandchild")]
         public class GrandchildViewModel
         {
             [Get("/")]
@@ -48,7 +50,8 @@
             }
         }
 
-        [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
+        [RouteInherit(typeof(RoutePrefixViewModel))]
+        [RoutePrefix("{prefix}")]
         public class ParameterizedPrefixViewModel
         {
             [Get("{value}")]
@@ -58,7 +61,8 @@
             }
         }
 
-        [RoutePrefix(typeof(RoutePrefixViewModel), "{prefix}")]
+        [RouteInherit(typeof(RoutePrefixViewModel))]
+        [RoutePrefix("{prefix}")]
         public class ConstructorPrefixViewModel
         {
             private readonly string prefix;

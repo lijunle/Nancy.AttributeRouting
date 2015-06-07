@@ -42,21 +42,27 @@
 
         private static BeforeAttribute GetAttribute(MethodBase method)
         {
-            // 1. check the method itself
-            var attr = method.GetCustomAttribute<BeforeAttribute>(inherit: false);
-            if (attr != null)
+            var methodAttribute = method.GetCustomAttribute<BeforeAttribute>(inherit: false);
+            var attribute = methodAttribute ?? GetAttribute(method.DeclaringType);
+            return attribute;
+        }
+
+        private static BeforeAttribute GetAttribute(Type type)
+        {
+            if (type == null || type == typeof(object))
             {
-                return attr;
+                return null;
             }
 
-            // 2. check the class which declares the method and its ancestors.
-            var attrs = method.DeclaringType.GetCustomAttributes<BeforeAttribute>(inherit: true);
+            var attrs = type.GetCustomAttributes<BeforeAttribute>(inherit: false);
             if (attrs.Any())
             {
+                // TODO handle multiple BeforeAttribute
                 return attrs.First();
             }
 
-            return null;
+            var ancestorType = RouteInheritAttribute.GetAncestorType(type);
+            return GetAttribute(ancestorType);
         }
     }
 }
