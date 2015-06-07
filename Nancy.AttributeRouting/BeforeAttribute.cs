@@ -1,6 +1,7 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Nancy.AttributeRouting.Exceptions;
@@ -12,6 +13,9 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public abstract class BeforeAttribute : Attribute
     {
+        private static readonly Dictionary<Type, BeforeAttribute> Cache =
+            new Dictionary<Type, BeforeAttribute>();
+
         /// <summary>
         /// Process the custom code and determine whether continue on view model execution.
         /// </summary>
@@ -60,6 +64,12 @@
                 return null;
             }
 
+            BeforeAttribute cachedAttribute;
+            if (Cache.TryGetValue(type, out cachedAttribute))
+            {
+                return cachedAttribute;
+            }
+
             var typeAttributes = type.GetCustomAttributes<BeforeAttribute>(inherit: false);
             if (typeAttributes.Count() > 1)
             {
@@ -67,6 +77,9 @@
             }
 
             var attribute = typeAttributes.SingleOrDefault() ?? GetAttribute(RouteInheritAttribute.GetAncestorType(type));
+
+            Cache.Add(type, attribute);
+
             return attribute;
         }
     }

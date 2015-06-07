@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Reflection;
     using Nancy.ModelBinding;
 
@@ -25,11 +26,7 @@
             this Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
             MethodBase method)
         {
-            IEnumerable<RouteAttribute> attrs = method.GetCustomAttributes<RouteAttribute>();
-            foreach (RouteAttribute attr in attrs)
-            {
-                RouteAttribute.Register(routings, attr, method);
-            }
+            RouteAttribute.Register(routings, method);
         }
 
         public static IDictionary<string, string> ToDictionary(this object thisObject)
@@ -66,6 +63,25 @@
         public static string GetFullName(this MethodBase method)
         {
             return string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
+        }
+
+        public static IDictionary<string, string> ToParameterDictionary(
+            this MethodCallExpression methodCallExpression)
+        {
+            MethodInfo method = methodCallExpression.Method;
+            IReadOnlyCollection<Expression> arguments = methodCallExpression.Arguments;
+
+            IEnumerable<string> paramNames =
+                method.GetParameters().Select(parameter => parameter.Name);
+
+            IEnumerable<object> paramValues =
+                arguments.Select(argument => Expression.Lambda(argument).Compile().DynamicInvoke());
+
+            Dictionary<string, string> paramDictionary =
+                paramNames.Zip(paramValues, (name, value) => Tuple.Create(name, value))
+                    .ToDictionary(tuple => tuple.Item1, tuple => Convert.ToString(tuple.Item2));
+
+            return paramDictionary;
         }
     }
 }

@@ -64,6 +64,7 @@
     <Compile Include="RouteAttribute.cs" />
     <Compile Include="RouteInheritAttribute.cs" />
     <Compile Include="RoutePrefixAttribute.cs" />
+    <Compile Include="SegmentExtractorExtensions.cs" />
     <Compile Include="UrlBuilder.cs" />
     <Compile Include="ViewAttribute.cs" />
     <Compile Include="ViewPrefixAttribute.cs" />

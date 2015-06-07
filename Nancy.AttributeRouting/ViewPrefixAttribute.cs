@@ -1,6 +1,7 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
     using System.Text;
 
@@ -11,6 +12,8 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class ViewPrefixAttribute : Attribute
     {
+        private static readonly Dictionary<Type, string> Cache = new Dictionary<Type, string>();
+
         private readonly string prefix;
 
         /// <summary>
@@ -22,7 +25,22 @@
             this.prefix = prefix;
         }
 
-        internal static StringBuilder GetPrefix(Type type)
+        internal static string GetPrefix(Type type)
+        {
+            string cachedPrefix;
+            if (Cache.TryGetValue(type, out cachedPrefix))
+            {
+                return cachedPrefix;
+            }
+
+            string prefix = GetPrefix(type, recursive: true).ToString();
+
+            Cache.Add(type, prefix);
+
+            return prefix;
+        }
+
+        private static StringBuilder GetPrefix(Type type, bool recursive)
         {
             if (type == null || type == typeof(object))
             {
@@ -30,7 +48,7 @@
             }
 
             Type ancestorType = RouteInheritAttribute.GetAncestorType(type);
-            StringBuilder builder = GetPrefix(ancestorType);
+            StringBuilder builder = GetPrefix(ancestorType, recursive);
 
             var attr = type.GetCustomAttribute<ViewPrefixAttribute>(inherit: false);
             if (attr != null)

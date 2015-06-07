@@ -5,7 +5,6 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
     using Nancy.AttributeRouting.Exceptions;
 
     /// <summary>
@@ -25,48 +24,64 @@
 
         internal static string GetPath(MethodBase method)
         {
-            RouteAttribute attr;
+            IEnumerable<RoutingPath> routingPaths = GetRoutingPaths(method);
 
-            try
-            {
-                attr = method.GetCustomAttribute<RouteAttribute>(inherit: false);
-            }
-            catch (AmbiguousMatchException e)
-            {
-                throw new MultipleRouteAttributesException(method);
-            }
-
-            if (attr == null)
+            if (routingPaths.Count() == 0)
             {
                 throw new NoRouteAttributeException(method);
             }
-
-            StringBuilder prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = prefix.Append('/').Append(attr.path).ToString();
-
-            return path;
+            else if (routingPaths.Count() > 1)
+            {
+                throw new MultipleRouteAttributesException(method);
+            }
+            else
+            {
+                return routingPaths.Single().Path;
+            }
         }
 
         internal static void Register(
             Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
-            RouteAttribute attribute,
             MethodBase method)
         {
-            HttpMethod httpMethod = attribute.method;
-            StringBuilder prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = prefix.Append('/').Append(attribute.path).ToString();
+            IEnumerable<RoutingPath> routingPaths = GetRoutingPaths(method);
 
-            if (routings[httpMethod].ContainsKey(path))
+            foreach (RoutingPath routingPath in routingPaths)
             {
-                throw new DuplicatedRoutingPathsException(routings, httpMethod, path, method);
-            }
+                HttpMethod httpMethod = routingPath.HttpMethod;
+                string path = routingPath.Path;
 
-            routings[httpMethod].Add(path, method);
+                if (routings[httpMethod].ContainsKey(path))
+                {
+                    throw new DuplicatedRoutingPathsException(routings, httpMethod, path, method);
+                }
+
+                routings[httpMethod].Add(path, method);
+            }
         }
 
-        private static string JoinPrefixAndPath(IEnumerable<string> prefix, string path)
+        private static IEnumerable<RoutingPath> GetRoutingPaths(MethodBase method)
         {
-            return string.Join("/", prefix.Concat(new string[] { path }));
+            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
+
+            IEnumerable<RoutingPath> routingPaths =
+                method.GetCustomAttributes<RouteAttribute>(inherit: false)
+                    .Select(attribute => new RoutingPath(attribute.method, prefix, attribute.path));
+
+            return routingPaths;
+        }
+
+        private class RoutingPath
+        {
+            public RoutingPath(HttpMethod httpMethod, string prefix, string path)
+            {
+                this.HttpMethod = httpMethod;
+                this.Path = string.Format("{0}/{1}", prefix, path);
+            }
+
+            public HttpMethod HttpMethod { get; private set; }
+
+            public string Path { get; private set; }
         }
     }
 

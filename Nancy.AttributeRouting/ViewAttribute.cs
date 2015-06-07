@@ -2,7 +2,6 @@
 {
     using System;
     using System.Reflection;
-    using System.Text;
 
     /// <summary>
     /// The View attribute indicates the view path to render from request.
@@ -35,8 +34,8 @@
                 return string.Empty;
             }
 
-            StringBuilder prefix = ViewPrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = prefix.Append('/').Append(attr.path).ToString();
+            string prefix = ViewPrefixAttribute.GetPrefix(method.DeclaringType);
+            string path = string.Format("{0}/{1}", prefix, attr.path);
 
             return path;
         }
