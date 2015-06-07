@@ -1,7 +1,7 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Reflection;
     using System.Text;
 
@@ -12,7 +12,8 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class ViewPrefixAttribute : Attribute
     {
-        private static readonly Dictionary<Type, string> Cache = new Dictionary<Type, string>();
+        private static readonly ConcurrentDictionary<Type, string> Cache =
+            new ConcurrentDictionary<Type, string>();
 
         private readonly string prefix;
 
@@ -27,15 +28,9 @@
 
         internal static string GetPrefix(Type type)
         {
-            string cachedPrefix;
-            if (Cache.TryGetValue(type, out cachedPrefix))
-            {
-                return cachedPrefix;
-            }
-
-            string prefix = GetPrefix(type, recursive: true).ToString().Trim('/');
-
-            Cache.Add(type, prefix);
+            string prefix = Cache.GetOrAdd(
+                type,
+                t => GetPrefix(t, recursive: true).ToString().Trim('/'));
 
             return prefix;
         }
