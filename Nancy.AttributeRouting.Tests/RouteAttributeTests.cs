@@ -131,6 +131,7 @@
         [Theory]
         [InlineData("/before/multiple-on-method")]
         [InlineData("/before/multiple-on-class")]
+        [InlineData("/before/multiple-on-interface")]
         public void Decorate_multiple_before_attributes_should_throw_exception(string url)
         {
             // Act

@@ -21,6 +21,14 @@
             object Get();
         }
 
+        [MultipleBefore]
+        [MultipleBefore]
+        public interface IMultipleBeforeOnInterfaceViewModel
+        {
+            [Get("before/multiple-on-interface")]
+            object Get();
+        }
+
         [Get("/")]
         [Rejected("reject-root-path")]
         public object RejectRootPath()
@@ -118,6 +126,14 @@
             }
         }
 
+        public class MultipleBeforeOnInterfaceViewModel : IMultipleBeforeOnInterfaceViewModel
+        {
+            public object Get()
+            {
+                return new { Result = "should-not-be-here" };
+            }
+        }
+
         private class RejectedAttribute : BeforeAttribute
         {
             private readonly string message;
@@ -142,7 +158,7 @@
             }
         }
 
-        [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
+        [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true)]
         private class MultipleBeforeAttribute : BeforeAttribute
         {
             public override Response Process(TinyIoCContainer container, NancyContext context)
