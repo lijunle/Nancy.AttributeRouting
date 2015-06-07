@@ -38,6 +38,8 @@
         [InlineData("/before", "Result", "reject-root-path")]
         [InlineData("/before/passed", "Result", "before-passed")]
         [InlineData("/before/rejected", "Result", "before-rejected")]
+        [InlineData("/before/rejected/by-interface", "Result", "rejected-by-interface")]
+        [InlineData("/before/rejected/by-interface-ancestor", "Result", "rejected-by-interface")]
         [InlineData("/before/rejected/by-class", "Result", "rejected-by-class")]
         [InlineData("/before/rejected/by-ancestor", "Result", "rejected-by-class")]
         [InlineData("/interface", "Result", "query-from-interface")]
@@ -129,6 +131,7 @@
         [Theory]
         [InlineData("/before/multiple-on-method")]
         [InlineData("/before/multiple-on-class")]
+        [InlineData("/before/multiple-on-interface")]
         public void Decorate_multiple_before_attributes_should_throw_exception(string url)
         {
             // Act

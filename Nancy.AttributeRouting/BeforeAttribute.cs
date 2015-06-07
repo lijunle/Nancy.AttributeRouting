@@ -10,7 +10,7 @@
     /// <summary>
     /// Before attribute provides a hook to execute before enter the view model execution.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface)]
     public abstract class BeforeAttribute : Attribute
     {
         private static readonly Dictionary<Type, BeforeAttribute> Cache =

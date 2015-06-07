@@ -7,6 +7,28 @@
     [RoutePrefix("before")]
     public class BeforeAttributeViewModel
     {
+        [Rejected("rejected-by-interface")]
+        public interface IRejectedByInterfaceViewModel
+        {
+            [Get("before/rejected/by-interface")]
+            object Get();
+        }
+
+        [RouteInherit(typeof(IRejectedByInterfaceViewModel))]
+        public interface IRejectedByInterfaceAncestorViewModel
+        {
+            [Get("before/rejected/by-interface-ancestor")]
+            object Get();
+        }
+
+        [MultipleBefore]
+        [MultipleBefore]
+        public interface IMultipleBeforeOnInterfaceViewModel
+        {
+            [Get("before/multiple-on-interface")]
+            object Get();
+        }
+
         [Get("/")]
         [Rejected("reject-root-path")]
         public object RejectRootPath()
@@ -40,6 +62,24 @@
         public object PostSameName()
         {
             return new { Result = "should-not-be-here" };
+        }
+
+        public class RejectedByInterfaceViewModel : IRejectedByInterfaceViewModel
+        {
+            public object Get()
+            {
+                // interface rejected attribute applies here
+                return new { Result = "should-not-be-here" };
+            }
+        }
+
+        public class RejectedByInterfaceAncestorViewModel : IRejectedByInterfaceAncestorViewModel
+        {
+            public object Get()
+            {
+                // interface ancestor rejected attribute applies here
+                return new { Result = "should-not-be-here" };
+            }
         }
 
         [Rejected("rejected-by-class")]
@@ -86,6 +126,14 @@
             }
         }
 
+        public class MultipleBeforeOnInterfaceViewModel : IMultipleBeforeOnInterfaceViewModel
+        {
+            public object Get()
+            {
+                return new { Result = "should-not-be-here" };
+            }
+        }
+
         private class RejectedAttribute : BeforeAttribute
         {
             private readonly string message;
@@ -110,7 +158,7 @@
             }
         }
 
-        [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
+        [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true)]
         private class MultipleBeforeAttribute : BeforeAttribute
         {
             public override Response Process(TinyIoCContainer container, NancyContext context)
