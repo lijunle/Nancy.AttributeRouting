@@ -4,7 +4,7 @@
     using System.Reflection;
 
     [Serializable]
-    public class MultipleBeforeAttributeException : Exception
+    public sealed class MultipleBeforeAttributeException : Exception
     {
         internal MultipleBeforeAttributeException(MethodBase method)
             : base(GenerateMessage(method))

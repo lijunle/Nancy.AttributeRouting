@@ -7,7 +7,7 @@
     /// <see cref="NoRouteAttributeException"/> indicates no route attribute is decorated on method.
     /// </summary>
     [Serializable]
-    public class NoRouteAttributeException : Exception
+    public sealed class NoRouteAttributeException : Exception
     {
         internal NoRouteAttributeException(MethodBase method)
             : base(GenerateMessage(method))
