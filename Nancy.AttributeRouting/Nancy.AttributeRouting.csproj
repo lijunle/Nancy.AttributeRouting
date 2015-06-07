@@ -55,6 +55,7 @@
     <Compile Include="AttributeRoutingResolver.cs" />
     <Compile Include="BeforeAttribute.cs" />
     <Compile Include="Exceptions\DuplicatedRoutingPathsException.cs" />
+    <Compile Include="Exceptions\MultipleBeforeAttributeException.cs" />
     <Compile Include="Exceptions\MultipleRouteAttributesException.cs" />
     <Compile Include="Exceptions\NoRouteAttributeException.cs" />
     <Compile Include="Extensions.cs" />
