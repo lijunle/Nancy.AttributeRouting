@@ -15,14 +15,14 @@
 
         [Get("rejected")]
         [Rejected("before-rejected")]
-        public virtual object Reject()
+        public object Reject()
         {
             return new { Result = "should-not-be-here" };
         }
 
         [Get("passed")]
         [Passed]
-        public virtual object Pass()
+        public object Pass()
         {
             return new { Result = "before-passed" };
         }
@@ -41,44 +41,25 @@
             return new { Result = "should-not-be-here" };
         }
 
-        [RouteInherit(typeof(BeforeAttributeViewModel))]
-        public class PassedChildViewModel : BeforeAttributeViewModel
+        [Rejected("rejected-by-class")]
+        public class RejectedByClassViewModel
         {
-            [Get("child/passed")]
-            [Passed]
-            public override object Reject()
+            [Get("before/rejected/by-class")]
+            public object RejectByClass()
             {
-                // the parent rejected attribute does not affect child.
-                return new { Result = "passed-from-child" };
+                // if method attribute is absent, the class level attribute applies.
+                return new { Result = "should-not-be-here" };
             }
         }
 
-        [RouteInherit(typeof(BeforeAttributeViewModel))]
-        [Rejected("rejected-from-child")]
-        public class RejectedChildViewModel : BeforeAttributeViewModel
+        [RouteInherit(typeof(RejectedByClassViewModel))]
+        public class RejectByAncestorViewModel
         {
-            [Get("child/rejected")]
-            public override object Pass()
+            [Get("before/rejected/by-ancestor")]
+            public object Pass()
             {
-                // if method hook is absent, the class level hook applies.
-                return base.Pass();
-            }
-        }
-
-        [RouteInherit(typeof(RejectedChildViewModel))]
-        [Rejected("rejected-from-nearest")]
-        public class NearestChildViewModel : RejectedChildViewModel
-        {
-        }
-
-        [RouteInherit(typeof(NearestChildViewModel))]
-        public class LeafChildViewModel : NearestChildViewModel
-        {
-            [Get("child/nearest")]
-            public override object Pass()
-            {
-                // the nearest ancestor class level hook applies
-                return base.Pass();
+                // the route inherited attribute applies here
+                return new { Result = "should-not-be-here" };
             }
         }
 
