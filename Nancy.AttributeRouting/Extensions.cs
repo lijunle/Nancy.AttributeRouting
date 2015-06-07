@@ -25,11 +25,7 @@
             this Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
             MethodBase method)
         {
-            IEnumerable<RouteAttribute> attrs = method.GetCustomAttributes<RouteAttribute>();
-            foreach (RouteAttribute attr in attrs)
-            {
-                RouteAttribute.Register(routings, attr, method);
-            }
+            RouteAttribute.Register(routings, method);
         }
 
         public static IDictionary<string, string> ToDictionary(this object thisObject)
