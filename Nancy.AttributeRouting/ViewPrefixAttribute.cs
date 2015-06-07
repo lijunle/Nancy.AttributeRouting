@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Concurrent;
     using System.Reflection;
-    using System.Text;
 
     /// <summary>
     /// The ViewPrefix attribute. It decorates on class, indicates the View attribute works with
@@ -28,30 +27,37 @@
 
         internal static string GetPrefix(Type type)
         {
-            string prefix = Cache.GetOrAdd(
-                type,
-                t => GetPrefix(t, recursive: true).ToString().Trim('/'));
-
+            string prefix = GetPrefixFromCache(type);
             return prefix;
         }
 
-        private static StringBuilder GetPrefix(Type type, bool recursive)
+        private static string GetPrefixFromCache(Type type)
         {
-            if (type == null || type == typeof(object))
+            if (type == null)
             {
-                return new StringBuilder();
+                return string.Empty;
             }
+            else
+            {
+                string prefix = Cache.GetOrAdd(type, t => GetPrefixFromCalculation(t));
+                return prefix;
+            }
+        }
 
+        private static string GetPrefixFromCalculation(Type type)
+        {
             Type ancestorType = RouteInheritAttribute.GetAncestorType(type);
-            StringBuilder builder = GetPrefix(ancestorType, recursive);
+            string prefix = GetPrefixFromCache(ancestorType);
 
             var attr = type.GetCustomAttribute<ViewPrefixAttribute>(inherit: false);
             if (attr != null)
             {
-                builder.Append('/').Append(attr.prefix);
+                return string.Format("{0}/{1}", prefix, attr.prefix).Trim('/');
             }
-
-            return builder;
+            else
+            {
+                return prefix;
+            }
         }
     }
 }
