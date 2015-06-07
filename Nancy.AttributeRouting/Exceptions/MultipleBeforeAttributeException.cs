@@ -10,6 +10,12 @@
     [Serializable]
     public sealed class MultipleBeforeAttributeException : Exception
     {
+        internal MultipleBeforeAttributeException(MemberInfo member)
+            : base()
+        {
+            // TODO generate the exception message
+        }
+
         internal MultipleBeforeAttributeException(MethodBase method)
             : base(GenerateMessage(method))
         {
