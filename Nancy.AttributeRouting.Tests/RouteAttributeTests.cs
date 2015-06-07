@@ -1,7 +1,10 @@
 ﻿namespace Nancy.AttributeRouting.Tests
 {
+    using System;
     using System.Collections.Generic;
+    using Nancy.AttributeRouting.Exceptions;
     using Nancy.AttributeRouting.Tests.ViewModels;
+    using Nancy.Extensions;
     using Nancy.Testing;
     using Xunit;
 
@@ -121,6 +124,36 @@
 
             var body = (IDictionary<string, object>)response.Body.DeserializeJson<object>();
             Assert.Equal(expectedValue, body["Result"]);
+        }
+
+        [Theory]
+        [InlineData("/before/multiple-on-method")]
+        [InlineData("/before/multiple-on-class")]
+        public void Decorate_multiple_before_attributes_should_throw_exception(string url)
+        {
+            // Act
+            BrowserResponse response = Browser.Get(url, with => with.Accept("application/json"));
+
+            // Assert
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+
+            ISet<Type> validExceptionTypes = new HashSet<Type> { typeof(MultipleBeforeAttributeException) };
+            ISet<Type> exceptionTypes = GetExceptionTypes(response);
+            Assert.Subset(validExceptionTypes, exceptionTypes);
+        }
+
+        private static ISet<Type> GetExceptionTypes(BrowserResponse response)
+        {
+            var exceptionTypes = new HashSet<Type>();
+
+            var exception = response.Context.GetException();
+            while (exception != null)
+            {
+                exceptionTypes.Add(exception.GetType());
+                exception = exception.InnerException;
+            }
+
+            return exceptionTypes;
         }
     }
 }
