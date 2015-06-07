@@ -33,7 +33,7 @@
             }
             catch (AmbiguousMatchException e)
             {
-                throw new MultipleRouteAttributesException(method, e);
+                throw new MultipleRouteAttributesException(method);
             }
 
             if (attr == null)
