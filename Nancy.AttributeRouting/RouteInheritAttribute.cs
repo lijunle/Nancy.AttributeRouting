@@ -7,6 +7,7 @@
     /// <see cref="RouteInheritAttribute"/> indicates a type inherit another type's routing
     /// information, including routing prefix, view prefix and before hooks.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class RouteInheritAttribute : Attribute
     {
         private readonly Type type;
