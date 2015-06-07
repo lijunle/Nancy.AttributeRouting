@@ -1,9 +1,7 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Text;
+    using System.Collections.Concurrent;
 
     /// <summary>
     /// The ViewPrefix attribute. It decorates on class, indicates the View attribute works with
@@ -12,7 +10,8 @@
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
     public class ViewPrefixAttribute : Attribute
     {
-        private static readonly Dictionary<Type, string> Cache = new Dictionary<Type, string>();
+        private static readonly ConcurrentDictionary<Type, string> Cache =
+            new ConcurrentDictionary<Type, string>();
 
         private readonly string prefix;
 
@@ -27,36 +26,8 @@
 
         internal static string GetPrefix(Type type)
         {
-            string cachedPrefix;
-            if (Cache.TryGetValue(type, out cachedPrefix))
-            {
-                return cachedPrefix;
-            }
-
-            string prefix = GetPrefix(type, recursive: true).ToString().Trim('/');
-
-            Cache.Add(type, prefix);
-
+            string prefix = Cache.GetPrefix<ViewPrefixAttribute>(type, attr => attr.prefix);
             return prefix;
-        }
-
-        private static StringBuilder GetPrefix(Type type, bool recursive)
-        {
-            if (type == null || type == typeof(object))
-            {
-                return new StringBuilder();
-            }
-
-            Type ancestorType = RouteInheritAttribute.GetAncestorType(type);
-            StringBuilder builder = GetPrefix(ancestorType, recursive);
-
-            var attr = type.GetCustomAttribute<ViewPrefixAttribute>(inherit: false);
-            if (attr != null)
-            {
-                builder.Append('/').Append(attr.prefix);
-            }
-
-            return builder;
         }
     }
 }

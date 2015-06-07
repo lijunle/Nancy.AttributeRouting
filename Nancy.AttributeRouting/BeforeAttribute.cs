@@ -1,7 +1,7 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Linq;
     using System.Reflection;
     using Nancy.AttributeRouting.Exceptions;
@@ -13,8 +13,9 @@
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface)]
     public abstract class BeforeAttribute : Attribute
     {
-        private static readonly Dictionary<Type, BeforeAttribute> Cache =
-            new Dictionary<Type, BeforeAttribute>();
+        // object may be instance of BeforeAttribute or MultipleBeforeAttributeException
+        private static readonly ConcurrentDictionary<MemberInfo, object> Cache =
+            new ConcurrentDictionary<MemberInfo, object>();
 
         /// <summary>
         /// Process the custom code and determine whether continue on view model execution.
@@ -47,40 +48,67 @@
 
         private static BeforeAttribute GetAttribute(MethodBase method)
         {
-            var methodAttributes = method.GetCustomAttributes<BeforeAttribute>(inherit: false);
-            if (methodAttributes.Count() > 1)
+            object cachedAttribute = GetAttributeFromCache(method);
+            if (cachedAttribute is Exception)
             {
-                throw new MultipleBeforeAttributeException(method);
+                throw (Exception)cachedAttribute;
             }
-
-            var attribute = methodAttributes.SingleOrDefault() ?? GetAttribute(method.DeclaringType);
-            return attribute;
-        }
-
-        private static BeforeAttribute GetAttribute(Type type)
-        {
-            if (type == null || type == typeof(object))
+            else if (cachedAttribute is BeforeAttribute)
+            {
+                return (BeforeAttribute)cachedAttribute;
+            }
+            else
             {
                 return null;
             }
+        }
 
-            BeforeAttribute cachedAttribute;
-            if (Cache.TryGetValue(type, out cachedAttribute))
+        private static object GetAttributeFromCache(MemberInfo member)
+        {
+            if (member == null)
             {
+                return null;
+            }
+            else
+            {
+                object cachedAttribute = Cache.GetOrAdd(
+                    member,
+                    m => GetAttributeFromCalculation(m));
+
                 return cachedAttribute;
             }
+        }
 
-            var typeAttributes = type.GetCustomAttributes<BeforeAttribute>(inherit: false);
-            if (typeAttributes.Count() > 1)
+        private static object GetAttributeFromCalculation(MemberInfo member)
+        {
+            // get attribute from this member
+            var attributes = member.GetCustomAttributes<BeforeAttribute>(inherit: false);
+            if (attributes.Count() > 1)
             {
-                throw new MultipleBeforeAttributeException(type);
+                // do not throw exception, the caller will cache it from returned value
+                return new MultipleBeforeAttributeException(member);
+            }
+            else if (attributes.Count() == 1)
+            {
+                return attributes.Single();
             }
 
-            var attribute = typeAttributes.SingleOrDefault() ?? GetAttribute(RouteInheritAttribute.GetAncestorType(type));
+            // get attribute from method's declaring type if applicable
+            var method = member as MethodBase;
+            if (method != null)
+            {
+                return GetAttributeFromCache(method.DeclaringType);
+            }
 
-            Cache.Add(type, attribute);
+            // get attribute from type's route ancestor type if applicable
+            var type = member as Type;
+            if (type != null)
+            {
+                Type ancestorType = RouteInheritAttribute.GetAncestorType(type);
+                return GetAttributeFromCache(ancestorType);
+            }
 
-            return attribute;
+            return null;
         }
     }
 }
