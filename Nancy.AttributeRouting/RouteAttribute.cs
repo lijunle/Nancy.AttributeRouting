@@ -62,7 +62,7 @@
 
         private static IEnumerable<RoutingPath> GetRoutingPaths(MethodBase method)
         {
-            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType).ToString();
+            string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);
 
             IEnumerable<RoutingPath> routingPaths =
                 method.GetCustomAttributes<RouteAttribute>(inherit: false)
