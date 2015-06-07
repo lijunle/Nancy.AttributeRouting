@@ -9,7 +9,8 @@
         object GetWithParamter(string value);
     }
 
-    [RoutePrefix(typeof(IInterfaceViewModel), "interface")]
+    [RouteInherit(typeof(IInterfaceViewModel))]
+    [RoutePrefix("interface")]
     public interface IChildViewModel
     {
         [Get("child")]
