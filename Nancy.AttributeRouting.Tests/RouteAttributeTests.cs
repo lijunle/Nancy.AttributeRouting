@@ -38,6 +38,7 @@
         [InlineData("/before", "Result", "reject-root-path")]
         [InlineData("/before/passed", "Result", "before-passed")]
         [InlineData("/before/rejected", "Result", "before-rejected")]
+        [InlineData("/before/rejected/by-interface", "Result", "rejected-by-interface")]
         [InlineData("/before/rejected/by-class", "Result", "rejected-by-class")]
         [InlineData("/before/rejected/by-ancestor", "Result", "rejected-by-class")]
         [InlineData("/interface", "Result", "query-from-interface")]

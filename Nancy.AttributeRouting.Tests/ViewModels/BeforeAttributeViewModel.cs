@@ -7,6 +7,13 @@
     [RoutePrefix("before")]
     public class BeforeAttributeViewModel
     {
+        [Rejected("rejected-by-interface")]
+        public interface IRejectedByInterfaceViewModel
+        {
+            [Get("before/rejected/by-interface")]
+            object Get();
+        }
+
         [Get("/")]
         [Rejected("reject-root-path")]
         public object RejectRootPath()
@@ -40,6 +47,15 @@
         public object PostSameName()
         {
             return new { Result = "should-not-be-here" };
+        }
+
+        public class RejectedByInterfaceViewModel : IRejectedByInterfaceViewModel
+        {
+            public object Get()
+            {
+                // interface rejected attribute applies here
+                return new { Result = "should-not-be-here" };
+            }
         }
 
         [Rejected("rejected-by-class")]
