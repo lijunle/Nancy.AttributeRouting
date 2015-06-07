@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
     using System.Text.RegularExpressions;
     using Nancy.Extensions;
     using Nancy.Routing;
@@ -91,28 +90,11 @@
             }
 
             string path = RouteAttribute.GetPath(methodCall.Method);
+            IDictionary<string, string> methodParameters = methodCall.ToParameterDictionary();
+            IDictionary<string, string> pathParameters = parameters.Merge(methodParameters);
 
-            IDictionary<string, string> methodParameters =
-                MethodCallToDictionary(methodCall.Method, methodCall.Arguments);
-
-            return ExtractParametersToPath(this.segmentExtractor, path, parameters.Merge(methodParameters));
-        }
-
-        private static IDictionary<string, string> MethodCallToDictionary(
-            MethodBase method,
-            IReadOnlyCollection<Expression> arguments)
-        {
-            IEnumerable<string> paramNames =
-                method.GetParameters().Select(parameter => parameter.Name);
-
-            IEnumerable<object> paramValues =
-                arguments.Select(argument => Expression.Lambda(argument).Compile().DynamicInvoke());
-
-            Dictionary<string, string> result =
-                paramNames.Zip(paramValues, (name, value) => Tuple.Create(name, value))
-                    .ToDictionary(tuple => tuple.Item1, tuple => Convert.ToString(tuple.Item2));
-
-            return result;
+            string url = ExtractParametersToPath(this.segmentExtractor, path, pathParameters);
+            return url;
         }
 
         #region Inspired From Nancy.Linker https://github.com/horsdal/Nancy.Linker
