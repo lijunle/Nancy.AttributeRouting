@@ -17,20 +17,8 @@
         /// </summary>
         /// <param name="prefix">The prefix string for the route attribute path.</param>
         public RoutePrefixAttribute(string prefix)
-            : this(null, prefix)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RoutePrefixAttribute"/> class.
-        /// </summary>
-        /// <param name="prefixType">The prefix of this type leveraged as prefix of prefix.</param>
-        /// <param name="prefix">The prefix string for the route attribute path.</param>
-        public RoutePrefixAttribute(Type prefixType, string prefix)
-        {
-            string typePrefix = GetPrefix(prefixType);
-            string trimPrefix = prefix.Trim('/');
-            this.prefix = string.Format("{0}/{1}", typePrefix, trimPrefix).Trim('/');
+            this.prefix = prefix;
         }
 
         internal static string GetPrefix(Type type)

@@ -17,20 +17,8 @@
         /// </summary>
         /// <param name="prefix">The path prefix.</param>
         public ViewPrefixAttribute(string prefix)
-            : this(null, prefix)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ViewPrefixAttribute"/> class.
-        /// </summary>
-        /// <param name="prefixType">The prefix of this type leveraged as prefix of prefix.</param>
-        /// <param name="prefix">The path prefix.</param>
-        public ViewPrefixAttribute(Type prefixType, string prefix)
-        {
-            string typePrefix = GetPrefix(prefixType);
-            string trimPrefix = prefix.Trim('/');
-            this.prefix = string.Format("{0}/{1}", typePrefix, trimPrefix).Trim('/');
+            this.prefix = prefix;
         }
 
         internal static string GetPrefix(Type type)
