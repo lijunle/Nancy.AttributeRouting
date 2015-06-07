@@ -1,6 +1,7 @@
 ﻿namespace Nancy.AttributeRouting
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -82,6 +83,47 @@
                     .ToDictionary(tuple => tuple.Item1, tuple => Convert.ToString(tuple.Item2));
 
             return paramDictionary;
+        }
+
+        internal static string GetPrefix<T>(
+            this ConcurrentDictionary<Type, string> cache,
+            Type type,
+            Func<T, string> prefixAccessor)
+            where T : Attribute
+        {
+            if (type == null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                string prefix = cache.GetOrAdd(
+                    type,
+                    t => cache.CalculatePrefix<T>(t, prefixAccessor));
+
+                return prefix;
+            }
+        }
+
+        private static string CalculatePrefix<T>(
+            this ConcurrentDictionary<Type, string> cache,
+            Type type,
+            Func<T, string> prefixAccessor)
+            where T : Attribute
+        {
+            Type ancestorType = RouteInheritAttribute.GetAncestorType(type);
+            string ancestorPrefix = cache.GetPrefix<T>(ancestorType, prefixAccessor);
+
+            var attr = type.GetCustomAttribute<T>(inherit: false);
+            if (attr != null)
+            {
+                string attrPrefix = prefixAccessor.Invoke(attr);
+                return string.Format("{0}/{1}", ancestorPrefix, attrPrefix).Trim('/');
+            }
+            else
+            {
+                return ancestorPrefix;
+            }
         }
     }
 }
