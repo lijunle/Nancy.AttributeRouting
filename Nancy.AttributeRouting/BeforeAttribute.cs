@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Reflection;
+    using Nancy.AttributeRouting.Exceptions;
     using Nancy.TinyIoc;
 
     /// <summary>
@@ -42,8 +43,13 @@
 
         private static BeforeAttribute GetAttribute(MethodBase method)
         {
-            var methodAttribute = method.GetCustomAttribute<BeforeAttribute>(inherit: false);
-            var attribute = methodAttribute ?? GetAttribute(method.DeclaringType);
+            var methodAttributes = method.GetCustomAttributes<BeforeAttribute>(inherit: false);
+            if (methodAttributes.Count() > 1)
+            {
+                throw new MultipleBeforeAttributeException(method);
+            }
+
+            var attribute = methodAttributes.SingleOrDefault() ?? GetAttribute(method.DeclaringType);
             return attribute;
         }
 
@@ -54,15 +60,14 @@
                 return null;
             }
 
-            var attrs = type.GetCustomAttributes<BeforeAttribute>(inherit: false);
-            if (attrs.Any())
+            var typeAttributes = type.GetCustomAttributes<BeforeAttribute>(inherit: false);
+            if (typeAttributes.Count() > 1)
             {
-                // TODO handle multiple BeforeAttribute
-                return attrs.First();
+                throw new MultipleBeforeAttributeException(type);
             }
 
-            var ancestorType = RouteInheritAttribute.GetAncestorType(type);
-            return GetAttribute(ancestorType);
+            var attribute = typeAttributes.SingleOrDefault() ?? GetAttribute(RouteInheritAttribute.GetAncestorType(type));
+            return attribute;
         }
     }
 }

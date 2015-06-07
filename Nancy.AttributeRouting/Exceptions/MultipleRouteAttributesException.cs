@@ -8,10 +8,10 @@
     /// decorated on method.
     /// </summary>
     [Serializable]
-    public class MultipleRouteAttributesException : Exception
+    public sealed class MultipleRouteAttributesException : Exception
     {
-        internal MultipleRouteAttributesException(MethodBase method, Exception innerException)
-            : base(GenerateMessage(method), innerException)
+        internal MultipleRouteAttributesException(MethodBase method)
+            : base(GenerateMessage(method))
         {
         }
 

@@ -9,7 +9,7 @@
     /// with a same routing path on a same HTTP method.
     /// </summary>
     [Serializable]
-    public class DuplicatedRoutingPathsException : Exception
+    public sealed class DuplicatedRoutingPathsException : Exception
     {
         internal DuplicatedRoutingPathsException(
             Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
