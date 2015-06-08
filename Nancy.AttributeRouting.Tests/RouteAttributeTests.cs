@@ -150,6 +150,18 @@
             Assert.Subset(validExceptionTypes, exceptionTypes);
         }
 
+        [Fact]
+        public void Interface_should_register_as_multi_instance()
+        {
+            // Act
+            int number1 = RequestInstaceNumber(Browser);
+            int number2 = RequestInstaceNumber(Browser);
+
+            // Assert
+            Assert.Equal(1, number1);
+            Assert.Equal(2, number2);
+        }
+
         private static ISet<Type> GetExceptionTypes(BrowserResponse response)
         {
             var exceptionTypes = new HashSet<Type>();
@@ -162,6 +174,16 @@
             }
 
             return exceptionTypes;
+        }
+
+        private static int RequestInstaceNumber(Browser browser)
+        {
+            BrowserResponse response = browser.Get(
+                "/interface/number-of-instance",
+                with => with.Accept("application/json"));
+
+            int number = response.Body.DeserializeJson<int>();
+            return number;
         }
     }
 }

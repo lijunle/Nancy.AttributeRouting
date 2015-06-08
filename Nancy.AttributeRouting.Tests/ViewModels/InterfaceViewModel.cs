@@ -32,6 +32,12 @@
         object Get();
     }
 
+    public interface INumberOfInstanceViewModel
+    {
+        [Get("interface/number-of-instance")]
+        string GetInstanceNumber();
+    }
+
     public class InterfaceViewModel : IInterfaceViewModel
     {
         public object Get()
@@ -65,6 +71,21 @@
             public object Get()
             {
                 return new { Message = "Get HTML with view prefix from interface." };
+            }
+        }
+
+        public class NumberOfInstanceViewModel : INumberOfInstanceViewModel
+        {
+            private static int number = 0;
+
+            public NumberOfInstanceViewModel()
+            {
+                number++;
+            }
+
+            public string GetInstanceNumber()
+            {
+                return number.ToString();
             }
         }
     }
