@@ -6,6 +6,7 @@
     using Nancy.AttributeRouting.Tests.ViewModels;
     using Nancy.Extensions;
     using Nancy.Testing;
+    using Nancy.TinyIoc;
     using Xunit;
 
     public class RouteAttributeTests
@@ -150,6 +151,37 @@
             Assert.Subset(validExceptionTypes, exceptionTypes);
         }
 
+        [Fact]
+        public void Interface_should_register_as_multi_instance()
+        {
+            // Act
+            int number1 = RequestInstaceNumber(Browser);
+            int number2 = RequestInstaceNumber(Browser);
+
+            // Assert
+            Assert.Equal(1, number1);
+            Assert.Equal(2, number2);
+        }
+
+        [Fact]
+        public void Request_interface_route_without_implementation_should_return_500()
+        {
+            // Act
+            BrowserResponse response = Browser.Get("/interface/without-implementation");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+
+            ISet<Type> validExceptionTypes = new HashSet<Type>
+            {
+                typeof(RequestExecutionException),
+                typeof(TinyIoCResolutionException),
+            };
+
+            ISet<Type> exceptionTypes = GetExceptionTypes(response);
+            Assert.Subset(validExceptionTypes, exceptionTypes);
+        }
+
         private static ISet<Type> GetExceptionTypes(BrowserResponse response)
         {
             var exceptionTypes = new HashSet<Type>();
@@ -162,6 +194,16 @@
             }
 
             return exceptionTypes;
+        }
+
+        private static int RequestInstaceNumber(Browser browser)
+        {
+            BrowserResponse response = browser.Get(
+                "/interface/number-of-instance",
+                with => with.Accept("application/json"));
+
+            int number = response.Body.DeserializeJson<int>();
+            return number;
         }
     }
 }

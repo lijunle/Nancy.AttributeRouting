@@ -32,6 +32,21 @@
         object Get();
     }
 
+    public interface INumberOfInstanceViewModel
+    {
+        [Get("interface/number-of-instance")]
+        string GetInstanceNumber();
+    }
+
+    public interface IInterfaceWithoutImplementation
+    {
+        // In such case, request should return internal server error (500) because the interface
+        // cannot be resolved from IoC, for URL builder should still work fine because it generates
+        // URL from lambda expression.
+        [Get("interface/without-implementation")]
+        object Get();
+    }
+
     public class InterfaceViewModel : IInterfaceViewModel
     {
         public object Get()
@@ -65,6 +80,21 @@
             public object Get()
             {
                 return new { Message = "Get HTML with view prefix from interface." };
+            }
+        }
+
+        public class NumberOfInstanceViewModel : INumberOfInstanceViewModel
+        {
+            private static int number = 0;
+
+            public NumberOfInstanceViewModel()
+            {
+                number++;
+            }
+
+            public string GetInstanceNumber()
+            {
+                return number.ToString();
             }
         }
     }
