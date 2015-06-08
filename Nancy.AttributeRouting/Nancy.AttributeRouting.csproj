@@ -65,6 +65,7 @@
     <Compile Include="RouteInheritAttribute.cs" />
     <Compile Include="RoutePrefixAttribute.cs" />
     <Compile Include="Security\RequiresAuthenticationAttribute.cs" />
+    <Compile Include="Security\RequiresClaimsAttribute.cs" />
     <Compile Include="SegmentExtractorExtensions.cs" />
     <Compile Include="UrlBuilder.cs" />
     <Compile Include="ViewAttribute.cs" />
