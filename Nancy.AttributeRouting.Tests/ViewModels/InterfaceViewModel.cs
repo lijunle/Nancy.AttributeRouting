@@ -38,6 +38,15 @@
         string GetInstanceNumber();
     }
 
+    public interface IInterfaceWithoutImplementation
+    {
+        // In such case, request should return internal server error (500) because the interface
+        // cannot be resolved from IoC, for URL builder should still work fine because it generates
+        // URL from lambda expression.
+        [Get("interface/without-implementation")]
+        object Get();
+    }
+
     public class InterfaceViewModel : IInterfaceViewModel
     {
         public object Get()

@@ -155,6 +155,10 @@
                 yield return new TestCase<IChildViewModel>(
                     m => m.Get(),
                     "/interface/child");
+
+                yield return new TestCase<IInterfaceWithoutImplementation>(
+                    m => m.Get(),
+                    "/interface/without-implementation");
             }
         }
 
