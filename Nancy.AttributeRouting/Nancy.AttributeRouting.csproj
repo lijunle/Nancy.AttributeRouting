@@ -68,6 +68,7 @@
     <Compile Include="Security\RequiresAuthenticationAttribute.cs" />
     <Compile Include="Security\RequiresClaimsAttribute.cs" />
     <Compile Include="Security\RequiresHttpsAttribute.cs" />
+    <Compile Include="Security\RequiresValidatedClaimsAttribute.cs" />
     <Compile Include="SegmentExtractorExtensions.cs" />
     <Compile Include="UrlBuilder.cs" />
     <Compile Include="ViewAttribute.cs" />
