@@ -10,6 +10,11 @@
     /// <inheritdoc/>
     public class AttributeRoutingRegistration : IRegistrations
     {
+        private static TypeRegistration[] typeRegistrations = new[]
+        {
+            new TypeRegistration(typeof(IUrlBuilder), typeof(UrlBuilder))
+        };
+
         private static IEnumerable<TypeRegistration> interfaceRegistrations;
 
         static AttributeRoutingRegistration()
@@ -50,8 +55,7 @@
         {
             get
             {
-                var urlBuilderRegistration = new TypeRegistration(typeof(IUrlBuilder), typeof(UrlBuilder));
-                return new[] { urlBuilderRegistration }.Concat(interfaceRegistrations);
+                return typeRegistrations.Concat(interfaceRegistrations);
             }
         }
 
