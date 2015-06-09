@@ -35,7 +35,7 @@
             }
 
             string prefix = ViewPrefixAttribute.GetPrefix(method.DeclaringType);
-            string path = string.Format("{0}/{1}", prefix, attr.path);
+            string path = string.Format("{0}/{1}", prefix, attr.path).Trim('/');
 
             return path;
         }
