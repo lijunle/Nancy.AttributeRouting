@@ -96,25 +96,12 @@
 
         private static TypeRegistration GetTypeRegistration(IEnumerable<Type> allTypes, Type @interface)
         {
-            IEnumerable<Type> implementations =
-                allTypes.Where(type => type.GetInterface(@interface.FullName) != null);
+            Type implementation =
+                allTypes.FirstOrDefault(type => type.GetInterface(@interface.FullName) != null);
 
-            if (implementations.Count() > 1)
+            if (implementation != null)
             {
-                IEnumerable<string> implementationNames = implementations.Select(type => type.FullName);
-
-                var message =
-                    string.Format(
-                        "More than one class implements interface {0}:{1}{2}",
-                        @interface.FullName,
-                        Environment.NewLine,
-                        string.Join(Environment.NewLine, implementationNames));
-
-                throw new AmbiguousMatchException(message);
-            }
-            else if (implementations.Count() == 1)
-            {
-                return new TypeRegistration(@interface, implementations.Single(), Lifetime.PerRequest);
+                return new TypeRegistration(@interface, implementation, Lifetime.PerRequest);
             }
             else
             {
