@@ -46,6 +46,7 @@
         [InlineData("/interface", "Result", "query-from-interface")]
         [InlineData("/interface/passed-to-interface", "Result", "passed-to-interface")]
         [InlineData("/interface/child", "Result", "from-child-interface")]
+        [InlineData("/interface/child-of-class", "Result", "from-child-of-class")]
         public void Attribute_routing_should_accept_get_request(
             string path,
             string expectedKey,

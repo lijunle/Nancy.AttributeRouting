@@ -38,6 +38,12 @@
         string GetInstanceNumber();
     }
 
+    public interface IChildOfClassViewModel
+    {
+        [Get("interface/child-of-class")]
+        object GetChildOfClass();
+    }
+
     public interface IInterfaceWithoutImplementation
     {
         // In such case, request should return internal server error (500) because the interface
@@ -95,6 +101,14 @@
             public string GetInstanceNumber()
             {
                 return number.ToString();
+            }
+        }
+
+        public class ChildOfClassViewModel : InterfaceViewModel, IChildOfClassViewModel
+        {
+            public object GetChildOfClass()
+            {
+                return new { Result = "from-child-of-class" };
             }
         }
     }
