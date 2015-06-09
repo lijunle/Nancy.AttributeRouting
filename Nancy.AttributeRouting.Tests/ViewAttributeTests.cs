@@ -10,6 +10,7 @@
 
         [Theory]
         [InlineData("/html", "Hello world!")]
+        [InlineData("/html/subfolder", "Get subfolder file from root.")]
         [InlineData("/html/prefix", "Get view prefix message.")]
         [InlineData("/html/prefix/type", "Get type prefix message.")]
         [InlineData("/html/prefix/deeper", "Get deeper prefix message.")]

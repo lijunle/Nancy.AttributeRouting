@@ -9,6 +9,13 @@
             return new { Message = "Hello world!" };
         }
 
+        [Get("/html/subfolder")]
+        [View("Prefix/view-prefix")]
+        public object GetSubfolder()
+        {
+            return new { Message = "Get subfolder file from root." };
+        }
+
         [ViewPrefix("Prefix")]
         public class ViewPrefixViewModel
         {
