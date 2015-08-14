@@ -28,7 +28,7 @@
             if (result == null)
             {
                 string message = string.Format("Value for path segment {0} missing", segment);
-                throw new ArgumentException(message, "segment");
+                throw new ArgumentException(message, nameof(segment));
             }
 
             return Uri.EscapeDataString(result);
