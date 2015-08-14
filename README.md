@@ -1,5 +1,7 @@
 # Nancy.AttributeRouting
 
+[![Build status](https://ci.appveyor.com/api/projects/status/86jwerymo30f9949/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/nancy-attributerouting/branch/master)
+
 Enable attribute routing for Nancy project, and build route URL with compiled-time checked lambda expression.
 
 # Install
@@ -79,7 +81,7 @@ Next, we are going to provide a page for creating a new Todo item. The new page 
 public class TodoCreate
 {
     private readonly IDatabase database;
-    
+
     [Get("/todo/create")]
     [View("TodoCreate")]
     public TodoCreate(IDatabase database)
@@ -93,7 +95,7 @@ public class TodoCreate
         this.database.TodoItems.Add(form.Content);
         return response.AsRedirect("/todo");
     }
-    
+
     public class Form
     {
         public string Content { get; set; }
@@ -121,7 +123,7 @@ Add create todo items page to todo list page:
 public class Todo
 {
     private readonly IUrlBuilder urlBuilder; // injected from constructor
-    
+
     public string CreateTodoPage
     {
         get { return this.urlBuilder.GetUrl<TodoCreate>(() => new TodoCreate(null)); }
@@ -136,7 +138,7 @@ Update the redirect url builder in `TodoCreate` view model:
 public class TodoCreate
 {
     private readonly IUrlBuilder urlBuilder; // injected from constructor
-    
+
     public Response Post(IResponseFormatter response, Form form)
     {
         // ... the code above
