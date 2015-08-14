@@ -16,3 +16,10 @@ before_build:
 
 before_test:
   - ps: dir "$env:APPVEYOR_BUILD_FOLDER\Nancy.AttributeRouting.Tests\bin\$env:CONFIGURATION\"
+
+artifacts:
+  - path: '**\*.nupkg'
+
+nuget:
+  project_feed: true
+  disable_publish_on_pr: true
