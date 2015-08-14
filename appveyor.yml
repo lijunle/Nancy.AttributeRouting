@@ -1,0 +1,25 @@
+platform:
+  - Any CPU
+
+configuration:
+  - Debug
+  - Release
+
+matrix:
+  fast_finish: true
+
+cache:
+  - packages -> **\packages.config
+
+before_build:
+  - ps: nuget restore "$env:APPVEYOR_BUILD_FOLDER\Nancy.AttributeRouting.sln"
+
+before_test:
+  - ps: dir "$env:APPVEYOR_BUILD_FOLDER\Nancy.AttributeRouting.Tests\bin\$env:CONFIGURATION\"
+
+artifacts:
+  - path: '**\*.nupkg'
+
+nuget:
+  project_feed: true
+  disable_publish_on_pr: true
