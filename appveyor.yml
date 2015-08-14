@@ -35,3 +35,15 @@ nuget:
   account_feed: false
   project_feed: false
   disable_publish_on_pr: true
+
+deploy:
+  - release: v$(APPVEYOR_BUILD_VERSION)
+    provider: GitHub
+    artifact: Nancy.AttributeRouting.$(APPVEYOR_BUILD_VERSION).nupkg
+    draft: false
+    prerelease: false
+    auth_token:
+      secure: cApkFZuYfz7loLotMfbhb53ZIfjjfbY7dr46eu6Q9+yAV+KuSGYGcVTG8Bgx8wka
+    on:
+      branch: master
+      appveyor_repo_tag: true
