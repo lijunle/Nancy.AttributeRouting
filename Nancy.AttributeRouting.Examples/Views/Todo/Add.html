@@ -6,6 +6,7 @@
     <h1>This is Add Todo Item page.</h1>
     <div>Back to <a href="@Model.TodoUrl">Todo List</a> page</div>
     <form method="post">
+        <div style="color: red">@Model.ErrorMessage</div>
         <input type="text" name="description" placeholder="Description..." />
         <input type="submit" value="Submit" />
     </form>

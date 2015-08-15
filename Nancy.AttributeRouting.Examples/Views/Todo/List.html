@@ -8,5 +8,18 @@
         <a href="@Model.HomeUrl">Back to Home page</a> |
         <a href="@Model.AddUrl">Add new Todo item</a>
     </div>
+    <form method="post">
+        <ul>
+            @Each.Items
+            <li>
+                <label>
+                    <input type="checkbox" name="Ids" value="@Current.Id" @If.Completed checked @EndIf />
+                    @Current.Description
+                </label>
+            </li>
+            @EndEach
+        </ul>
+        <input type="submit" value="Complete" />
+    </form>
 </body>
 </html>
