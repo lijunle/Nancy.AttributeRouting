@@ -40,9 +40,7 @@
         }
 
         /// <inheritdoc/>
-        public override Response Process(TinyIoCContainer container, NancyContext context)
-        {
-            return SecurityHooks.RequiresHttps(this.redirect, this.httpsPort).Invoke(context);
-        }
+        public override Response Process(TinyIoCContainer container, NancyContext context) =>
+            SecurityHooks.RequiresHttps(this.redirect, this.httpsPort).Invoke(context);
     }
 }

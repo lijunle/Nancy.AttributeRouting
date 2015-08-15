@@ -29,10 +29,8 @@
         }
 
         /// <inheritdoc/>
-        public override Response Process(TinyIoCContainer container, NancyContext context)
-        {
-            return SecurityHooks.RequiresAuthentication().Invoke(context)
-                ?? SecurityHooks.RequiresAnyClaim(this.requiredClaims).Invoke(context);
-        }
+        public override Response Process(TinyIoCContainer container, NancyContext context) =>
+            SecurityHooks.RequiresAuthentication().Invoke(context) ??
+            SecurityHooks.RequiresAnyClaim(this.requiredClaims).Invoke(context);
     }
 }

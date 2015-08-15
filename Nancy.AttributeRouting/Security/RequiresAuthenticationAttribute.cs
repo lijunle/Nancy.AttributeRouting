@@ -10,9 +10,7 @@
     public class RequiresAuthenticationAttribute : BeforeAttribute
     {
         /// <inheritdoc/>
-        public override Response Process(TinyIoCContainer container, NancyContext context)
-        {
-            return SecurityHooks.RequiresAuthentication().Invoke(context);
-        }
+        public override Response Process(TinyIoCContainer container, NancyContext context) =>
+            SecurityHooks.RequiresAuthentication().Invoke(context);
     }
 }

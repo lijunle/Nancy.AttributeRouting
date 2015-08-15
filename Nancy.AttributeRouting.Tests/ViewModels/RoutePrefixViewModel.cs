@@ -4,19 +4,13 @@
     public class RoutePrefixViewModel
     {
         [Get("/")]
-        public object Get()
-        {
-            return new { Result = "value" };
-        }
+        public object Get() => new { Result = "value" };
 
         [RouteInherit(typeof(RoutePrefixViewModel))]
         public class TypePrefixViewModel
         {
             [Get("/type-prefix")]
-            public object GetTypePrefix()
-            {
-                return new { Result = "from-type-prefix" };
-            }
+            public object GetTypePrefix() => new { Result = "from-type-prefix" };
         }
 
         [RouteInherit(typeof(RoutePrefixViewModel))]
@@ -24,10 +18,7 @@
         public class ChildPrefixViewModel
         {
             [Get("/")]
-            public object GetChildPrefix()
-            {
-                return new { Result = "from-child-prefix" };
-            }
+            public object GetChildPrefix() => new { Result = "from-child-prefix" };
         }
 
         [RouteInherit(typeof(ChildPrefixViewModel))]
@@ -35,19 +26,13 @@
         public class GrandchildViewModel
         {
             [Get("/")]
-            public object GetGrandchild()
-            {
-                return new { Result = "from-grandchild" };
-            }
+            public object GetGrandchild() => new { Result = "from-grandchild" };
         }
 
         public class InheritViewModel : RoutePrefixViewModel
         {
             [Get("/route-prefix/inherit")]
-            public object GetInherit()
-            {
-                return new { Result = "inherit-not-affect-routing" };
-            }
+            public object GetInherit() => new { Result = "inherit-not-affect-routing" };
         }
 
         [RouteInherit(typeof(RoutePrefixViewModel))]
@@ -55,10 +40,7 @@
         public class ParameterizedPrefixViewModel
         {
             [Get("{value}")]
-            public object GetResultWithProperty(string prefix, string value)
-            {
-                return new { Result = prefix + "." + value };
-            }
+            public object GetResultWithProperty(string prefix, string value) => new { Result = prefix + "." + value };
         }
 
         [RouteInherit(typeof(RoutePrefixViewModel))]
@@ -78,10 +60,7 @@
             }
 
             [Get("/")]
-            public object Get()
-            {
-                return new { Result = this.prefix };
-            }
+            public object Get() => new { Result = this.prefix };
         }
     }
 }

@@ -55,38 +55,23 @@
 
     public class InterfaceViewModel : IInterfaceViewModel
     {
-        public object Get()
-        {
-            return new { Result = "query-from-interface" };
-        }
+        public object Get() => new { Result = "query-from-interface" };
 
-        public object GetWithParamter(string value)
-        {
-            return new { Result = value };
-        }
+        public object GetWithParamter(string value) => new { Result = value };
 
         public class ChildViewModel : IChildViewModel
         {
-            public object Get()
-            {
-                return new { Result = "from-child-interface" };
-            }
+            public object Get() => new { Result = "from-child-interface" };
         }
 
         public class HtmlViewModel : IHtmlViewModel
         {
-            public object Get()
-            {
-                return new { Message = "Get HTML from interface." };
-            }
+            public object Get() => new { Message = "Get HTML from interface." };
         }
 
         public class HtmlChildViewModel : IHtmlChildViewModel
         {
-            public object Get()
-            {
-                return new { Message = "Get HTML with view prefix from interface." };
-            }
+            public object Get() => new { Message = "Get HTML with view prefix from interface." };
         }
 
         public class NumberOfInstanceViewModel : INumberOfInstanceViewModel
@@ -98,18 +83,12 @@
                 number++;
             }
 
-            public string GetInstanceNumber()
-            {
-                return number.ToString();
-            }
+            public string GetInstanceNumber() => number.ToString();
         }
 
         public class ChildOfClassViewModel : InterfaceViewModel, IChildOfClassViewModel
         {
-            public object GetChildOfClass()
-            {
-                return new { Result = "from-child-of-class" };
-            }
+            public object GetChildOfClass() => new { Result = "from-child-of-class" };
         }
     }
 }

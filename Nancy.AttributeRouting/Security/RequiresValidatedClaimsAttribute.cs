@@ -11,11 +11,9 @@
     public abstract class RequiresValidatedClaimsAttribute : BeforeAttribute
     {
         /// <inheritdoc/>
-        public override Response Process(TinyIoCContainer container, NancyContext context)
-        {
-            return SecurityHooks.RequiresAuthentication().Invoke(context)
-                ?? SecurityHooks.RequiresValidatedClaims(this.IsValid).Invoke(context);
-        }
+        public override Response Process(TinyIoCContainer container, NancyContext context) =>
+            SecurityHooks.RequiresAuthentication().Invoke(context) ??
+            SecurityHooks.RequiresValidatedClaims(this.IsValid).Invoke(context);
 
         /// <summary>
         /// The implementation to validate claims.

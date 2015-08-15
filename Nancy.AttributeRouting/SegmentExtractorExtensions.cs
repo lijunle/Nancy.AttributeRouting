@@ -28,7 +28,7 @@
             if (result == null)
             {
                 string message = string.Format("Value for path segment {0} missing", segment);
-                throw new ArgumentException(message, "segment");
+                throw new ArgumentException(message, nameof(segment));
             }
 
             return Uri.EscapeDataString(result);
@@ -54,10 +54,8 @@
             }
         }
 
-        private static string GetRegexSegmentValue(string segment, IDictionary<string, string> parameters)
-        {
-            return Regex.Replace(segment, @"\(\?<(?<name>.*?)>.*?\)", x => parameters[x.Groups["name"].Value]);
-        }
+        private static string GetRegexSegmentValue(string segment, IDictionary<string, string> parameters) =>
+            Regex.Replace(segment, @"\(\?<(?<name>.*?)>.*?\)", x => parameters[x.Groups["name"].Value]);
 
         private static string GetConstrainedParamterValue(string segment, IDictionary<string, string> parameters)
         {
@@ -66,10 +64,7 @@
             return res;
         }
 
-        private static bool IsContrainedParameter(string segment)
-        {
-            return segment.Contains(':');
-        }
+        private static bool IsContrainedParameter(string segment) => segment.Contains(':');
 
         private static string GetParameterizedSegmentValue(string segment, IDictionary<string, string> parameters)
         {

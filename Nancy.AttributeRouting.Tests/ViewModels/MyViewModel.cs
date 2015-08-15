@@ -4,22 +4,13 @@
     {
         private string property;
 
-        public string Property
-        {
-            get { return this.property ?? "Value"; }
-        }
+        public string Property => this.property ?? "Value";
 
         [Get("/")]
-        public object Index()
-        {
-            return new { Result = "Index" };
-        }
+        public object Index() => new { Result = "Index" };
 
         [Get("/my-view-model")]
-        public MyViewModel GetWithDefaultProperty()
-        {
-            return this;
-        }
+        public MyViewModel GetWithDefaultProperty() => this;
 
         [Get("/my-view-model/{property}")]
         public MyViewModel GetWithProperty(string property)
@@ -29,53 +20,29 @@
         }
 
         [Get("/my/result")]
-        public object GetResult()
-        {
-            return new { Result = "MyResult" };
-        }
+        public object GetResult() => new { Result = "MyResult" };
 
         [Get("/my/result/{value}")]
-        public object GetResult(string value)
-        {
-            return new { Result = value };
-        }
+        public object GetResult(string value) => new { Result = value };
 
-        public string GetWithoutRoutings()
-        {
-            return string.Empty;
-        }
+        public string GetWithoutRoutings() => string.Empty;
 
         [Get("/my/1")]
         [Get("/my/2")]
-        public object GetByTwoRoutings()
-        {
-            return new { Result = "TheSameResultFromTwoRoutings" };
-        }
+        public object GetByTwoRoutings() => new { Result = "TheSameResultFromTwoRoutings" };
 
         public class NestedViewModel
         {
-            public string NestedProperty
-            {
-                get { return "NestedValue"; }
-            }
+            public string NestedProperty => "NestedValue";
 
             [Get("/nested-view-model")]
-            public NestedViewModel Get()
-            {
-                return this;
-            }
+            public NestedViewModel Get() => this;
 
             [Get("/nested/result")]
-            public object GetResult()
-            {
-                return new { Result = "NestedResult" };
-            }
+            public object GetResult() => new { Result = "NestedResult" };
 
             [Get("/nested/result/{value}")]
-            public object GetResult(string value)
-            {
-                return new { Result = "nested-" + value };
-            }
+            public object GetResult(string value) => new { Result = "nested-" + value };
         }
     }
 }

@@ -11,61 +11,31 @@
             this.urlBuilder = urlBuilder;
         }
 
-        public string Url
-        {
-            get
-            {
-                return this.urlBuilder.GetUrl<ComplexViewModel>(m => m.GetWithInjection());
-            }
-        }
+        public string Url => this.urlBuilder.GetUrl<ComplexViewModel>(m => m.GetWithInjection());
 
         [Get("/complex/with-injection")]
-        public ComplexViewModel GetWithInjection()
-        {
-            return this;
-        }
+        public ComplexViewModel GetWithInjection() => this;
 
         [Get("/complex/guid/{id:guid}")]
-        public string GetGuid(Guid id)
-        {
-            return id.ToString();
-        }
+        public string GetGuid(Guid id) => id.ToString();
 
         [Get("/complex/datetime/{time:datetime}")]
-        public string GetDateTime(DateTime time)
-        {
-            return time.ToString();
-        }
+        public string GetDateTime(DateTime time) => time.ToString();
 
         [Get("/complex/int/{number:int}")]
-        public string GetInt(int number)
-        {
-            return number.ToString();
-        }
+        public string GetInt(int number) => number.ToString();
 
         [Get("/complex/boolean/{flag:bool}")]
-        public string GetBoolean(bool flag)
-        {
-            return flag.ToString();
-        }
+        public string GetBoolean(bool flag) => flag.ToString();
 
         [Post("/complex/post/form")]
-        public string GetByInjectedRequestData(Form form)
-        {
-            return string.Format("{0}={1}", form.User, form.Password);
-        }
+        public string GetByInjectedRequestData(Form form) => string.Format("{0}={1}", form.User, form.Password);
 
         [Get("/complex/get/optional/{name?default}")]
-        public object GetWithOptionalParameter(string name = null)
-        {
-            return new { Name = name };
-        }
+        public object GetWithOptionalParameter(string name = null) => new { Name = name };
 
         [Get("/complex/special/{str}")]
-        public object GetWithSpecialCharacters(string str)
-        {
-            return new { str };
-        }
+        public object GetWithSpecialCharacters(string str) => new { str };
 
         public class Form
         {
