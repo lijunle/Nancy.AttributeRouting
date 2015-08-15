@@ -182,14 +182,14 @@
         }
 
         [Theory]
-        [MemberData("TestCases")]
+        [MemberData(nameof(TestCases))]
         public void Test_URL_builder(ITestCase testCase)
         {
             testCase.Run();
         }
 
         [Theory]
-        [MemberData("ExceptionCases")]
+        [MemberData(nameof(ExceptionCases))]
         public void Throws_URL_builder_exception(ITestCase testCase)
         {
             testCase.Run();
@@ -255,7 +255,7 @@
                 Assert.Equal(this.url, url);
             }
 
-            public override string ToString() => string.Format("{0} {1}", typeof(T).Name, this.Expression);
+            public override string ToString() => $"{typeof(T).Name} {this.Expression}";
         }
 
         public class ExceptionTestCase<T, U> : TestCase<T>
