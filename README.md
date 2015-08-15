@@ -157,6 +157,10 @@ We created two pages with Nancy and AttributeRouting. Following MVVM pattern, on
 
 Check [examples](https://github.com/lijunle/Nancy.AttributeRouting/tree/master/Nancy.AttributeRouting.Examples) folder to see a full MVVM approach to build website.
 
+# API
+
+See [Nancy.AttributeRouting.md](https://github.com/lijunle/Nancy.AttributeRouting/blob/master/Nancy.AttributeRouting/Nancy.AttributeRouting.md) file.
+
 # License
 
 MIT License.
