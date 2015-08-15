@@ -98,6 +98,10 @@
                     m => m.GetBoolean(true),
                     "/complex/boolean/True");
 
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetRegex("regex-name"),
+                    "/complex/regex/regex-name");
+
                 // expression tree does not allow optional parameter, no way to get routing optional parameter
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetWithOptionalParameter(null),

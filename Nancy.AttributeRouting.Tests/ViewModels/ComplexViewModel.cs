@@ -28,6 +28,9 @@
         [Get("/complex/boolean/{flag:bool}")]
         public string GetBoolean(bool flag) => flag.ToString();
 
+        [Get("/complex/regex/(?<name>.+)")]
+        public string GetRegex(string name) => name;
+
         [Post("/complex/post/form")]
         public string GetByInjectedRequestData(Form form) => string.Format("{0}={1}", form.User, form.Password);
 

@@ -84,6 +84,7 @@
         [InlineData("/complex/datetime/2001-02-03T04%3A05%3A06.0789", "2/3/2001 4:05:06 AM")]
         [InlineData("/complex/int/000987", "987")]
         [InlineData("/complex/boolean/true", "True")]
+        [InlineData("/complex/regex/my-name", "my-name")]
         public void Complex_primitive_type_should_be_parsed_into_method(string path, string expectedBody)
         {
             // Act
