@@ -18,6 +18,7 @@
     <RestorePackages>true</RestorePackages>
     <DownloadNuGetExe>true</DownloadNuGetExe>
     <BuildPackage>true</BuildPackage>
+    <DocumentationFile>Nancy.AttributeRouting.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,7 +29,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <DocumentationFile>bin\Debug\Nancy.AttributeRouting.XML</DocumentationFile>
     <CodeAnalysisRuleSet>Nancy.AttributeRouting.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -38,7 +38,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Nancy.AttributeRouting.XML</DocumentationFile>
     <CodeAnalysisRuleSet>Nancy.AttributeRouting.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
@@ -113,7 +112,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

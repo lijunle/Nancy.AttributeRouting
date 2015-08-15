@@ -1,0 +1,345 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nancy.AttributeRouting</name>
+    </assembly>
+    <members>
+        <member name="T:Nancy.AttributeRouting.AttributeRoutingRegistration">
+            <inheritdoc/>
+        </member>
+        <member name="P:Nancy.AttributeRouting.AttributeRoutingRegistration.CollectionTypeRegistrations">
+            <inheritdoc/>
+        </member>
+        <member name="P:Nancy.AttributeRouting.AttributeRoutingRegistration.InstanceRegistrations">
+            <inheritdoc/>
+        </member>
+        <member name="P:Nancy.AttributeRouting.AttributeRoutingRegistration.TypeRegistrations">
+            <inheritdoc/>
+        </member>
+        <member name="T:Nancy.AttributeRouting.AttributeRoutingResolver">
+            <summary>
+            The class to resolve routing attributes.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.AttributeRoutingResolver.#ctor(Nancy.TinyIoc.TinyIoCContainer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.AttributeRoutingResolver"/> class.
+            </summary>
+            <param name="container">The Nancy IoC container.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.BeforeAttribute">
+            <summary>
+            Before attribute provides a hook to execute before enter the view model execution.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.BeforeAttribute.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)">
+            <summary>
+            Process the custom code and determine whether continue on view model execution.
+            </summary>
+            <param name="container">
+            The Tiny IoC container. It provides <see cref="T:Nancy.AttributeRouting.IUrlBuilder"/> and others to construct
+            the response.
+            </param>
+            <param name="context">
+            The Nancy context. It provides user information and others to determine whether continue
+            view model execution.
+            </param>
+            <returns>
+            The response. If this is <c>null</c>, it will continue on view model execution,
+            otherwise it returns the this value directly.
+            </returns>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Exceptions.DuplicatedRoutingPathsException">
+            <summary>
+            <see cref="T:Nancy.AttributeRouting.Exceptions.DuplicatedRoutingPathsException"/> indicates two or more methods are decorated
+            with a same routing path on a same HTTP method.
+            </summary>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Exceptions.MultipleBeforeAttributeException">
+            <summary>
+            <see cref="T:Nancy.AttributeRouting.Exceptions.MultipleBeforeAttributeException"/> indicates multiple before attributes are
+            decorated on method or type.
+            </summary>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Exceptions.MultipleRouteAttributesException">
+            <summary>
+            <see cref="T:Nancy.AttributeRouting.Exceptions.MultipleRouteAttributesException"/> indicates multiple route attributes are
+            decorated on method.
+            </summary>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Exceptions.NoRouteAttributeException">
+            <summary>
+            <see cref="T:Nancy.AttributeRouting.Exceptions.NoRouteAttributeException"/> indicates no route attribute is decorated on method.
+            </summary>
+        </member>
+        <member name="T:Nancy.AttributeRouting.RouteAttribute">
+            <summary>
+            The Route attribute indicates the routing path to handle the request.
+            </summary>
+        </member>
+        <member name="T:Nancy.AttributeRouting.DeleteAttribute">
+            <summary>
+            The Delete attribute. It indicates that this method hit with HTTP DELETE method.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.DeleteAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.DeleteAttribute"/> class.
+            </summary>
+            <param name="path">The path to register into routing table.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.GetAttribute">
+            <summary>
+            The Get attribute. It indicates that this method hit with HTTP GET method.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.GetAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.GetAttribute"/> class.
+            </summary>
+            <param name="path">The path to register into routing table.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.OptionsAttribute">
+            <summary>
+            The Options attribute. It indicates that this method hit with HTTP OPTIONS method.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.OptionsAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.OptionsAttribute"/> class.
+            </summary>
+            <param name="path">The path to register into routing table.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.PatchAttribute">
+            <summary>
+            The Patch attribute. It indicates that this method hit with HTTP PATCH method.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.PatchAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.PatchAttribute"/> class.
+            </summary>
+            <param name="path">The path to register into routing table.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.PostAttribute">
+            <summary>
+            The Post attribute. It indicates that this method hit with HTTP POST method.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.PostAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.PostAttribute"/> class.
+            </summary>
+            <param name="path">The path to register into routing table.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.PutAttribute">
+            <summary>
+            The Put attribute. It indicates that this method hit with HTTP PUT method.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.PutAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.PutAttribute"/> class.
+            </summary>
+            <param name="path">The path to register into routing table.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.RouteInheritAttribute">
+            <summary>
+            <see cref="T:Nancy.AttributeRouting.RouteInheritAttribute"/> indicates a type inherit another type's routing
+            information, including routing prefix, view prefix and before hooks.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.RouteInheritAttribute.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.RouteInheritAttribute"/> class.
+            </summary>
+            <param name="type">The type to inherit its routing information.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.RoutePrefixAttribute">
+            <summary>
+            The RoutePrefix attribute. It decorates on class, indicates the path from route attribute on
+            the class and child class will be prefixed.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.RoutePrefixAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.RoutePrefixAttribute"/> class.
+            </summary>
+            <param name="prefix">The prefix string for the route attribute path.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Security.RequiresAnyClaimAttribute">
+            <summary>
+            The member decorated with <see cref="T:Nancy.AttributeRouting.Security.RequiresAnyClaimAttribute"/> indicates it requires
+            authentication and any one of certain claims to be present.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresAnyClaimAttribute.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.Security.RequiresAnyClaimAttribute"/> class.
+            </summary>
+            <param name="requiredClaims">The claims to be present for authentication.</param>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresAnyClaimAttribute.#ctor(System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresAnyClaimAttribute.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Security.RequiresAuthenticationAttribute">
+            <summary>
+            The member decorated with <see cref="T:Nancy.AttributeRouting.Security.RequiresAuthenticationAttribute"/> indicates it
+            requires authentication.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresAuthenticationAttribute.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Security.RequiresClaimsAttribute">
+            <summary>
+            The member decorated with <see cref="T:Nancy.AttributeRouting.Security.RequiresClaimsAttribute"/> indicates it requires
+            authentication and certain claims to be present.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresClaimsAttribute.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.Security.RequiresClaimsAttribute"/> class.
+            </summary>
+            <param name="claims">The claims to be present for authentication.</param>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresClaimsAttribute.#ctor(System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresClaimsAttribute.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Security.RequiresHttpsAttribute">
+            <summary>
+            The member decorated with <see cref="T:Nancy.AttributeRouting.Security.RequiresHttpsAttribute"/> indicates it requires HTTPS protocol.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresHttpsAttribute.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresHttpsAttribute.#ctor(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresHttpsAttribute.#ctor(System.Boolean,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.Security.RequiresHttpsAttribute"/> class.
+            </summary>
+            <param name="redirect">
+            True if the user should be redirected to HTTPS if the incoming request was made using
+            HTTP, otherwise false if <see cref="F:Nancy.HttpStatusCode.Forbidden"/> should be returned.
+            </param>
+            <param name="httpsPort">The HTTPS port number to use</param>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresHttpsAttribute.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Nancy.AttributeRouting.Security.RequiresValidatedClaimsAttribute">
+            <summary>
+            The member decorated with <see cref="T:Nancy.AttributeRouting.Security.RequiresValidatedClaimsAttribute"/> indicates it
+            requires claims to be validated.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresValidatedClaimsAttribute.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.Security.RequiresValidatedClaimsAttribute.IsValid(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            The implementation to validate claims.
+            </summary>
+            <param name="claims">The claims from request.</param>
+            <returns>True if the claims is valid, otherwise false.</returns>
+        </member>
+        <member name="T:Nancy.AttributeRouting.IUrlBuilder">
+            <summary>
+            The URL builder interface. It accepts an expression related to a view model, then construct
+            the URL string corresponding to the view model call.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.IUrlBuilder.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Gets URL from the method call of a <typeparamref name="T"/> instance.
+            </summary>
+            <param name="expression">
+            The method call lambda expression from a <typeparamref name="T"/> instance.
+            </param>
+            <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
+            <returns>The constructed URL string.</returns>
+        </member>
+        <member name="M:Nancy.AttributeRouting.IUrlBuilder.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object)">
+            <summary>
+            Gets URL from the method call of a <typeparamref name="T"/> instance.
+            </summary>
+            <param name="expression">
+            The method call lambda expression from a <typeparamref name="T"/> instance.
+            </param>
+            <param name="parameters">
+            The parameter object to provide additional information to construct the URL. The object
+            will be converted into dictionary then invoke another overload.
+            </param>
+            <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
+            <returns>The constructed URL string.</returns>
+        </member>
+        <member name="M:Nancy.AttributeRouting.IUrlBuilder.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Gets URL from the method call of a <typeparamref name="T"/> instance.
+            </summary>
+            <param name="expression">
+            The method call lambda expression from a <typeparamref name="T"/> instance.
+            </param>
+            <param name="parameters">
+            The parameter dictionary to provide additional information to construct the URL. The
+            dictionary key is the routing template placeholder, the dictionary value is the actual
+            value to replace the placeholder.
+            </param>
+            <typeparam name="T">A view model class decorates with routing attributes.</typeparam>
+            <returns>The constructed URL string.</returns>
+        </member>
+        <member name="T:Nancy.AttributeRouting.UrlBuilder">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.UrlBuilder.#ctor(Nancy.Routing.IRouteSegmentExtractor)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.UrlBuilder.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.UrlBuilder.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Nancy.AttributeRouting.UrlBuilder.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="T:Nancy.AttributeRouting.ViewAttribute">
+            <summary>
+            The View attribute indicates the view path to render from request.
+            </summary>
+            <example>
+            The following code will render <c>View/index.html</c> with routing instance.
+            <code>
+            View('View/index.html')
+            </code>
+            </example>
+        </member>
+        <member name="M:Nancy.AttributeRouting.ViewAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.ViewAttribute"/> class.
+            </summary>
+            <param name="path">The view path for rendering.</param>
+        </member>
+        <member name="T:Nancy.AttributeRouting.ViewPrefixAttribute">
+            <summary>
+            The ViewPrefix attribute. It decorates on class, indicates the View attribute works with
+            this prefix to locate paths.
+            </summary>
+        </member>
+        <member name="M:Nancy.AttributeRouting.ViewPrefixAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.ViewPrefixAttribute"/> class.
+            </summary>
+            <param name="prefix">The path prefix.</param>
+        </member>
+    </members>
+</doc>

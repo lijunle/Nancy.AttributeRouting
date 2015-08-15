@@ -17,18 +17,18 @@ With AttributeRouting, there is no need to write [NancyModule](https://github.co
 
 With AttributeRouting, you can write a clean MVVM (Model - View - View Model) approach with Nancy framework.
 
-# Usage Tutorial
+# Tutorial
 
-The tutorial is to leverage AttributeRouting to build two simple pages.
+This tutorial walks through how to use AttributeRouting to build pages. For Full examples, please check [examples](https://github.com/lijunle/Nancy.AttributeRouting/tree/master/Nancy.AttributeRouting.Examples) folder.
 
 ## Todo List Page
 
-The first page to list some todo items in our `/todo` page.
+First, we are going to create a page to list todo items in the `/todo` routing.
 
 The following are the corresponding view and view model. (*Note:* you can use any view engine, I use the default [Super Simple View Engine](https://github.com/NancyFx/Nancy/wiki/The-Super-Simple-View-Engine) in my example.)
 
 ```html
-<!-- todo view, place as `/Views/Todo.html` -->
+<!-- show todo list view, place as `/Views/TodoList.html` -->
 <html>
     <body>
         <ul>
@@ -41,173 +41,125 @@ The following are the corresponding view and view model. (*Note:* you can use an
 ```
 
 ```csharp
-// todo view model, place as `/ViewModels/Todo.cs`
-public class Todo
+// show todo list view model, place as `/ViewModels/TodoList.cs`
+public class TodoList
 {
-    [Get("/todo")]
-    [View("Todo")]
-    public Todo(IDatabase database) // Use IoC to inject dependencies to view model
+    private readonly ITodoDatabase database;
+
+    public TodoList(ITodoDatabase database) // Use IoC to inject dependencies to view model
     {
-        this.Items = database.TodoItems; // get items from database or external data sources
+        this.database = database;
     }
 
-    public List<string> Items { get; set; }
+    public IEnumerable<string> Items => this.database.TodoItems;
+
+    [Get("/todo")]
+    [View(nameof(TodoList))]
+    public TodoList Get() => this;
 }
 ```
 
-Notice the `Get` and `View` attribute on `Todo` class constructor:
+Notice the `Get` and `View` attribute on `Todo` class methods:
 
-- The `Get` attribute register `/todo` path on Nancy routing table.
-- The `View` attribute tells Nancy content negotiate which view template should pick up when requesting HTML.
-- The `View` attribute path value (`Todo`) works with [Nancy view location convention](https://github.com/NancyFx/Nancy/wiki/View-location-conventions) to find out the proper view template to render. That is `/Views/Todo.html` in my example.
+- The `Get` attribute register `/todo` path to Nancy routing table.
+- The `View` attribute tells Nancy content negotiate which view template should pick up when browser requests HTML.
+- The `View` attribute value (`nameof(TodoList)`) works with [Nancy view location convention](https://github.com/NancyFx/Nancy/wiki/View-location-conventions) to find out the proper view template to render. That is `/Views/TodoList.html` in my example.
 
-## Create Todo Item Page
+## Add Todo Item Page
 
-Next, we are going to provide a page for creating a new Todo item. The new page is under route path `/todo/create`.
+Next, we are going to create a page to add new Todo items. The new page is under route path `/todo/add`.
 
 ```html
-<!-- todo create view, place as `/Views/TodoCreate.html` -->
+<!-- add todo item view, place as `/Views/TodoAdd.html` -->
 <html>
     <body>
-        <form>
-            <input type="text" name="content" placeholder="Todo Content" />
-            <input type="submit" />
+        <form method="post">
+            <input type="text" name="description" placeholder="Description..." />
+            <input type="submit" value="Submit" />
         </form>
     </body>
 </html>
 ```
 
 ```csharp
-// todo create view model, place as `/ViewModels/TodoCreate.cs`
-public class TodoCreate
+// add todo item view model, place as `/ViewModels/TodoAdd.cs`
+[RoutePrefix("todo")]
+public class TodoAdd
 {
-    private readonly IDatabase database;
+    private readonly ITodoDatabase database;
 
-    [Get("/todo/create")]
-    [View("TodoCreate")]
-    public TodoCreate(IDatabase database)
+    public TodoAdd(ITodoDatabase database)
     {
         this.database = database;
     }
 
-    [Post("/todo/create")]
-    public Response Post(IResponseFormatter response, Form form)
+    [Get("add")]
+    [View(nameof(TodoAdd))]
+    public TodoAdd Get() => this;
+
+    [Post("add")]
+    public Response Post(Form form)
     {
-        this.database.TodoItems.Add(form.Content);
-        return response.AsRedirect("/todo");
+        this.database.TodoItems.Add(form.Description);
+        return new RedirectResponse("/todo");
     }
 
     public class Form
     {
-        public string Content { get; set; }
+        public string Description { get; set; }
     }
 }
 ```
 
-- There is a simple form in the view to post the data back to view model.
-- In the view model, a method with `Post` attribute is provided to handle the posted request.
-- After added the item to database, the method leverages the injected `response` to redirect to `/toto` page.
+- This page shows a form to add a new todo item.
+- The `RoutePrefix` attribute prefixes routing every route in the class
+- The `Get` attribute on the `Get` method is to response `TodoAdd` view to user.
+- The `Post` attribute on the `Post` method is to handle the HTTP POST method request.
+- The `Post` method parameter binds the request payload as a non-primitive class (`Form` class here).
+- The `Post` method returns `Nancy.Response` instance directly, so it will not do content negotiate.
 
-## Link Two Pages
+## Generate Page URL in runtime
 
-The two pages are separated, it would be better to provide links in pages. So, user can negivate pages by links.
+The `/todo` is hard coded in both pages. With project grows up, it is hard to update all route strings even do simple refactor.
 
-Add create todo items page to todo list page:
+`Nancy.AttributeRouting` provides an interface `IUrlBuilder` to generate page URL in runtime.
 
-```html
-<!-- add the following link to /Views/Todo.html -->
-<a href="@Model.CreateTodoPage">Create todo items</a>
-```
+For example, update the redirect URL code in `TodoAdd` view model:
 
 ```csharp
-// update Todo view model in `/ViewModels/Todo.cs`
-public class Todo
+// update TodoAdd view model in `/ViewModels/TodoAdd.cs`
+public class TodoAdd
 {
-    private readonly IUrlBuilder urlBuilder; // injected from constructor
+    private readonly IUrlBuilder builder; // injected from constructor
 
-    public string CreateTodoPage
+    public TodoAdd(IUrlBuilder builder, ITodoDatabase database)
     {
-        get { return this.urlBuilder.GetUrl<TodoCreate>(() => new TodoCreate(null)); }
+        // other codes keep the same...
+        this.builder = builder;
+    }
+
+    public Response Post(Form form)
+    {
+        // other codes keep the same...
+        string todoListUrl = this.builder.GetUrl<TodoList>(m => m.Get(null));
+        return new RedirectResponse(todoListUrl);
     }
 }
 ```
 
-Update the redirect url builder in `TodoCreate` view model:
-
-```csharp
-// update TodoCreate view model in `/ViewModels/TodoCreate.cs`
-public class TodoCreate
-{
-    private readonly IUrlBuilder urlBuilder; // injected from constructor
-
-    public Response Post(IResponseFormatter response, Form form)
-    {
-        // ... the code above
-        string url = this.urlBuilder.GetUrl<Todo>(() => new Todo(null, null));
-        return response.AsRedirect(url);
-    }
-}
-```
-
-- Note that we are using `IUrlBuilder` to construct URL on run time. `IUrlBuilder` in provided from Nancy.AttributeRouting too. There is no need to configure, it is registed on IoC container by default.
-- Regarding to the APIs of `IUrlBuilder`, please check the **API** section below.
-
-## Route and View Prefix
-
-You might have notice, both page routing path has a same path `/todo`. It is a good practice to avoid redundant. Extract them as a route prefix.
-
-```csharp
-[RoutePrefix("todo")]
-public abstract class TodoBase
-{
-}
-
-public class Todo : TodoBase
-{
-    [Get("/")]
-    public Todo(IDatabase database)
-    {
-        // ... the code above
-    }
-}
-
-public class TodoCreate : TodoBase
-{
-    [Get("/create")]
-    public TodoCreate(IDatabase database)
-    {
-        // .. the code above
-    }
-
-    [Post("/create")]
-    public Response Post(IResponseFormatter response, Form form)
-    {
-        // ... the code above
-    }
-}
-```
-
-- Their both same route prefix is extracted to their base class attached `RoutePrefix` attribute.
-- There is a similiar attrbiute with `View` attribute named `ViewPrefix` attribute.
-- You can check the detail APIs of `RoutePrefix` and `ViewPrefix` attributes, please check the **API** section below.
+- The `IUrlBuilder` interface is registered to Nancy IoC at bootstrap. It is out-of-box to inject to view models.
+- The `IUrlBuilder` interface provides `GetUrl<TViewModel>` method to generated view model URL in runtime.
+- The `GetUrl` lambda expression arguments will replace route variables when necessary.
 
 ## Conclusion
 
-We created two simple pages with Nancy and AttributeRouting. Following MVVM pattern, only models (the IDatabase part), views and view models are created. In the view - view model part, we focus on how the view looks like, what functions we need to provide for the corresponding views.
+We created two pages with Nancy and AttributeRouting. Following MVVM pattern, only models (the ITodoDatabase part), views and view models are created. In the view - view model part, we focus on how the view looks like, what functions we need to provide for the corresponding views.
 
-Routing and view discovering are trivial jobs, use AttributeRouting for them.
+Check [examples](https://github.com/lijunle/Nancy.AttributeRouting/tree/master/Nancy.AttributeRouting.Examples) folder to see a full MVVM approach to build website.
 
 # API
 
-## RouteAttribute
-
-## ViewAttribute
-
-## RoutePrefixAttribute
-
-## ViewPrefixAttribute
-
-## IUrlBuilder
+See [Nancy.AttributeRouting.md](https://github.com/lijunle/Nancy.AttributeRouting/blob/master/Nancy.AttributeRouting/Nancy.AttributeRouting.md) file.
 
 # License
 
