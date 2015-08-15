@@ -3,39 +3,21 @@
     public class HttpMethodViewModel
     {
         [Delete("/my")]
-        public string Delete()
-        {
-            return "MyDelete";
-        }
+        public string Delete() => "MyDelete";
 
         [Get("/my")]
-        public string Get()
-        {
-            return "MyGet";
-        }
+        public string Get() => "MyGet";
 
         [Options("/my")]
-        public string Options()
-        {
-            return "MyOptions";
-        }
+        public string Options() => "MyOptions";
 
         [Patch("/my")]
-        public string Patch()
-        {
-            return "MyPatch";
-        }
+        public string Patch() => "MyPatch";
 
         [Post("/my")]
-        public string Post()
-        {
-            return "MyPost";
-        }
+        public string Post() => "MyPost";
 
         [Put("/my")]
-        public string Put()
-        {
-            return "MyPut";
-        }
+        public string Put() => "MyPut";
     }
 }

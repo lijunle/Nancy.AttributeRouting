@@ -4,27 +4,18 @@
     {
         [Get("/html")]
         [View("view")]
-        public object GetView()
-        {
-            return new { Message = "Hello world!" };
-        }
+        public object GetView() => new { Message = "Hello world!" };
 
         [Get("/html/subfolder")]
         [View("Prefix/view-prefix")]
-        public object GetSubfolder()
-        {
-            return new { Message = "Get subfolder file from root." };
-        }
+        public object GetSubfolder() => new { Message = "Get subfolder file from root." };
 
         [ViewPrefix("Prefix")]
         public class ViewPrefixViewModel
         {
             [Get("/html/prefix")]
             [View("view-prefix")]
-            public object GetInnerView()
-            {
-                return new { Message = "Get view prefix message." };
-            }
+            public object GetInnerView() => new { Message = "Get view prefix message." };
         }
 
         [RouteInherit(typeof(ViewPrefixViewModel))]
@@ -32,10 +23,7 @@
         {
             [Get("/html/prefix/type")]
             [View("type-prefix")]
-            public object GetView()
-            {
-                return new { Message = "Get type prefix message." };
-            }
+            public object GetView() => new { Message = "Get type prefix message." };
         }
 
         [RouteInherit(typeof(ViewPrefixViewModel))]
@@ -44,10 +32,7 @@
         {
             [Get("/html/prefix/deeper")]
             [View("deeper-prefix")]
-            public object GetDeeperView()
-            {
-                return new { Message = "Get deeper prefix message." };
-            }
+            public object GetDeeperView() => new { Message = "Get deeper prefix message." };
         }
     }
 }

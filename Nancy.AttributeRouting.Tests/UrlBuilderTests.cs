@@ -233,10 +233,7 @@
                 this.url = url;
             }
 
-            public static implicit operator object[](TestCase<T> testCase)
-            {
-                return new object[] { testCase };
-            }
+            public static implicit operator object[] (TestCase<T> testCase) => new object[] { testCase };
 
             public virtual void Run()
             {
@@ -251,10 +248,7 @@
                 Assert.Equal(this.url, url);
             }
 
-            public override string ToString()
-            {
-                return string.Format("{0} {1}", typeof(T).Name, this.Expression);
-            }
+            public override string ToString() => string.Format("{0} {1}", typeof(T).Name, this.Expression);
         }
 
         public class ExceptionTestCase<T, U> : TestCase<T>
