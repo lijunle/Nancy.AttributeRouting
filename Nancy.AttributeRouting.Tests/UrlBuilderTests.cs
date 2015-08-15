@@ -98,6 +98,10 @@
                     m => m.GetBoolean(true),
                     "/complex/boolean/True");
 
+                yield return new TestCase<ComplexViewModel>(
+                    m => m.GetRegex("regex-name"),
+                    "/complex/regex/regex-name");
+
                 // expression tree does not allow optional parameter, no way to get routing optional parameter
                 yield return new TestCase<ComplexViewModel>(
                     m => m.GetWithOptionalParameter(null),
@@ -171,18 +175,21 @@
 
                 yield return new ExceptionTestCase<MyViewModel, NoRouteAttributeException>(
                     m => m.GetWithoutRoutings());
+
+                yield return new ExceptionTestCase<RoutePrefixViewModel.ConstructorPrefixViewModel, ArgumentException>(
+                    m => m.Get());
             }
         }
 
         [Theory]
-        [MemberData("TestCases")]
+        [MemberData(nameof(TestCases))]
         public void Test_URL_builder(ITestCase testCase)
         {
             testCase.Run();
         }
 
         [Theory]
-        [MemberData("ExceptionCases")]
+        [MemberData(nameof(ExceptionCases))]
         public void Throws_URL_builder_exception(ITestCase testCase)
         {
             testCase.Run();
@@ -248,7 +255,7 @@
                 Assert.Equal(this.url, url);
             }
 
-            public override string ToString() => string.Format("{0} {1}", typeof(T).Name, this.Expression);
+            public override string ToString() => $"{typeof(T).Name} {this.Expression}";
         }
 
         public class ExceptionTestCase<T, U> : TestCase<T>

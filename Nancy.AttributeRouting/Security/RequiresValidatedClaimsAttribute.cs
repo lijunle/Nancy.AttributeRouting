@@ -1,6 +1,7 @@
 ﻿namespace Nancy.AttributeRouting.Security
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using Nancy.Security;
     using Nancy.TinyIoc;
 
@@ -8,6 +9,7 @@
     /// The member decorated with <see cref="RequiresValidatedClaimsAttribute"/> indicates it
     /// requires claims to be validated.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public abstract class RequiresValidatedClaimsAttribute : BeforeAttribute
     {
         /// <inheritdoc/>
