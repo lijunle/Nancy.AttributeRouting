@@ -200,8 +200,6 @@
 
         public class TestCase<T> : ITestCase where T : class
         {
-            protected readonly Expression<Func<T, object>> Expression;
-
             private readonly IDictionary<string, string> dictionary;
 
             private readonly object parameters;
@@ -233,7 +231,9 @@
                 this.url = url;
             }
 
-            public static implicit operator object[] (TestCase<T> testCase) => new object[] { testCase };
+            protected Expression<Func<T, object>> Expression { get; }
+
+            public static implicit operator object[](TestCase<T> testCase) => new object[] { testCase };
 
             public virtual void Run()
             {
