@@ -29,7 +29,7 @@ before_test:
   - ps: dir "$env:APPVEYOR_BUILD_FOLDER\Nancy.AttributeRouting.Tests\bin\$env:CONFIGURATION\"
 
 artifacts:
-  - path: '**\*.nupkg'
+  - path: 'Nancy.AttributeRouting\**\*.nupkg'
 
 nuget:
   account_feed: false
@@ -39,7 +39,6 @@ nuget:
 deploy:
   - release: v$(APPVEYOR_BUILD_VERSION)
     provider: GitHub
-    artifact: Nancy.AttributeRouting.$(APPVEYOR_BUILD_VERSION).nupkg
     draft: false
     prerelease: false
     auth_token:
