@@ -1,6 +1,7 @@
 # Nancy.AttributeRouting
 
 [![Build status](https://ci.appveyor.com/api/projects/status/86jwerymo30f9949/branch/master?svg=true)](https://ci.appveyor.com/project/lijunle/nancy-attributerouting/branch/master)
+[![Coverage Status](https://coveralls.io/repos/lijunle/Nancy.AttributeRouting/badge.svg?branch=master&service=github)](https://coveralls.io/github/lijunle/Nancy.AttributeRouting?branch=master)
 
 Enable attribute routing for Nancy project, and build route URL with compiled-time checked lambda expression.
 
