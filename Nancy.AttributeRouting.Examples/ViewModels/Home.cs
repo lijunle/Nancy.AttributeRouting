@@ -1,7 +1,5 @@
 ﻿namespace Nancy.AttributeRouting.Examples.ViewModels
 {
-    using Todo;
-
     public class Home
     {
         private readonly IUrlBuilder builder;
@@ -11,7 +9,9 @@
             this.builder = builder;
         }
 
-        public string TodoUrl => this.builder.GetUrl<List>(m => m.Get());
+        public string TodoUrl => this.builder.GetUrl<Todo.List>(m => m.Get());
+
+        public string ContactUrl => this.builder.GetUrl<Contact.List>(m => m.Get());
 
         public string AboutUrl => this.builder.GetUrl<About>(m => m.Get());
 

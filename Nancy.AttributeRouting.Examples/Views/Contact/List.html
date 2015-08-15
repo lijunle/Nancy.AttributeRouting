@@ -1,0 +1,89 @@
+﻿<html>
+<head>
+    <title>Contact List</title>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+    <h1>This is Contact List page.</h1>
+    <div><a href="@Model.HomeUrl">Back to Home page</a></div>
+    <div id="error-message" style="color: red"></div>
+    <form>
+        <fieldset>
+            <legend>Add new contact item</legend>
+            <input id="name" type="text" placeholder="Name" />
+            <input id="phone" type="text" placeholder="Phone" />
+            <input type="submit" value="Submit" />
+        </fieldset>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.Contacts
+            <tr>
+                <td>@Current.Name</td>
+                <td>@Current.Phone</td>
+                <td><a class="delete" href="javascript:void(0)" data-id="@Current.Id">Delete</a></td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <script>
+        $('form').submit(function () {
+            // prepare request data
+            var data = {
+                name: $('#name').val(),
+                phone: $('#phone').val()
+            };
+
+            // post to backend
+            $('#error-message').text('');
+            $.post("@Model.AddUrl", data).then(function (result) {
+                if (result.errorMessage) {
+                    $('#error-message').text(result.errorMessage);
+                } else {
+                    $('table').append(
+                        $('<tr>').append(
+                            $('<td>').text(data.name)).append(
+                            $('<td>').text(data.phone)).append(
+                            $('<td>').append(
+                                $('<a>').text('Delete').attr({
+                                    'class': 'delete',
+                                    'href': 'javascript:void(0)',
+                                    'data-id': result.contactId
+                                }))));
+
+                    // clean up form
+                    $('#name').val('');
+                    $('#phone').val('');
+                }
+            });
+
+            // not trigger HTML form submit
+            return false;
+        });
+
+        $('table').on('click', '.delete', function () {
+            // prepare request data
+            var data = {
+                contactId: $(this).attr('data-id')
+            };
+
+            // post to backend
+            $('#error-message').text('');
+            $.post("@Model.DeleteUrl", data).then(function (result) {
+                if (result.errorMessage) {
+                    $('#error-message').text(result.errorMessage);
+                } else {
+                    $('table .delete[data-id=' + result.contactId + ']').parents('tr').remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
