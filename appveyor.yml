@@ -22,14 +22,24 @@ assembly_info:
 cache:
   - packages -> **\packages.config
 
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: AO3IDJhJX5ipKoF6ocupCLqns27es3j/2I4Dt/AnOdbTgYKriuXSyRBAjBAKn6Wi
+
 before_build:
   - ps: nuget restore "$env:APPVEYOR_BUILD_FOLDER\Nancy.AttributeRouting.sln"
 
 before_test:
   - ps: dir "$env:APPVEYOR_BUILD_FOLDER\Nancy.AttributeRouting.Tests\bin\$env:CONFIGURATION\"
 
+test_script:
+  - cinst opencover coveralls.io -source https://nuget.org/api/v2/
+  - OpenCover.Console.exe -register:user -filter:"+[Nancy.AttributeRouting]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -target:"%XUNIT20%\xunit.console.exe" -targetargs:"""%APPVEYOR_BUILD_FOLDER%\Nancy.AttributeRouting.Tests\bin\%CONFIGURATION%\Nancy.AttributeRouting.Tests.dll"" -noshadow -appveyor" -output:coverage.xml -returntargetcode
+  - coveralls.net --opencover coverage.xml
+
 artifacts:
   - path: 'Nancy.AttributeRouting\**\*.nupkg'
+  - path: coverage.xml
 
 nuget:
   account_feed: false
