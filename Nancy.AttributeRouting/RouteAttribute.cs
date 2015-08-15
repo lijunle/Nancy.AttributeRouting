@@ -79,9 +79,9 @@
                 this.Path = string.Format("{0}/{1}", prefix, path);
             }
 
-            public HttpMethod HttpMethod { get; private set; }
+            public HttpMethod HttpMethod { get; }
 
-            public string Path { get; private set; }
+            public string Path { get; }
         }
     }
 

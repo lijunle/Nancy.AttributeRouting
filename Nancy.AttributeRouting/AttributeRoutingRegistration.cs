@@ -39,60 +39,26 @@
         }
 
         /// <inheritdoc/>
-        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations
-        {
-            get { return null; }
-        }
+        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations => null;
 
         /// <inheritdoc/>
-        public IEnumerable<InstanceRegistration> InstanceRegistrations
-        {
-            get { return null; }
-        }
+        public IEnumerable<InstanceRegistration> InstanceRegistrations => null;
 
         /// <inheritdoc/>
-        public IEnumerable<TypeRegistration> TypeRegistrations
-        {
-            get
-            {
-                return typeRegistrations.Concat(interfaceRegistrations);
-            }
-        }
+        public IEnumerable<TypeRegistration> TypeRegistrations => typeRegistrations.Concat(interfaceRegistrations);
 
-        private static IEnumerable<MethodBase> GetMethodsWithRouteAttribute(Type type)
-        {
-            IEnumerable<MethodBase> methods = type
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+        private static IEnumerable<MethodBase> GetMethodsWithRouteAttribute(Type type) =>
+            type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(HasRouteAttribute);
 
-            return methods;
-        }
+        private static bool HasRouteAttribute(MethodBase method) =>
+            method.GetCustomAttributes<RouteAttribute>().Any();
 
-        private static bool HasRouteAttribute(MethodBase method)
-        {
-            return method.GetCustomAttributes<RouteAttribute>().Any();
-        }
+        private static bool DoesSupportType(Type type) =>
+            type.IsInterface || (!type.IsAbstract && (type.IsPublic || type.IsNestedPublic));
 
-        private static bool DoesSupportType(Type type)
-        {
-            if (type.IsInterface)
-            {
-                return true;
-            }
-            else if (!type.IsAbstract && (type.IsPublic || type.IsNestedPublic))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private static bool IsInterfaceHavingMethodsWithRouteAttribute(Type type)
-        {
-            return type.IsInterface && GetMethodsWithRouteAttribute(type).Any();
-        }
+        private static bool IsInterfaceHavingMethodsWithRouteAttribute(Type type) =>
+            type.IsInterface && GetMethodsWithRouteAttribute(type).Any();
 
         private static TypeRegistration GetTypeRegistration(IEnumerable<Type> allTypes, Type @interface)
         {

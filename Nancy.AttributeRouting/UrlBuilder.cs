@@ -66,16 +66,12 @@
         }
 
         /// <inheritdoc/>
-        public string GetUrl<T>(Expression<Func<T, object>> expression)
-        {
-            return this.GetUrl<T>(expression, new Dictionary<string, string>());
-        }
+        public string GetUrl<T>(Expression<Func<T, object>> expression) =>
+            this.GetUrl<T>(expression, new Dictionary<string, string>());
 
         /// <inheritdoc/>
-        public string GetUrl<T>(Expression<Func<T, object>> expression, object parameters)
-        {
-            return this.GetUrl<T>(expression, parameters.ToDictionary());
-        }
+        public string GetUrl<T>(Expression<Func<T, object>> expression, object parameters) =>
+            this.GetUrl<T>(expression, parameters.ToDictionary());
 
         /// <inheritdoc/>
         public string GetUrl<T>(Expression<Func<T, object>> expression, IDictionary<string, string> parameters)
