@@ -11,8 +11,9 @@
     /// </summary>
     public class AttributeRoutingResolver : NancyModule
     {
-        internal static readonly Dictionary<HttpMethod, Dictionary<string, MethodBase>> Routings =
-            new Dictionary<HttpMethod, Dictionary<string, MethodBase>>
+        static AttributeRoutingResolver()
+        {
+            Routings = new Dictionary<HttpMethod, Dictionary<string, MethodBase>>
             {
                 { HttpMethod.Delete, new Dictionary<string, MethodBase>() },
                 { HttpMethod.Get, new Dictionary<string, MethodBase>() },
@@ -21,6 +22,7 @@
                 { HttpMethod.Post, new Dictionary<string, MethodBase>() },
                 { HttpMethod.Put, new Dictionary<string, MethodBase>() },
             };
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributeRoutingResolver"/> class.
@@ -35,6 +37,8 @@
             Resolve(container, this, this.Post, HttpMethod.Post);
             Resolve(container, this, this.Put, HttpMethod.Put);
         }
+
+        internal static Dictionary<HttpMethod, Dictionary<string, MethodBase>> Routings { get; }
 
         private static void Resolve(
             TinyIoCContainer container,
