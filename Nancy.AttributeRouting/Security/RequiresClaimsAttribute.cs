@@ -1,6 +1,7 @@
 ﻿namespace Nancy.AttributeRouting.Security
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nancy.Security;
     using Nancy.TinyIoc;
@@ -9,6 +10,7 @@
     /// The member decorated with <see cref="RequiresClaimsAttribute"/> indicates it requires
     /// authentication and certain claims to be present.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class RequiresClaimsAttribute : BeforeAttribute
     {
         private readonly IEnumerable<string> claims;

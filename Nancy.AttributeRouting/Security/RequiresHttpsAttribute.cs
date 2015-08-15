@@ -1,11 +1,13 @@
 ﻿namespace Nancy.AttributeRouting.Security
 {
+    using System.Diagnostics.CodeAnalysis;
     using Nancy.Security;
     using Nancy.TinyIoc;
 
     /// <summary>
     /// The member decorated with <see cref="RequiresHttpsAttribute"/> indicates it requires HTTPS protocol.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class RequiresHttpsAttribute : BeforeAttribute
     {
         private readonly bool redirect;
