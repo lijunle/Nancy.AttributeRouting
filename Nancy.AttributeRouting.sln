@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AE8464
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.AttributeRouting.Examples", "Nancy.AttributeRouting.Examples\Nancy.AttributeRouting.Examples.csproj", "{70C05534-6D54-45BD-B27A-EACC92F4799B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{E86404FB-F157-40C0-BF1E-D63ECE715372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E86404FB-F157-40C0-BF1E-D63ECE715372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E86404FB-F157-40C0-BF1E-D63ECE715372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C05534-6D54-45BD-B27A-EACC92F4799B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C05534-6D54-45BD-B27A-EACC92F4799B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C05534-6D54-45BD-B27A-EACC92F4799B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C05534-6D54-45BD-B27A-EACC92F4799B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
