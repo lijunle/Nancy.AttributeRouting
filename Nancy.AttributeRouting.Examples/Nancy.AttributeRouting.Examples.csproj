@@ -98,6 +98,8 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\TodoDatabase.cs" />
+    <Compile Include="Model\TodoItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\About.cs" />
     <Compile Include="ViewModels\Home.cs" />
