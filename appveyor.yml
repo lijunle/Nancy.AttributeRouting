@@ -1,4 +1,4 @@
-version: 0.5.4.{build}
+version: 0.5.5.{build}
 
 init:
   - ps: if ($env:APPVEYOR_REPO_TAG_NAME) { Update-AppveyorBuild -Version $env:APPVEYOR_REPO_TAG_NAME.Substring(1) }
