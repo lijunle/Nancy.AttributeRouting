@@ -39,7 +39,6 @@ test_script:
 
 artifacts:
   - path: 'Nancy.AttributeRouting\**\*.nupkg'
-  - path: coverage.xml
 
 nuget:
   account_feed: false
