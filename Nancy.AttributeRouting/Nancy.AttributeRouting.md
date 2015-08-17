@@ -1,358 +1,677 @@
-
 # Nancy.AttributeRouting
-
 
 ## AttributeRoutingRegistration
 
+##### Namespace
 
-### .CollectionTypeRegistrations
+Nancy.AttributeRouting
 
+##### Summary
 
-### .InstanceRegistrations
+*Inherit from parent.*
 
+### CollectionTypeRegistrations `property`
 
-### .TypeRegistrations
+##### Summary
 
+*Inherit from parent.*
+
+### InstanceRegistrations `property`
+
+##### Summary
+
+*Inherit from parent.*
+
+### TypeRegistrations `property`
+
+##### Summary
+
+*Inherit from parent.*
 
 ## AttributeRoutingResolver
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The class to resolve routing attributes.
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(container)
+##### Summary
 
-Initializes a new instance of the class.
+Initializes a new instance of the `AttributeRoutingResolver` class.
 
-| Name | Description |
-| ---- | ----------- |
-| container | *Nancy.TinyIoc.TinyIoCContainer*<br>The Nancy IoC container. |
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| container | Nancy.TinyIoc.TinyIoCContainer | The Nancy IoC container. |
 
 ## BeforeAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 Before attribute provides a hook to execute before enter the view model execution.
 
+### Process `method`
 
-### M:Nancy.AttributeRouting.Process(container, context)
+##### Summary
 
 Process the custom code and determine whether continue on view model execution.
 
-| Name | Description |
-| ---- | ----------- |
-| container | *Nancy.TinyIoc.TinyIoCContainer*<br> The Tiny IoC container. It provides and others to construct the response.  |
-| context | *Nancy.NancyContext*<br> The Nancy context. It provides user information and others to determine whether continue view model execution.  |
+##### Returns
 
+The response. If this is `null`, it will continue on view model execution, otherwise it returns the this value directly.
 
-#### Returns
+##### Parameters
 
- The response. If this is null, it will continue on view model execution, otherwise it returns the this value directly. 
-
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| container | Nancy.TinyIoc.TinyIoCContainer | The Tiny IoC container. It provides `IUrlBuilder` and others to construct the response. |
+| context | Nancy.NancyContext | The Nancy context. It provides user information and others to determine whether continue view model execution. |
 
 ## DeleteAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The Delete attribute. It indicates that this method hit with HTTP DELETE method.
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(path)
+##### Summary
 
-Initializes a new instance of the class.
+Initializes a new instance of the `DeleteAttribute` class.
 
-| Name | Description |
-| ---- | ----------- |
-| path | *System.String*<br>The path to register into routing table. |
+##### Parameters
 
-## Exceptions.DuplicatedRoutingPathsException
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| path | System.String | The path to register into routing table. |
 
-indicates two or more methods are decorated with a same routing path on a same HTTP method.
+## DuplicatedRoutingPathsException
 
+##### Namespace
 
-## Exceptions.MultipleBeforeAttributeException
+Nancy.AttributeRouting.Exceptions
 
-indicates multiple before attributes are decorated on method or type.
+##### Summary
 
-
-## Exceptions.MultipleRouteAttributesException
-
-indicates multiple route attributes are decorated on method.
-
-
-## Exceptions.NoRouteAttributeException
-
-indicates no route attribute is decorated on method.
-
+`DuplicatedRoutingPathsException` indicates two or more methods are decorated with a same routing path on a same HTTP method.
 
 ## GetAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The Get attribute. It indicates that this method hit with HTTP GET method.
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(path)
+##### Summary
 
-Initializes a new instance of the class.
+Initializes a new instance of the `GetAttribute` class.
 
-| Name | Description |
-| ---- | ----------- |
-| path | *System.String*<br>The path to register into routing table. |
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| path | System.String | The path to register into routing table. |
 
 ## IUrlBuilder
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The URL builder interface. It accepts an expression related to a view model, then construct the URL string corresponding to the view model call.
 
+### GetUrl\`\`1 `method`
 
-### M:Nancy.AttributeRouting.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+##### Summary
 
-Gets URL from the method call of a instance.
+Gets URL from the method call of a `T` instance.
 
-| Name | Description |
-| ---- | ----------- |
-| expression | *Unknown type*<br> The method call lambda expression from a instance.  |
-
-
-#### Returns
+##### Returns
 
 The constructed URL string.
 
+##### Parameters
 
-### M:Nancy.AttributeRouting.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Collections.Generic.IDictionary{System.String,System.String})
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| expression | System.Linq.Expressions.Expression{System.Func{\`\`0,System.Object}} | The method call lambda expression from a `T` instance. |
 
-Gets URL from the method call of a instance.
-
-| Name | Description |
-| ---- | ----------- |
-| expression | *Unknown type*<br> The method call lambda expression from a instance.  |
-| parameters | *Unknown type*<br> The parameter dictionary to provide additional information to construct the URL. The dictionary key is the routing template placeholder, the dictionary value is the actual value to replace the placeholder.  |
-
-
-#### Returns
-
-The constructed URL string.
-
-
-### M:Nancy.AttributeRouting.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object)
-
-Gets URL from the method call of a instance.
+##### Generic Types
 
 | Name | Description |
 | ---- | ----------- |
-| expression | *Unknown type*<br> The method call lambda expression from a instance.  |
-| parameters | *Unknown type*<br> The parameter object to provide additional information to construct the URL. The object will be converted into dictionary then invoke another overload.  |
+| T | A view model class decorates with routing attributes. |
 
+### GetUrl\`\`1 `method`
 
-#### Returns
+##### Summary
+
+Gets URL from the method call of a `T` instance.
+
+##### Returns
 
 The constructed URL string.
 
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| expression | System.Linq.Expressions.Expression{System.Func{\`\`0,System.Object}} | The method call lambda expression from a `T` instance. |
+| parameters | System.Collections.Generic.IDictionary{System.String,System.String} | The parameter dictionary to provide additional information to construct the URL. The dictionary key is the routing template placeholder, the dictionary value is the actual value to replace the placeholder. |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | A view model class decorates with routing attributes. |
+
+### GetUrl\`\`1 `method`
+
+##### Summary
+
+Gets URL from the method call of a `T` instance.
+
+##### Returns
+
+The constructed URL string.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| expression | System.Linq.Expressions.Expression{System.Func{\`\`0,System.Object}} | The method call lambda expression from a `T` instance. |
+| parameters | System.Object | The parameter object to provide additional information to construct the URL. The object will be converted into dictionary then invoke another overload. |
+
+##### Generic Types
+
+| Name | Description |
+| ---- | ----------- |
+| T | A view model class decorates with routing attributes. |
+
+## MultipleBeforeAttributeException
+
+##### Namespace
+
+Nancy.AttributeRouting.Exceptions
+
+##### Summary
+
+`MultipleBeforeAttributeException` indicates multiple before attributes are decorated on method or type.
+
+## MultipleRouteAttributesException
+
+##### Namespace
+
+Nancy.AttributeRouting.Exceptions
+
+##### Summary
+
+`MultipleRouteAttributesException` indicates multiple route attributes are decorated on method.
+
+## NoRouteAttributeException
+
+##### Namespace
+
+Nancy.AttributeRouting.Exceptions
+
+##### Summary
+
+`NoRouteAttributeException` indicates no route attribute is decorated on method.
 
 ## OptionsAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The Options attribute. It indicates that this method hit with HTTP OPTIONS method.
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(path)
+##### Summary
 
-Initializes a new instance of the class.
+Initializes a new instance of the `OptionsAttribute` class.
 
-| Name | Description |
-| ---- | ----------- |
-| path | *System.String*<br>The path to register into routing table. |
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| path | System.String | The path to register into routing table. |
 
 ## PatchAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The Patch attribute. It indicates that this method hit with HTTP PATCH method.
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(path)
+##### Summary
 
-Initializes a new instance of the class.
+Initializes a new instance of the `PatchAttribute` class.
 
-| Name | Description |
-| ---- | ----------- |
-| path | *System.String*<br>The path to register into routing table. |
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| path | System.String | The path to register into routing table. |
 
 ## PostAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The Post attribute. It indicates that this method hit with HTTP POST method.
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(path)
+##### Summary
 
-Initializes a new instance of the class.
+Initializes a new instance of the `PostAttribute` class.
 
-| Name | Description |
-| ---- | ----------- |
-| path | *System.String*<br>The path to register into routing table. |
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| path | System.String | The path to register into routing table. |
 
 ## PutAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The Put attribute. It indicates that this method hit with HTTP PUT method.
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(path)
+##### Summary
 
-Initializes a new instance of the class.
+Initializes a new instance of the `PutAttribute` class.
 
-| Name | Description |
-| ---- | ----------- |
-| path | *System.String*<br>The path to register into routing table. |
+##### Parameters
 
-## RouteAttribute
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| path | System.String | The path to register into routing table. |
 
-The Route attribute indicates the routing path to handle the request.
+## RequiresAnyClaimAttribute
 
+##### Namespace
 
-## RouteInheritAttribute
+Nancy.AttributeRouting.Security
 
-indicates a type inherit another type's routing information, including routing prefix, view prefix and before hooks.
+##### Summary
 
+The member decorated with `RequiresAnyClaimAttribute` indicates it requires authentication and any one of certain claims to be present.
 
-### M:Nancy.AttributeRouting.#ctor(type)
+### #ctor `constructor`
 
-Initializes a new instance of the class.
+##### Summary
 
-| Name | Description |
-| ---- | ----------- |
-| type | *System.Type*<br>The type to inherit its routing information. |
+Initializes a new instance of the `RequiresAnyClaimAttribute` class.
 
-## RoutePrefixAttribute
+##### Parameters
 
-The RoutePrefix attribute. It decorates on class, indicates the path from route attribute on the class and child class will be prefixed.
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| requiredClaims | System.Collections.Generic.IEnumerable{System.String} | The claims to be present for authentication. |
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(prefix)
+##### Summary
 
-Initializes a new instance of the class.
+*Inherit from parent.*
 
-| Name | Description |
-| ---- | ----------- |
-| prefix | *System.String*<br>The prefix string for the route attribute path. |
+##### Parameters
 
-## Security.RequiresAnyClaimAttribute
+This method has no parameters.
 
-The member decorated with indicates it requires authentication and any one of certain claims to be present.
+### Process `method`
 
+##### Summary
 
-### M:Nancy.AttributeRouting.#ctor(requiredClaims)
+*Inherit from parent.*
 
-Initializes a new instance of the class.
+##### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| requiredClaims | *System.Collections.Generic.IEnumerable{System.String}*<br>The claims to be present for authentication. |
+This method has no parameters.
 
-### M:Nancy.AttributeRouting.#ctor(System.String[])
+## RequiresAuthenticationAttribute
 
+##### Namespace
 
-### M:Nancy.AttributeRouting.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)
+Nancy.AttributeRouting.Security
 
+##### Summary
 
-## Security.RequiresAuthenticationAttribute
+The member decorated with `RequiresAuthenticationAttribute` indicates it requires authentication.
 
-The member decorated with indicates it requires authentication.
+### Process `method`
 
+##### Summary
 
-### M:Nancy.AttributeRouting.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)
+*Inherit from parent.*
 
+##### Parameters
 
-## Security.RequiresClaimsAttribute
+This method has no parameters.
 
-The member decorated with indicates it requires authentication and certain claims to be present.
+## RequiresClaimsAttribute
 
+##### Namespace
 
-### M:Nancy.AttributeRouting.#ctor(claims)
+Nancy.AttributeRouting.Security
 
-Initializes a new instance of the class.
+##### Summary
 
-| Name | Description |
-| ---- | ----------- |
-| claims | *System.Collections.Generic.IEnumerable{System.String}*<br>The claims to be present for authentication. |
+The member decorated with `RequiresClaimsAttribute` indicates it requires authentication and certain claims to be present.
 
-### M:Nancy.AttributeRouting.#ctor(System.String[])
+### #ctor `constructor`
 
+##### Summary
 
-### M:Nancy.AttributeRouting.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)
+Initializes a new instance of the `RequiresClaimsAttribute` class.
 
+##### Parameters
 
-## Security.RequiresHttpsAttribute
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| claims | System.Collections.Generic.IEnumerable{System.String} | The claims to be present for authentication. |
 
-The member decorated with indicates it requires HTTPS protocol.
+### #ctor `constructor`
 
+##### Summary
 
-### M:Nancy.AttributeRouting.#ctor
+*Inherit from parent.*
 
+##### Parameters
 
-### M:Nancy.AttributeRouting.#ctor(System.Boolean)
+This method has no parameters.
 
+### Process `method`
 
-### M:Nancy.AttributeRouting.#ctor(redirect, httpsPort)
+##### Summary
 
-Initializes a new instance of the class.
+*Inherit from parent.*
 
-| Name | Description |
-| ---- | ----------- |
-| redirect | *System.Boolean*<br> True if the user should be redirected to HTTPS if the incoming request was made using HTTP, otherwise false if should be returned.  |
-| httpsPort | *System.Int32*<br>The HTTPS port number to use |
+##### Parameters
 
-### M:Nancy.AttributeRouting.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)
+This method has no parameters.
 
+## RequiresHttpsAttribute
 
-## Security.RequiresValidatedClaimsAttribute
+##### Namespace
 
-The member decorated with indicates it requires claims to be validated.
+Nancy.AttributeRouting.Security
 
+##### Summary
 
-### M:Nancy.AttributeRouting.IsValid(claims)
+The member decorated with `RequiresHttpsAttribute` indicates it requires HTTPS protocol.
+
+### #ctor `constructor`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+### #ctor `constructor`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+### #ctor `constructor`
+
+##### Summary
+
+Initializes a new instance of the `RequiresHttpsAttribute` class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| redirect | System.Boolean | True if the user should be redirected to HTTPS if the incoming request was made using HTTP, otherwise false if `Forbidden` should be returned. |
+| httpsPort | System.Int32 | The HTTPS port number to use |
+
+### Process `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+## RequiresValidatedClaimsAttribute
+
+##### Namespace
+
+Nancy.AttributeRouting.Security
+
+##### Summary
+
+The member decorated with `RequiresValidatedClaimsAttribute` indicates it requires claims to be validated.
+
+### IsValid `method`
+
+##### Summary
 
 The implementation to validate claims.
 
-| Name | Description |
-| ---- | ----------- |
-| claims | *System.Collections.Generic.IEnumerable{System.String}*<br>The claims from request. |
-
-
-#### Returns
+##### Returns
 
 True if the claims is valid, otherwise false.
 
+##### Parameters
 
-### M:Nancy.AttributeRouting.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| claims | System.Collections.Generic.IEnumerable{System.String} | The claims from request. |
 
+### Process `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+## RouteAttribute
+
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
+The Route attribute indicates the routing path to handle the request.
+
+## RouteInheritAttribute
+
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
+`RouteInheritAttribute` indicates a type inherit another type's routing information, including routing prefix, view prefix and before hooks.
+
+### #ctor `constructor`
+
+##### Summary
+
+Initializes a new instance of the `RouteInheritAttribute` class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| type | System.Type | The type to inherit its routing information. |
+
+## RoutePrefixAttribute
+
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
+The RoutePrefix attribute. It decorates on class, indicates the path from route attribute on the class and child class will be prefixed.
+
+### #ctor `constructor`
+
+##### Summary
+
+Initializes a new instance of the `RoutePrefixAttribute` class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| prefix | System.String | The prefix string for the route attribute path. |
 
 ## UrlBuilder
 
+##### Namespace
 
-### M:Nancy.AttributeRouting.#ctor(Nancy.Routing.IRouteSegmentExtractor)
+Nancy.AttributeRouting
 
+##### Summary
 
-### M:Nancy.AttributeRouting.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})
+*Inherit from parent.*
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Collections.Generic.IDictionary{System.String,System.String})
+##### Summary
 
+*Inherit from parent.*
 
-### M:Nancy.AttributeRouting.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object)
+##### Parameters
 
+This method has no parameters.
+
+### GetUrl\`\`1 `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+### GetUrl\`\`1 `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
+
+### GetUrl\`\`1 `method`
+
+##### Summary
+
+*Inherit from parent.*
+
+##### Parameters
+
+This method has no parameters.
 
 ## ViewAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The View attribute indicates the view path to render from request.
 
+##### Example
 
-### M:Nancy.AttributeRouting.#ctor(path)
+The following code will render `View/index.html` with routing instance.
 
-Initializes a new instance of the class.
+```
+View('View/index.html')
+```
 
-| Name | Description |
-| ---- | ----------- |
-| path | *System.String*<br>The view path for rendering. |
+### #ctor `constructor`
+
+##### Summary
+
+Initializes a new instance of the `ViewAttribute` class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| path | System.String | The view path for rendering. |
 
 ## ViewPrefixAttribute
 
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
 The ViewPrefix attribute. It decorates on class, indicates the View attribute works with this prefix to locate paths.
 
+### #ctor `constructor`
 
-### M:Nancy.AttributeRouting.#ctor(prefix)
+##### Summary
 
-Initializes a new instance of the class.
+Initializes a new instance of the `ViewPrefixAttribute` class.
 
-| Name | Description |
-| ---- | ----------- |
-| prefix | *System.String*<br>The path prefix. |
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| prefix | System.String | The path prefix. |
