@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestBootstrapper.cs" />
     <Compile Include="UrlBuilderTests.cs" />
     <Compile Include="ViewAttributeTests.cs" />
     <Compile Include="ViewModels\BeforeAttributeViewModel.cs" />

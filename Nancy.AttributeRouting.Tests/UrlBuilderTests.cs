@@ -10,7 +10,7 @@
 
     public class UrlBuilderTests
     {
-        private readonly Browser app = new Browser(new DefaultNancyBootstrapper());
+        private readonly Browser app = new Browser(new TestBootstrapper());
 
         public interface ITestCase
         {
