@@ -37,6 +37,9 @@
         [Get("/complex/get/optional/{name?default}")]
         public object GetWithOptionalParameter(string name = null) => new { Name = name };
 
+        [Get("/complex/get/missing/{name?}")]
+        public object GetWithMissingParameter(string name = null) => new { Name = name ?? "default-name" };
+
         [Get("/complex/special/{str}")]
         public object GetWithSpecialCharacters(string str) => new { str };
 
