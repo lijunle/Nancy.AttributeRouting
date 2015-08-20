@@ -57,8 +57,8 @@
             return bindMethod.Invoke(null, new[] { module });
         }
 
-        public static string GetFullName(this MethodBase method) =>
-            string.Format("{0}.{1}", method.ReflectedType.FullName, method.Name);
+        public static string GetFullName(this MemberInfo member) =>
+            string.Format("{0}.{1}", member.ReflectedType.FullName, member.Name);
 
         public static IDictionary<string, string> ToParameterDictionary(
             this MethodCallExpression methodCallExpression)

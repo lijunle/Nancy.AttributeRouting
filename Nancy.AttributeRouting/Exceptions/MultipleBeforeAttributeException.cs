@@ -11,35 +11,15 @@
     public sealed class MultipleBeforeAttributeException : Exception
     {
         internal MultipleBeforeAttributeException(MemberInfo member)
-            : base()
-        {
-            // TODO generate the exception message
-        }
-
-        internal MultipleBeforeAttributeException(MethodBase method)
-            : base(GenerateMessage(method))
+            : base(GenerateMessage(member))
         {
         }
 
-        internal MultipleBeforeAttributeException(Type type)
-            : base(GenerateMessage(type))
-        {
-        }
-
-        private static string GenerateMessage(MethodBase method)
+        private static string GenerateMessage(MemberInfo member)
         {
             string message = string.Format(
-                "Multiple before attributes are decorated on method {0}.",
-                method.GetFullName());
-
-            return message;
-        }
-
-        private static string GenerateMessage(Type type)
-        {
-            string message = string.Format(
-                "Multiple before attributes are decorated on type {0}.",
-                type.FullName);
+                "Multiple before attributes are decorated on member {0}.",
+                member.GetFullName());
 
             return message;
         }
