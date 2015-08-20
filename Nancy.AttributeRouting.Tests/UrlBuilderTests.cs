@@ -170,6 +170,9 @@
         {
             get
             {
+                yield return new ExceptionTestCase<MyViewModel, ArgumentException>(
+                    m => "anything other than a method call expression");
+
                 yield return new ExceptionTestCase<MyViewModel, MultipleRouteAttributesException>(
                     m => m.GetByTwoRoutings());
 

@@ -27,6 +27,8 @@
         [InlineData("/complex/with-injection", "Url", "/complex/with-injection")]
         [InlineData("/complex/get/optional", "Name", "default")]
         [InlineData("/complex/get/optional/override-name", "Name", "override-name")]
+        [InlineData("/complex/get/missing", "Name", "default-name")]
+        [InlineData("/complex/get/missing/provided-name", "Name", "provided-name")]
         [InlineData("/complex/special/Space%20Here", "Str", "Space Here")]
         [InlineData("/complex/special/%E4%B8%AD%E6%96%87", "Str", "中文")]
         [InlineData("/route-prefix", "Result", "value")]
