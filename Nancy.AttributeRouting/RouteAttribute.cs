@@ -60,6 +60,10 @@
             }
         }
 
+        internal static IEnumerable<MethodInfo> GetMethods(Type type) =>
+            type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .Where(m => m.GetCustomAttributes<RouteAttribute>().Any());
+
         private static IEnumerable<RoutingPath> GetRoutingPaths(MethodBase method)
         {
             string prefix = RoutePrefixAttribute.GetPrefix(method.DeclaringType);

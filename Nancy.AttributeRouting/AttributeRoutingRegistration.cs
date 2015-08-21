@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
-    using Nancy.Bootstrapper;
-    using Nancy.TinyIoc;
+    using Bootstrapper;
 
     /// <inheritdoc/>
     public class AttributeRoutingRegistration : IRegistrations
@@ -15,64 +13,52 @@
             new TypeRegistration(typeof(IUrlBuilder), typeof(UrlBuilder))
         };
 
-        private static IEnumerable<TypeRegistration> interfaceRegistrations;
+        private readonly AttributeRoutingTable attributeRoutingTable;
 
-        static AttributeRoutingRegistration()
+        private readonly IEnumerable<TypeRegistration> interfaceRegistrations;
+
+        private readonly IEnumerable<Type> types;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeRoutingRegistration"/> class.
+        /// </summary>
+        /// <param name="typeProvider">The routing type provider.</param>
+        public AttributeRoutingRegistration(ITypeProvider typeProvider)
         {
-            IEnumerable<Type> allTypes =
-                AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(assembly => assembly.SafeGetTypes());
+            this.types = typeProvider.Types;
+            this.attributeRoutingTable = new AttributeRoutingTable(typeProvider);
 
-            IEnumerable<MethodBase> methods =
-                allTypes.Where(DoesSupportType).SelectMany(GetMethodsWithRouteAttribute);
-
-            foreach (MethodBase method in methods)
-            {
-                AttributeRoutingResolver.Routings.Register(method);
-            }
-
-            // Prepare the interface to implementation registration mapping for IoC
-            interfaceRegistrations =
-                allTypes.Where(IsInterfaceHavingMethodsWithRouteAttribute)
-                    .Select(@interface => GetTypeRegistration(allTypes, @interface))
-                    .Where(typeRegistration => typeRegistration != null);
+            this.interfaceRegistrations = this.types
+                .Where(IsRoutingInterface)
+                .Select(this.ToInterfaceClassPair)
+                .Where(x => x.Item2 != null)
+                .Select(this.ToTypeRegistration);
         }
 
         /// <inheritdoc/>
-        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations => null;
+        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations =>
+            null;
 
         /// <inheritdoc/>
-        public IEnumerable<InstanceRegistration> InstanceRegistrations => null;
+        public IEnumerable<InstanceRegistration> InstanceRegistrations =>
+            new[]
+            {
+                new InstanceRegistration(typeof(AttributeRoutingTable), this.attributeRoutingTable)
+            };
 
         /// <inheritdoc/>
-        public IEnumerable<TypeRegistration> TypeRegistrations => typeRegistrations.Concat(interfaceRegistrations);
+        public IEnumerable<TypeRegistration> TypeRegistrations =>
+            typeRegistrations.Concat(this.interfaceRegistrations);
 
-        private static IEnumerable<MethodBase> GetMethodsWithRouteAttribute(Type type) =>
-            type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                .Where(HasRouteAttribute);
+        private static bool IsRoutingInterface(Type type) =>
+            type.IsInterface && RouteAttribute.GetMethods(type).Any();
 
-        private static bool HasRouteAttribute(MethodBase method) =>
-            method.GetCustomAttributes<RouteAttribute>().Any();
+        private Tuple<Type, Type> ToInterfaceClassPair(Type @interface) =>
+            Tuple.Create(
+                @interface,
+                this.types.FirstOrDefault(type => type.GetInterface(@interface.FullName) != null));
 
-        private static bool DoesSupportType(Type type) =>
-            type.IsInterface || (!type.IsAbstract && (type.IsPublic || type.IsNestedPublic));
-
-        private static bool IsInterfaceHavingMethodsWithRouteAttribute(Type type) =>
-            type.IsInterface && GetMethodsWithRouteAttribute(type).Any();
-
-        private static TypeRegistration GetTypeRegistration(IEnumerable<Type> allTypes, Type @interface)
-        {
-            Type implementation =
-                allTypes.FirstOrDefault(type => type.GetInterface(@interface.FullName) != null);
-
-            if (implementation != null)
-            {
-                return new TypeRegistration(@interface, implementation, Lifetime.PerRequest);
-            }
-            else
-            {
-                return null;
-            }
-        }
+        private TypeRegistration ToTypeRegistration(Tuple<Type, Type> interfaceClassPair) =>
+            new TypeRegistration(interfaceClassPair.Item1, interfaceClassPair.Item2, Lifetime.PerRequest);
     }
 }

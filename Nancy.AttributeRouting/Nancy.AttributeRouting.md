@@ -2,6 +2,7 @@
 # Contents [#](#contents 'Go To Here')
 
 - [AttributeRoutingRegistration](#T-Nancy.AttributeRouting.AttributeRoutingRegistration 'Nancy.AttributeRouting.AttributeRoutingRegistration')
+  - [#ctor(typeProvider)](#M-Nancy.AttributeRouting.AttributeRoutingRegistration.#ctor-Nancy.AttributeRouting.ITypeProvider- 'Nancy.AttributeRouting.AttributeRoutingRegistration.#ctor(Nancy.AttributeRouting.ITypeProvider)')
   - [CollectionTypeRegistrations](#P-Nancy.AttributeRouting.AttributeRoutingRegistration.CollectionTypeRegistrations 'Nancy.AttributeRouting.AttributeRoutingRegistration.CollectionTypeRegistrations')
   - [InstanceRegistrations](#P-Nancy.AttributeRouting.AttributeRoutingRegistration.InstanceRegistrations 'Nancy.AttributeRouting.AttributeRoutingRegistration.InstanceRegistrations')
   - [TypeRegistrations](#P-Nancy.AttributeRouting.AttributeRoutingRegistration.TypeRegistrations 'Nancy.AttributeRouting.AttributeRoutingRegistration.TypeRegistrations')
@@ -9,11 +10,15 @@
   - [#ctor(container)](#M-Nancy.AttributeRouting.AttributeRoutingResolver.#ctor-Nancy.TinyIoc.TinyIoCContainer- 'Nancy.AttributeRouting.AttributeRoutingResolver.#ctor(Nancy.TinyIoc.TinyIoCContainer)')
 - [BeforeAttribute](#T-Nancy.AttributeRouting.BeforeAttribute 'Nancy.AttributeRouting.BeforeAttribute')
   - [Process(container,context)](#M-Nancy.AttributeRouting.BeforeAttribute.Process-Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext- 'Nancy.AttributeRouting.BeforeAttribute.Process(Nancy.TinyIoc.TinyIoCContainer,Nancy.NancyContext)')
+- [DefaultTypeProvider](#T-Nancy.AttributeRouting.DefaultTypeProvider 'Nancy.AttributeRouting.DefaultTypeProvider')
+  - [Types](#P-Nancy.AttributeRouting.DefaultTypeProvider.Types 'Nancy.AttributeRouting.DefaultTypeProvider.Types')
 - [DeleteAttribute](#T-Nancy.AttributeRouting.DeleteAttribute 'Nancy.AttributeRouting.DeleteAttribute')
   - [#ctor(path)](#M-Nancy.AttributeRouting.DeleteAttribute.#ctor-System.String- 'Nancy.AttributeRouting.DeleteAttribute.#ctor(System.String)')
 - [DuplicatedRoutingPathsException](#T-Nancy.AttributeRouting.Exceptions.DuplicatedRoutingPathsException 'Nancy.AttributeRouting.Exceptions.DuplicatedRoutingPathsException')
 - [GetAttribute](#T-Nancy.AttributeRouting.GetAttribute 'Nancy.AttributeRouting.GetAttribute')
   - [#ctor(path)](#M-Nancy.AttributeRouting.GetAttribute.#ctor-System.String- 'Nancy.AttributeRouting.GetAttribute.#ctor(System.String)')
+- [ITypeProvider](#T-Nancy.AttributeRouting.ITypeProvider 'Nancy.AttributeRouting.ITypeProvider')
+  - [Types](#P-Nancy.AttributeRouting.ITypeProvider.Types 'Nancy.AttributeRouting.ITypeProvider.Types')
 - [IUrlBuilder](#T-Nancy.AttributeRouting.IUrlBuilder 'Nancy.AttributeRouting.IUrlBuilder')
   - [GetUrl\`\`1(expression)](#M-Nancy.AttributeRouting.IUrlBuilder.GetUrl``1-System.Linq.Expressions.Expression{System.Func{``0,System.Object}}- 'Nancy.AttributeRouting.IUrlBuilder.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})')
   - [GetUrl\`\`1(expression,parameters)](#M-Nancy.AttributeRouting.IUrlBuilder.GetUrl``1-System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object- 'Nancy.AttributeRouting.IUrlBuilder.GetUrl``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object)')
@@ -75,6 +80,19 @@ Nancy.AttributeRouting
 ##### Summary
 
 *Inherit from parent.*
+
+<a name='M-Nancy.AttributeRouting.AttributeRoutingRegistration.#ctor-Nancy.AttributeRouting.ITypeProvider-'></a>
+### #ctor(typeProvider) `constructor` [#](#M-Nancy.AttributeRouting.AttributeRoutingRegistration.#ctor-Nancy.AttributeRouting.ITypeProvider- 'Go To Here') [^](#contents 'Back To Contents')
+
+##### Summary
+
+Initializes a new instance of the [AttributeRoutingRegistration](#T-Nancy.AttributeRouting.AttributeRoutingRegistration 'Nancy.AttributeRouting.AttributeRoutingRegistration') class.
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| typeProvider | [Nancy.AttributeRouting.ITypeProvider](#T-Nancy.AttributeRouting.ITypeProvider 'Nancy.AttributeRouting.ITypeProvider') | The routing type provider. |
 
 <a name='P-Nancy.AttributeRouting.AttributeRoutingRegistration.CollectionTypeRegistrations'></a>
 ### CollectionTypeRegistrations `property` [#](#P-Nancy.AttributeRouting.AttributeRoutingRegistration.CollectionTypeRegistrations 'Go To Here') [^](#contents 'Back To Contents')
@@ -150,6 +168,24 @@ The response. If this is `null`, it will continue on view model execution, other
 | container | [Nancy.TinyIoc.TinyIoCContainer](#T-Nancy.TinyIoc.TinyIoCContainer 'Nancy.TinyIoc.TinyIoCContainer') | The Tiny IoC container. It provides [IUrlBuilder](#T-Nancy.AttributeRouting.IUrlBuilder 'Nancy.AttributeRouting.IUrlBuilder') and others to construct the response. |
 | context | [Nancy.NancyContext](#T-Nancy.NancyContext 'Nancy.NancyContext') | The Nancy context. It provides user information and others to determine whether continue view model execution. |
 
+<a name='T-Nancy.AttributeRouting.DefaultTypeProvider'></a>
+## DefaultTypeProvider [#](#T-Nancy.AttributeRouting.DefaultTypeProvider 'Go To Here') [^](#contents 'Back To Contents')
+
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
+The default type provider for routing register.
+
+<a name='P-Nancy.AttributeRouting.DefaultTypeProvider.Types'></a>
+### Types `property` [#](#P-Nancy.AttributeRouting.DefaultTypeProvider.Types 'Go To Here') [^](#contents 'Back To Contents')
+
+##### Summary
+
+*Inherit from parent.*
+
 <a name='T-Nancy.AttributeRouting.DeleteAttribute'></a>
 ## DeleteAttribute [#](#T-Nancy.AttributeRouting.DeleteAttribute 'Go To Here') [^](#contents 'Back To Contents')
 
@@ -208,6 +244,24 @@ Initializes a new instance of the [GetAttribute](#T-Nancy.AttributeRouting.GetAt
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | path | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The path to register into routing table. |
+
+<a name='T-Nancy.AttributeRouting.ITypeProvider'></a>
+## ITypeProvider [#](#T-Nancy.AttributeRouting.ITypeProvider 'Go To Here') [^](#contents 'Back To Contents')
+
+##### Namespace
+
+Nancy.AttributeRouting
+
+##### Summary
+
+Type provider to provide types for routing register.
+
+<a name='P-Nancy.AttributeRouting.ITypeProvider.Types'></a>
+### Types `property` [#](#P-Nancy.AttributeRouting.ITypeProvider.Types 'Go To Here') [^](#contents 'Back To Contents')
+
+##### Summary
+
+Gets the type list for routing register. Their methods decorated with [RouteAttribute](#T-Nancy.AttributeRouting.RouteAttribute 'Nancy.AttributeRouting.RouteAttribute') will be registed to routing table. By default, all types will be registed.
 
 <a name='T-Nancy.AttributeRouting.IUrlBuilder'></a>
 ## IUrlBuilder [#](#T-Nancy.AttributeRouting.IUrlBuilder 'Go To Here') [^](#contents 'Back To Contents')

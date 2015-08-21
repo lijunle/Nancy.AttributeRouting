@@ -72,7 +72,9 @@
   <ItemGroup>
     <Compile Include="AttributeRoutingRegistration.cs" />
     <Compile Include="AttributeRoutingResolver.cs" />
+    <Compile Include="AttributeRoutingTable.cs" />
     <Compile Include="BeforeAttribute.cs" />
+    <Compile Include="DefaultTypeProvider.cs" />
     <Compile Include="Exceptions\DuplicatedRoutingPathsException.cs" />
     <Compile Include="Exceptions\MultipleBeforeAttributeException.cs" />
     <Compile Include="Exceptions\MultipleRouteAttributesException.cs" />
