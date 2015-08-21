@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FalseRouteAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBootstrapper.cs" />
     <Compile Include="UrlBuilderTests.cs" />
