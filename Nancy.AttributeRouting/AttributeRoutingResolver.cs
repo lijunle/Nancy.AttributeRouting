@@ -11,42 +11,29 @@
     /// </summary>
     public class AttributeRoutingResolver : NancyModule
     {
-        static AttributeRoutingResolver()
-        {
-            Routings = new Dictionary<HttpMethod, Dictionary<string, MethodBase>>
-            {
-                { HttpMethod.Delete, new Dictionary<string, MethodBase>() },
-                { HttpMethod.Get, new Dictionary<string, MethodBase>() },
-                { HttpMethod.Options, new Dictionary<string, MethodBase>() },
-                { HttpMethod.Patch, new Dictionary<string, MethodBase>() },
-                { HttpMethod.Post, new Dictionary<string, MethodBase>() },
-                { HttpMethod.Put, new Dictionary<string, MethodBase>() },
-            };
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributeRoutingResolver"/> class.
         /// </summary>
         /// <param name="container">The Nancy IoC container.</param>
         public AttributeRoutingResolver(TinyIoCContainer container)
         {
-            Resolve(container, this, this.Delete, HttpMethod.Delete);
-            Resolve(container, this, this.Get, HttpMethod.Get);
-            Resolve(container, this, this.Options, HttpMethod.Options);
-            Resolve(container, this, this.Patch, HttpMethod.Patch);
-            Resolve(container, this, this.Post, HttpMethod.Post);
-            Resolve(container, this, this.Put, HttpMethod.Put);
+            var table = container.Resolve<AttributeRoutingTable>();
+            Resolve(container, this, table.Routings, this.Delete, HttpMethod.Delete);
+            Resolve(container, this, table.Routings, this.Get, HttpMethod.Get);
+            Resolve(container, this, table.Routings, this.Options, HttpMethod.Options);
+            Resolve(container, this, table.Routings, this.Patch, HttpMethod.Patch);
+            Resolve(container, this, table.Routings, this.Post, HttpMethod.Post);
+            Resolve(container, this, table.Routings, this.Put, HttpMethod.Put);
         }
-
-        internal static Dictionary<HttpMethod, Dictionary<string, MethodBase>> Routings { get; }
 
         private static void Resolve(
             TinyIoCContainer container,
             INancyModule module,
+            Dictionary<HttpMethod, Dictionary<string, MethodBase>> routings,
             RouteBuilder builder,
             HttpMethod httpMethod)
         {
-            foreach (KeyValuePair<string, MethodBase> routing in Routings[httpMethod])
+            foreach (KeyValuePair<string, MethodBase> routing in routings[httpMethod])
             {
                 string path = routing.Key;
                 string name = string.Format("{0} {1}", httpMethod, path);
