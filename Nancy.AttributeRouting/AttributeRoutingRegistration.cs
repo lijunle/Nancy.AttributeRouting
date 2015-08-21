@@ -15,27 +15,42 @@
             new TypeRegistration(typeof(IUrlBuilder), typeof(UrlBuilder))
         };
 
+        private static bool initialized;
+
+        private static object initializeLock = new object();
+
         private static IEnumerable<TypeRegistration> interfaceRegistrations;
 
-        static AttributeRoutingRegistration()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeRoutingRegistration"/> class.
+        /// </summary>
+        public AttributeRoutingRegistration()
         {
-            IEnumerable<Type> allTypes =
-                AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(assembly => assembly.SafeGetTypes());
-
-            IEnumerable<MethodBase> methods =
-                allTypes.Where(DoesSupportType).SelectMany(GetMethodsWithRouteAttribute);
-
-            foreach (MethodBase method in methods)
+            lock (initializeLock)
             {
-                AttributeRoutingResolver.Routings.Register(method);
-            }
+                if (!initialized)
+                {
+                    initialized = true;
 
-            // Prepare the interface to implementation registration mapping for IoC
-            interfaceRegistrations =
-                allTypes.Where(IsInterfaceHavingMethodsWithRouteAttribute)
-                    .Select(@interface => GetTypeRegistration(allTypes, @interface))
-                    .Where(typeRegistration => typeRegistration != null);
+                    IEnumerable<Type> allTypes =
+                        AppDomain.CurrentDomain.GetAssemblies()
+                            .SelectMany(assembly => assembly.SafeGetTypes());
+
+                    IEnumerable<MethodBase> methods =
+                        allTypes.Where(DoesSupportType).SelectMany(GetMethodsWithRouteAttribute);
+
+                    foreach (MethodBase method in methods)
+                    {
+                        AttributeRoutingResolver.Routings.Register(method);
+                    }
+
+                    // Prepare the interface to implementation registration mapping for IoC
+                    interfaceRegistrations =
+                        allTypes.Where(IsInterfaceHavingMethodsWithRouteAttribute)
+                            .Select(@interface => GetTypeRegistration(allTypes, @interface))
+                            .Where(typeRegistration => typeRegistration != null);
+                }
+            }
         }
 
         /// <inheritdoc/>

@@ -7,6 +7,11 @@
         <member name="T:Nancy.AttributeRouting.AttributeRoutingRegistration">
             <inheritdoc/>
         </member>
+        <member name="M:Nancy.AttributeRouting.AttributeRoutingRegistration.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.AttributeRoutingRegistration"/> class.
+            </summary>
+        </member>
         <member name="P:Nancy.AttributeRouting.AttributeRoutingRegistration.CollectionTypeRegistrations">
             <inheritdoc/>
         </member>
