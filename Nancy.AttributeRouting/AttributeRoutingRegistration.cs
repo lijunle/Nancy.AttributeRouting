@@ -24,7 +24,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributeRoutingRegistration"/> class.
         /// </summary>
-        public AttributeRoutingRegistration()
+        /// <param name="typeProvider">The routing type provider.</param>
+        public AttributeRoutingRegistration(ITypeProvider typeProvider)
         {
             lock (initializeLock)
             {
@@ -32,9 +33,7 @@
                 {
                     initialized = true;
 
-                    IEnumerable<Type> allTypes =
-                        AppDomain.CurrentDomain.GetAssemblies()
-                            .SelectMany(assembly => assembly.SafeGetTypes());
+                    IEnumerable<Type> allTypes = typeProvider.Types;
 
                     IEnumerable<MethodBase> methods =
                         allTypes.Where(DoesSupportType).SelectMany(GetMethodsWithRouteAttribute);

@@ -7,10 +7,11 @@
         <member name="T:Nancy.AttributeRouting.AttributeRoutingRegistration">
             <inheritdoc/>
         </member>
-        <member name="M:Nancy.AttributeRouting.AttributeRoutingRegistration.#ctor">
+        <member name="M:Nancy.AttributeRouting.AttributeRoutingRegistration.#ctor(Nancy.AttributeRouting.ITypeProvider)">
             <summary>
             Initializes a new instance of the <see cref="T:Nancy.AttributeRouting.AttributeRoutingRegistration"/> class.
             </summary>
+            <param name="typeProvider">The routing type provider.</param>
         </member>
         <member name="P:Nancy.AttributeRouting.AttributeRoutingRegistration.CollectionTypeRegistrations">
             <inheritdoc/>
@@ -53,6 +54,27 @@
             The response. If this is <c>null</c>, it will continue on view model execution,
             otherwise it returns the this value directly.
             </returns>
+        </member>
+        <member name="T:Nancy.AttributeRouting.ITypeProvider">
+            <summary>
+            Type provider to provide types for routing register.
+            </summary>
+        </member>
+        <member name="P:Nancy.AttributeRouting.ITypeProvider.Types">
+            <summary>
+            Gets the type list for routing register.
+            Their methods decorated with <see cref="T:Nancy.AttributeRouting.RouteAttribute"/> will be registed to routing table.
+            By default, all types will be registed.
+            </summary>
+            <value>The type list.</value>
+        </member>
+        <member name="T:Nancy.AttributeRouting.DefaultTypeProvider">
+            <summary>
+            The default type provider for routing register.
+            </summary>
+        </member>
+        <member name="P:Nancy.AttributeRouting.DefaultTypeProvider.Types">
+            <inheritdoc/>
         </member>
         <member name="T:Nancy.AttributeRouting.Exceptions.DuplicatedRoutingPathsException">
             <summary>
