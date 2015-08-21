@@ -11,7 +11,7 @@
 
     public class RouteAttributeTests
     {
-        private static readonly Browser Browser = new Browser(new DefaultNancyBootstrapper());
+        private static readonly Browser Browser = new Browser(new TestBootstrapper());
 
         [Theory]
         [InlineData("/", "Result", "Index")]

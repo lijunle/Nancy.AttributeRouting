@@ -108,6 +108,7 @@
                 return GetAttributeFromCache(ancestorType);
             }
 
+            // it should not be here
             return null;
         }
     }
